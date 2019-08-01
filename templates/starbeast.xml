@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='StarBeast2' beautistatus='noAutoSetClockRate' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" required="" version="2.6">
+
+  {% for alignment in alignments %}
+    <data id="alignment-{{alignment.id}}" spec="Alignment" name="alignment">
+      {% for seq in alignment.sequences %}
+        <sequence id="seq_{{seq.taxon}}-{{seq.tip}}-{{alignment.id}}" spec="Sequence" taxon="{{seq.taxon}}-{{seq.tip}}" totalcount="4" value="{{seq.seq}}"/>
+      {% endfor %}
+    </data>
+  {% endfor %}
+
+<map name="Uniform" >beast.math.distributions.Uniform</map>
+<map name="Exponential" >beast.math.distributions.Exponential</map>
+<map name="LogNormal" >beast.math.distributions.LogNormalDistributionModel</map>
+<map name="Normal" >beast.math.distributions.Normal</map>
+<map name="Beta" >beast.math.distributions.Beta</map>
+<map name="Gamma" >beast.math.distributions.Gamma</map>
+<map name="LaplaceDistribution" >beast.math.distributions.LaplaceDistribution</map>
+<map name="prior" >beast.math.distributions.Prior</map>
+<map name="InverseGamma" >beast.math.distributions.InverseGamma</map>
+<map name="OneOnX" >beast.math.distributions.OneOnX</map>
+
+
+<run id="mcmc" spec="MCMC" chainLength="{{chain_length}}" storeEvery="{{sample_freq}}">
+    <state id="state" spec="State" storeEvery="{{sample_freq}}">
+        <stateNode id="Tree.t:Species" spec="starbeast2.SpeciesTree">
+            <taxonset id="taxonsuperset" spec="starbeast2.StarBeastTaxonSet">
+              {% for taxon in taxa %}
+                <taxon id="{{taxon}}" spec="TaxonSet">
+                  {% for tip in tips %}
+                    <taxon id="{{taxon}}-{{tip}}" spec="Taxon"/>
+                  {% endfor %}
+                </taxon>
+              {% endfor %}
+            </taxonset>
+        </stateNode>
+      {% for alignment in alignments %}
+        <tree id="Tree.t:alignment-{{alignment.id}}" spec="beast.evolution.tree.Tree" name="stateNode">
+            <taxonset id="TaxonSet.alignment-{{alignment.id}}" spec="TaxonSet">
+                <alignment idref="alignment-{{alignment.id}}"/>
+            </taxonset>
+        </tree>
+      {% endfor %}
+        <parameter id="constPopSizes.Species" spec="parameter.RealParameter" lower="0.0" name="stateNode">1.0</parameter>
+    </state>
+
+    <init id="SBI" spec="starbeast2.StarBeastInitializer" estimate="false" speciesTree="@Tree.t:Species">
+      {% for alignment in alignments %}
+        <geneTree idref="Tree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+        <parameter id="speciationRate.t:Species" spec="parameter.RealParameter" estimate="false" lower="0.0" name="birthRate">{{birth_rate}}</parameter>
+        <populationModel id="popModelBridge.Species" spec="starbeast2.PassthroughModel">
+            <childModel id="constPopModel.Species" spec="starbeast2.ConstantPopulations" populationSizes="@constPopSizes.Species" speciesTree="@Tree.t:Species"/>
+        </populationModel>
+    </init>
+
+    <distribution id="posterior" spec="util.CompoundDistribution">
+        <distribution id="speciescoalescent" spec="starbeast2.MultispeciesCoalescent">
+          {% for alignment in alignments %}
+            <distribution id="geneTree.t:alignment-{{alignment.id}}" spec="starbeast2.GeneTree" ploidy="1.0" populationModel="@popModelBridge.Species" speciesTree="@Tree.t:Species" tree="@Tree.t:alignment-{{alignment.id}}"/>
+          {% endfor %}
+        </distribution>
+        <distribution id="prior" spec="util.CompoundDistribution">
+            <distribution id="YuleModel.t:Species" spec="beast.evolution.speciation.YuleModel" birthDiffRate="@speciationRate.t:Species" tree="@Tree.t:Species"/>
+            <prior id="constPopSizesPrior.Species" name="distribution" x="@constPopSizes.Species">
+                <Gamma id="Gamma.0" mode="ShapeRate" name="distr">
+                    <parameter id="constPopShape.Species" spec="parameter.RealParameter" estimate="false" lower="0.0" name="alpha">{{pop_size_shape}}</parameter>
+                    <parameter id="constPopMean.Species" spec="parameter.RealParameter" estimate="false" lower="0.0" name="beta">{{pop_size_scale}}</parameter>
+                </Gamma>
+            </prior>
+        </distribution>
+        <distribution id="likelihood" spec="util.CompoundDistribution">
+          {% for alignment in alignments %}
+            <distribution id="treeLikelihood.alignment-{{alignment.id}}" spec="TreeLikelihood" {% if loop.index0 > 0 %}branchRateModel="@StrictClock.c:alignment-{{alignments[0].id}}" {% endif %}data="@alignment-{{alignment.id}}" tree="@Tree.t:alignment-{{alignment.id}}">
+                <siteModel id="SiteModel.s:alignment-{{alignment.id}}" spec="SiteModel">
+                    <parameter id="mutationRate.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" name="mutationRate">1.0</parameter>
+                    <parameter id="gammaShape.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" name="shape">1.0</parameter>
+                    <parameter id="proportionInvariant.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+                    <substModel id="gtr.s:alignment-{{alignment.id}}" spec="GTR">
+                        <parameter id="rateAC.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateAC">0.0</parameter>
+                        <parameter id="rateAG.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateAG">0.0</parameter>
+                        <parameter id="rateAT.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateAT">0.0</parameter>
+                        <parameter id="rateCG.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateCG">0.0</parameter>
+                        <parameter id="rateCT.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateCT">0.0</parameter>
+                        <parameter id="rateGT.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="rateGT">1.0</parameter>
+                        <frequencies id="estimatedFreqs.s:alignment-{{alignment.id}}" spec="Frequencies" estimate="false">
+                            <parameter id="freqParameter.s:alignment-{{alignment.id}}" spec="parameter.RealParameter" dimension="4" estimate="false" lower="0.0" name="frequencies" upper="1.0">0.0 0.0 0.5 0.5</parameter>
+                        </frequencies>
+                    </substModel>
+                </siteModel>
+              {% if loop.index0 == 0 %}
+                <branchRateModel id="StrictClock.c:alignment-{{alignment.id}}" spec="beast.evolution.branchratemodel.StrictClockModel">
+                    <parameter id="strictClockRate.c:alignment-{{alignment.id}}" spec="parameter.RealParameter" estimate="false" lower="0.0" name="clock.rate">1.0</parameter>
+                </branchRateModel>
+              {% endif %}
+            </distribution>
+          {% endfor %}
+        </distribution>
+    </distribution>
+
+    <operator id="Reheight.t:Species" spec="starbeast2.NodeReheight2" taxonset="@taxonsuperset" tree="@Tree.t:Species" weight="75.0">
+      {% for alignment in alignments %}
+        <geneTree idref="geneTree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+    </operator>
+
+    <operator id="coordinatedUniform.t:Species" spec="starbeast2.CoordinatedUniform" speciesTree="@Tree.t:Species" weight="15.0">
+      {% for alignment in alignments %}
+        <geneTree idref="Tree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+    </operator>
+
+    <operator id="coordinatedExponential.t:Species" spec="starbeast2.CoordinatedExponential" speciesTree="@Tree.t:Species" weight="15.0">
+      {% for alignment in alignments %}
+        <geneTree idref="Tree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+    </operator>
+
+    <operator id="SubtreeSlide.t:Species" spec="SubtreeSlide" size="0.002" tree="@Tree.t:Species" weight="15.0"/>
+
+    <operator id="WilsonBalding.t:Species" spec="WilsonBalding" tree="@Tree.t:Species" weight="15.0"/>
+
+    <operator id="Wide.t:Species" spec="Exchange" isNarrow="false" tree="@Tree.t:Species" weight="15.0"/>
+
+    <operator id="Narrow.t:Species" spec="Exchange" tree="@Tree.t:Species" weight="15.0"/>
+
+    <operator id="UniformOperator.t:Species" spec="Uniform" tree="@Tree.t:Species" weight="15.0"/>
+
+    <operator id="TreeRootScaler.t:Species" spec="ScaleOperator" rootOnly="true" scaleFactor="0.7" tree="@Tree.t:Species" weight="3.0"/>
+
+    <operator id="TreeScaler.t:Species" spec="ScaleOperator" scaleFactor="0.95" tree="@Tree.t:Species" weight="3.0"/>
+
+    <operator id="updownAll:Species" spec="UpDownOperator" scaleFactor="0.75" weight="6.0">
+        <down idref="Tree.t:Species"/>
+      {% for alignment in alignments %}
+        <down idref="Tree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+        <down idref="constPopSizes.Species"/>
+    </operator>
+
+  {% for alignment in alignments %}
+    <operator id="clockUpDownOperator.c:alignment-{{alignment.id}}" spec="UpDownOperator" scaleFactor="0.95" weight="3.0">
+        <down idref="Tree.t:alignment-{{alignment.id}}"/>
+    </operator>
+
+    <operator id="TreeScaler.t:alignment-{{alignment.id}}" spec="ScaleOperator" scaleFactor="0.95" tree="@Tree.t:alignment-{{alignment.id}}" weight="3.0"/>
+
+    <operator id="TreeRootScaler.t:alignment-{{alignment.id}}" spec="ScaleOperator" rootOnly="true" scaleFactor="0.7" tree="@Tree.t:alignment-{{alignment.id}}" weight="3.0"/>
+
+    <operator id="UniformOperator.t:alignment-{{alignment.id}}" spec="Uniform" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
+
+    <operator id="SubtreeSlide.t:alignment-{{alignment.id}}" spec="SubtreeSlide" size="0.002" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
+
+    <operator id="Narrow.t:alignment-{{alignment.id}}" spec="Exchange" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
+
+    <operator id="Wide.t:alignment-{{alignment.id}}" spec="Exchange" isNarrow="false" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
+
+    <operator id="WilsonBalding.t:alignment-{{alignment.id}}" spec="WilsonBalding" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
+
+  {% endfor %}
+    <operator id="constPopSizesSwap.Species" spec="starbeast2.RealCycle" k="2" optimise="false" parameter="@constPopSizes.Species" weight="3.0"/>
+
+    <operator id="constPopSizesScale.Species" spec="ScaleOperator" parameter="@constPopSizes.Species" scaleFactor="0.5" weight="3.0"/>
+
+    <logger id="tracelog" spec="Logger" fileName="starbeast.log" logEvery="5000" model="@posterior" sort="smart">
+        <log idref="posterior"/>
+        <log idref="likelihood"/>
+        <log idref="prior"/>
+        <log idref="speciescoalescent"/>
+        <log idref="YuleModel.t:Species"/>
+        <log id="TreeHeight.Species" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:Species"/>
+        <log id="TreeLength.Species" spec="starbeast2.TreeLengthLogger" tree="@Tree.t:Species"/>
+      {% for alignment in alignments %}
+        <log idref="treeLikelihood.alignment-{{alignment.id}}"/>
+        <log id="TreeHeight.t:alignment-{{alignment.id}}" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:alignment-{{alignment.id}}"/>
+      {% endfor %}
+    </logger>
+
+    <logger id="speciesTreeLogger" spec="Logger" fileName="species.trees" logEvery="5000" mode="tree">
+        <log id="SpeciesTreeLoggerX" spec="starbeast2.SpeciesTreeLogger" populationmodel="@constPopModel.Species" speciesTree="@Tree.t:Species"/>
+    </logger>
+
+    <logger id="screenlog" spec="Logger" logEvery="5000" model="@posterior">
+        <log idref="posterior"/>
+        <log id="ESS.0" spec="util.ESS" arg="@posterior"/>
+        <log idref="likelihood"/>
+        <log idref="prior"/>
+    </logger>
+
+  {% for alignment in alignments %}
+    <logger id="treelog.t:alignment-{{alignment.id}}" spec="Logger" fileName="$(tree).trees" logEvery="5000" mode="tree">
+        <log id="TreeWithMetaDataLogger.t:alignment-{{alignment.id}}" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:alignment-{{alignment.id}}"/>
+    </logger>
+
+  {% endfor %}
+    <operatorschedule id="operatorSchedule" spec="OperatorSchedule">
+        <subschedule id="operatorSubschedule" spec="OperatorSchedule" operatorPattern="^.*Species$" weight="20.0" weightIsPercentage="true"/>
+    </operatorschedule>
+
+</run>
+
+</beast>
