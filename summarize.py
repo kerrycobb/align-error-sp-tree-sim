@@ -58,7 +58,10 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
             eco_pattern = os.path.join(rep_dir, "ecoevo-{}-{}.o*".format(rep_id, chain))
             if check_output(eco_pattern, "Runtime:"):
                 eco_log = os.path.join(rep_dir, "ecoevolity-config-state-run-{}.log".format(chain))
-                est_df = pd.read_csv(eco_log, sep='\t')
+                try:
+                    est_df = pd.read_csv(eco_log, sep='\t')
+                except:
+                    quit("Unable to read {}".format(eco_log))
                 est_df = est_df.loc[eco_burnin:]
                 eco_theta_chains["root"].append(est_df["pop_size_root_sp1"].tolist())
                 eco_theta_chains["sp1"].append(est_df["pop_size_sp1"].tolist())

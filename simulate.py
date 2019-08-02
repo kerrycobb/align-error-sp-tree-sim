@@ -97,7 +97,7 @@ def gen_data(config_path, eco_config_path):
     ecoevolity_config = yaml.safe_load(open(eco_config_path))
     seed = config["seed"]
     nreps = config["nreps"]
-    singleton_sample_prob = config["singleton_sample_prob"]
+    singleton_sample_prob = float(config["singleton_sample_prob"])
     nspecies = config["nspecies"]
     ngenomes = config["ngenomes"]
     nloci = config["nloci"]
@@ -109,9 +109,14 @@ def gen_data(config_path, eco_config_path):
         ["parameters"]["population_size"]["prior"]["gamma_distribution"]["scale"]
     birth_rate = ecoevolity_config["event_time_prior"]["exponential_distribution"]["rate"]
 
-    # Create output directory
-    out_dir = os.path.abspath("out-sp{}-gen{}-loci{}-len{}-seed{}".format(
-        nspecies, ngenomes, nloci, locus_length, seed))
+    # Create output directories
+    contain_dir = os.path.abspath(
+        "out-sp{sp}-gen{gen}-loci{loc}-len{len}-single{sin}".format(
+            sp=nspecies, gen=ngenomes, loc=nloci,
+            len=locus_length, sin=singleton_sample_prob))
+    if not os.path.exists(contain_dir):
+        os.mkdir(contain_dir)
+    out_dir = os.path.join(contain_dir, "seed{}-reps{}".format(seed, nreps))
     os.mkdir(out_dir)
 
     # Copy configs into output directory

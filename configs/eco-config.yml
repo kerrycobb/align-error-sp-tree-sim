@@ -6,15 +6,15 @@ event_model_prior:
                 value:      1.0
                 estimate:   false
 
-# event_time_prior:
-#     gamma_distribution:
-#         shape: 1.0
-#         scale: 0.05
-#         # Exponential(rate = 2 * birth_rate = 20)
+#event_time_prior:
+#    gamma_distribution:
+#        shape: 1.0
+#        scale: 0.05
+#        # Exponential(rate = 2 * birth_rate = 20)
 
 event_time_prior:
-    exponential_distribution:
-        rate: 1.0
+  exponential_distribution:
+    rate: 20.0 # waiting time with two tips 2 * birth rate "lambda" of 10
 
 mcmc_settings:
     chain_length: 75000

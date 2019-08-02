@@ -1,6 +1,6 @@
-seed: 3 
+seed: 1 
 nreps: 20 
-singleton_sample_prob: 1
+singleton_sample_prob: .8
 nspecies: 2
 ngenomes: 4
 nloci: 100 
