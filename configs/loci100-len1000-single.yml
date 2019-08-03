@@ -1,9 +1,0 @@
-seed: 1 
-nreps: 20 
-singleton_sample_prob: .8
-nspecies: 2
-ngenomes: 4
-nloci: 100 
-locus_length: 1000
-ecoevolity_chains: 4 
-starbeast_chains: 2 
