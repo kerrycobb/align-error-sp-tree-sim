@@ -14,7 +14,7 @@ event_model_prior:
 
 event_time_prior:
   exponential_distribution:
-    rate: 20.0 # waiting time with two tips 2 * birth rate "lambda" of 10
+    rate: 20.0 # lambda/waiting time = birth rate of 10 * 2 tips
 
 mcmc_settings:
     chain_length: 75000
