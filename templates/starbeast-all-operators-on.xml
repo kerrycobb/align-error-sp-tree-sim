@@ -116,13 +116,13 @@
     </operator>
 
     <!-- Uncomment these if using tree with >2 tips -->
-    <!-- <operator id="SubtreeSlide.t:Species" spec="SubtreeSlide" size="0.002" tree="@Tree.t:Species" weight="15.0"/> -->
+    <operator id="SubtreeSlide.t:Species" spec="SubtreeSlide" size="0.002" tree="@Tree.t:Species" weight="15.0"/>
 
-    <!-- <operator id="WilsonBalding.t:Species" spec="WilsonBalding" tree="@Tree.t:Species" weight="15.0"/> -->
+    <operator id="WilsonBalding.t:Species" spec="WilsonBalding" tree="@Tree.t:Species" weight="15.0"/>
 
-    <!-- <operator id="Wide.t:Species" spec="Exchange" isNarrow="false" tree="@Tree.t:Species" weight="15.0"/> -->
+    <operator id="Wide.t:Species" spec="Exchange" isNarrow="false" tree="@Tree.t:Species" weight="15.0"/>
 
-    <!-- <operator id="Narrow.t:Species" spec="Exchange" tree="@Tree.t:Species" weight="15.0"/> -->
+    <operator id="Narrow.t:Species" spec="Exchange" tree="@Tree.t:Species" weight="15.0"/>
 
     <operator id="UniformOperator.t:Species" spec="Uniform" tree="@Tree.t:Species" weight="15.0"/>
 
@@ -139,9 +139,9 @@
     </operator>
 
   {% for alignment in alignments %}
-    <!-- <operator id="clockUpDownOperator.c:alignment-{{alignment.id}}" spec="UpDownOperator" scaleFactor="0.95" weight="3.0">
+    <operator id="clockUpDownOperator.c:alignment-{{alignment.id}}" spec="UpDownOperator" scaleFactor="0.95" weight="3.0">
         <down idref="Tree.t:alignment-{{alignment.id}}"/>
-    </operator> -->
+    </operator>
 
     <operator id="TreeScaler.t:alignment-{{alignment.id}}" spec="ScaleOperator" scaleFactor="0.95" tree="@Tree.t:alignment-{{alignment.id}}" weight="3.0"/>
 
@@ -149,13 +149,13 @@
 
     <operator id="UniformOperator.t:alignment-{{alignment.id}}" spec="Uniform" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
 
-    <!-- <operator id="SubtreeSlide.t:alignment-{{alignment.id}}" spec="SubtreeSlide" size="0.002" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/> -->
+    <operator id="SubtreeSlide.t:alignment-{{alignment.id}}" spec="SubtreeSlide" size="0.002" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
 
-    <!-- <operator id="Narrow.t:alignment-{{alignment.id}}" spec="Exchange" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/> -->
+    <operator id="Narrow.t:alignment-{{alignment.id}}" spec="Exchange" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
 
-    <!-- <operator id="Wide.t:alignment-{{alignment.id}}" spec="Exchange" isNarrow="false" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/> -->
+    <operator id="Wide.t:alignment-{{alignment.id}}" spec="Exchange" isNarrow="false" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
 
-    <!-- <operator id="WilsonBalding.t:alignment-{{alignment.id}}" spec="WilsonBalding" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/> -->
+    <operator id="WilsonBalding.t:alignment-{{alignment.id}}" spec="WilsonBalding" tree="@Tree.t:alignment-{{alignment.id}}" weight="15.0"/>
 
   {% endfor %}
     <operator id="constPopSizesSwap.Species" spec="starbeast2.RealCycle" k="2" optimise="false" parameter="@constPopSizes.Species" weight="3.0"/>
