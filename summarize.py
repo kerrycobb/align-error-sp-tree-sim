@@ -55,8 +55,9 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
         eco_theta_chains = dict(root=[], sp1=[], sp2=[])
         eco_time_chains = []
         for chain in range(1, eco_chains+1):
-            eco_pattern = os.path.join(rep_dir, "ecoevo-{}-{}.o*".format(rep_id, chain))
-            eco_log = os.path.join(rep_dir, "ecoevolity-config-state-run-{}.log".format(chain))
+            chain_dir = os.path.join(rep_dir, "ecoevo-chain-{}".format(chain))
+            eco_pattern = os.path.join(chain_dir, "ecoevo-{}-{}.o*".format(rep_id, chain))
+            eco_log = os.path.join(chain_dir, "ecoevolity-config-state-run-1.log")
             est_df = pd.read_csv(eco_log, sep='\t').loc[eco_burnin:]
             eco_theta_chains["root"].append(est_df["pop_size_root_sp1"].tolist())
             eco_theta_chains["sp1"].append(est_df["pop_size_sp1"].tolist())
@@ -78,11 +79,9 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
         star_theta_chains = dict(root=[], sp1=[], sp2=[])
         star_time_chains = []
         for chain in range(1, star_chains+1):
-            star_pattern = os.path.join(rep_dir, "star-{}-{}.o*".format(rep_id, chain))
-            trees_path = os.path.join(
-                rep_dir,
-                "starbeast-chain-{}".format(chain),
-                "species.trees")
+            chain_dir = os.path.join(rep_dir, "starbeast-chain-{}".format(chain))
+            star_pattern = os.path.join(chain_dir, "star-{}-{}.o*".format(rep_id, chain))
+            trees_path = os.path.join(chain_dir, "species.trees")
             trees = dp.TreeList.get(path=trees_path, schema='nexus')
             theta_chain = {key: [] for key in true_thetas}
             time_chain = []

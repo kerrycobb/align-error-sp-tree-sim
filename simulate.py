@@ -15,8 +15,6 @@ def generate_xml(
 
     align_base_name = os.path.basename(alignment_path).split(".")[0]
     out_path = os.path.join(out_dir, "starbeast.xml")
-    align_dir = os.path.join(out_dir, "alignments")
-    os.mkdir(align_dir)
     alignment = dp.StandardCharacterMatrix.get(path=alignment_path, schema="nexus")
 
     # Get sequences and sequence IDs from alignment
@@ -45,7 +43,7 @@ def generate_xml(
     pos = 0
     alignment_dicts = []
     for locus_id in range(1, nloci+1):
-        recoded_alignment_dict = {}
+        # recoded_alignment_dict = {}
         sequence_dicts = []
         for i, id in enumerate(ids):
             id_split = id.split("-")
@@ -57,19 +55,6 @@ def generate_xml(
             id=locus_id,
             sequences=sequence_dicts))
         pos += locus_length
-
-    # Output each locus into Fasta file
-    for locus in alignment_dicts:
-        recoded_alignment_dict = {}
-        for seq in locus["sequences"]:
-            id = seq["taxon"] + "-" + seq["tip"]
-            recoded_alignment_dict[id] = seq["seq"]
-        recoded_alignment = dp.DnaCharacterMatrix.from_dict(recoded_alignment_dict)
-        recoded_alignment_path = os.path.join(
-            align_dir, "alignment-{}.fasta".format(locus["id"]))
-        recoded_alignment.write(
-            path=recoded_alignment_path,
-            schema="fasta")
 
     # Build XML file
     env = jj.Environment(loader=jj.FileSystemLoader(template_dir),
@@ -92,9 +77,9 @@ def generate_xml(
       handle.write(xml)
 
 
-def gen_data(config_path, eco_config_path):
+def gen_data(config_path, eco_config_path, single_snp=False, rmv_cons=False):
     config = yaml.safe_load(open(config_path))
-    ecoevolity_config = yaml.safe_load(open(eco_config_path))
+    eco_config = yaml.safe_load(open(eco_config_path))
     seed = config["seed"]
     nreps = config["nreps"]
     singleton_sample_prob = float(config["singleton_sample_prob"])
@@ -103,16 +88,22 @@ def gen_data(config_path, eco_config_path):
     nloci = config["nloci"]
     locus_length = config["locus_length"]
     ncharacters = nloci * locus_length
-    pop_size_shape = ecoevolity_config["global_comparison_settings"]\
-        ["parameters"]["population_size"]["prior"]["gamma_distribution"]["shape"]
-    pop_size_scale = ecoevolity_config["global_comparison_settings"]\
-        ["parameters"]["population_size"]["prior"]["gamma_distribution"]["scale"]
-    wait_time = ecoevolity_config["event_time_prior"]["exponential_distribution"]["rate"]
-
+    pop_size_shape = eco_config["global_comparison_settings"]["parameters"]\
+        ["population_size"]["prior"]["gamma_distribution"]["shape"]
+    pop_size_scale = eco_config["global_comparison_settings"]["parameters"]\
+        ["population_size"]["prior"]["gamma_distribution"]["scale"]
+    wait_time = eco_config["event_time_prior"]["exponential_distribution"]["rate"]
+    
     # Create output directories
+    snp = ""
+    rmvCons = ""
+    if single_snp:
+        snp = "-snp"
+    elif rmv_cons:
+        rmvCons = "-rmvcons"
     contain_dir = os.path.abspath(
-        "out-sp{sp}-gen{gen}-loci{loc}-len{len}-sin{sin}".format(
-            sp=nspecies, gen=ngenomes, loc=nloci,
+        "out{snp}{rmvCons}-sp{sp}-gen{gen}-loc{loc}-len{len}-sin{sin}".format(
+            snp=snp, rmvCons=rmvCons, sp=nspecies, gen=ngenomes, loc=nloci,
             len=locus_length, sin=singleton_sample_prob))
     if not os.path.exists(contain_dir):
         os.mkdir(contain_dir)
@@ -122,8 +113,10 @@ def gen_data(config_path, eco_config_path):
     # Copy configs into output directory
     new_config_path = os.path.join(out_dir, "config.yml")
     yaml.dump(config, open(new_config_path, "w"))
+    if rmv_cons:
+        eco_config["global_comparison_settings"]["constant_sites_removed"] = True
     new_eco_config_path = os.path.join(out_dir, "eco-config.yml")
-    yaml.dump(ecoevolity_config, open(new_eco_config_path, "w"))
+    yaml.dump(eco_config, open(new_eco_config_path, "w"))
 
     # Generate dummy alignment
     dummy_alignment_file_name = "dummy-alignment.nex"
@@ -137,16 +130,20 @@ def gen_data(config_path, eco_config_path):
     subprocess.call(dummy_alignment_script, shell=True)
 
     # Simulate data
-    simulate_data_script = " ".join([
+    simcoevol_script = [
         "simcoevolity-ar",
         "--seed", str(seed),
-        "--locus-size", str(locus_length),
         "--singleton-sample-prob", str(singleton_sample_prob),
         "--number-of-replicates", str(nreps),
-        "-o", out_dir,
-        new_eco_config_path
-    ])
-    subprocess.call(simulate_data_script, shell=True)
+        "-o", out_dir]
+    if single_snp:
+        simcoevol_script.append("--max-one-variable-site-per-locus")
+    if rmv_cons:
+        simcoevol_script.append("--relax-constant-sites")
+    else:
+        simcoevol_script.append("--locus-size " + str(locus_length))
+    simcoevol_script.append(new_eco_config_path)
+    subprocess.call(" ".join(simcoevol_script), shell=True)
 
     # Move each replicate into directory, recode alignments, and build xml
     digits = int(math.log10(nreps))+1
@@ -155,19 +152,29 @@ def gen_data(config_path, eco_config_path):
         replicate_dir = os.path.join(out_dir,"replicate-{}".format(i))
         os.mkdir(replicate_dir)
 
-        alignment_path = os.path.join(out_dir, "simcoevolity-sim-{}-dummy-alignment.nex".format(i))
+        alignment_path = os.path.join(
+            out_dir,
+            "simcoevolity-sim-{}-dummy-alignment.nex".format(i))
         new_alignment_path = os.path.join(replicate_dir, "alignment.nex")
         os.rename(alignment_path, new_alignment_path)
 
-        true_value_path = os.path.join(out_dir, "simcoevolity-sim-{}-true-values.txt".format(i))
-        new_true_value_path = os.path.join(replicate_dir, "simulated-true-values.txt")
+        true_value_path = os.path.join(
+            out_dir, 
+            "simcoevolity-sim-{}-true-values.txt".format(i))
+        new_true_value_path = os.path.join(
+            replicate_dir, 
+            "simulated-true-values.txt")
         os.rename(true_value_path, new_true_value_path)
 
-        rep_config_path = os.path.join(out_dir, "simcoevolity-sim-{}-config.yml".format(i))
-        new_rep_config_path = os.path.join(replicate_dir, "ecoevolity-config.yml")
+        rep_config_path = os.path.join(
+            out_dir, 
+            "simcoevolity-sim-{}-config.yml".format(i))
+        new_rep_config_path = os.path.join(
+            replicate_dir, 
+            "ecoevolity-config.yml")
         os.rename(rep_config_path, new_rep_config_path)
         rep_config = yaml.safe_load(open(new_rep_config_path))
-        rep_config["comparisons"][0]["comparison"]["path"] = "alignment.nex"
+        rep_config["comparisons"][0]["comparison"]["path"] = "../alignment.nex"
         yaml.dump(rep_config, open(new_rep_config_path, "w"))
 
         generate_xml(
