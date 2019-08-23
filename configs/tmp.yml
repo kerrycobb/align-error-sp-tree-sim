@@ -1,9 +1,12 @@
-nreps: 10 
-singleton_sample_prob: 1.0
+nreps: 1 
+singleton_sample_prob:
+  - 0.0
+  # - 0.8
+  # - 0.6 
 nspecies: 2
 ngenomes: 4
-nloci: 10
-locus_length: 1000
+nloci: 1
+locus_length: 10
 ecoevolity_chains: 4
 ecoevolity_chain_length: 750000
 starbeast_chains: 2
@@ -11,4 +14,4 @@ starbeast_chain_length: 10000000
 pop_size_shape: 5.0
 pop_size_scale: 0.004
 birth_rate: 1.0
-templates_path: /gpfs01/home/kac0070/simulation/templates
+templates_path: /gpfs01/scratch/phyletica/bias-sim/templates/
