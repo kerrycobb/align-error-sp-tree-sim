@@ -10,6 +10,7 @@ import pandas as pd
 from check import check_output, check_eco_output
 import dendropy as dp
 from statistics import mean, stdev
+import dendropy as dp
 
 def calc_stats(method, rep, true, chains):
     combined = [i for j in chains for i in j]
@@ -38,31 +39,37 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
     nreps = config["nreps"]
     eco_chains = config["ecoevolity_chains"]
     star_chains = config["starbeast_chains"]
-    digits = int(math.log10(nreps))+1
-
     theta_dicts = []
     time_dicts = []
     for rep in range(0, nreps):
-        rep_id = str(rep).zfill(digits)
-        rep_dir = os.path.join(dir, "replicate-{}".format(rep_id))
-        true_df = pd.read_csv(os.path.join(rep_dir, "simulated-true-values.txt"), sep='\t')
-        true_thetas = dict(
-            root=true_df["pop_size_root_sp1"][0],
-            sp1=true_df["pop_size_sp1"][0],
-            sp2=true_df["pop_size_sp2"][0])
+        rep_dir = os.path.join(dir, "rep-{}".format(rep))
 
-        # Calc and store stats for ecoevolity
-        eco_theta_chains = dict(root=[], sp1=[], sp2=[])
+        # Get true simulated values
+        sim_tree_path = os.path.join(rep_dir, "species_tree.nex")
+        sim_tree = dp.Tree.get(path=sim_tree_path, schema="nexus")
+        true_thetas = {}
+        true_times = {}
+        for node in sim_tree:
+            if node.taxon:
+                label = node.taxon.label
+            else:
+                label = "root" 
+            true_thetas[label] = float(node.annotations["pop_size"].value)
+            true_times[label] = float(node.edge.length)
+
+
+        # Calculate and store stats for ecoevolity
+        eco_theta_chains = dict(root=[], T1=[], T2=[])
         eco_time_chains = []
         for chain in range(1, eco_chains+1):
             chain_dir = os.path.join(rep_dir, "ecoevo-chain-{}".format(chain))
-            eco_pattern = os.path.join(chain_dir, "ecoevo-{}-{}.o*".format(rep_id, chain))
+            eco_pattern = os.path.join(chain_dir, "ecoevo-{}-{}.o*".format(rep, chain))
             eco_log = os.path.join(chain_dir, "ecoevolity-config-state-run-1.log")
             est_df = pd.read_csv(eco_log, sep='\t').loc[eco_burnin:]
-            eco_theta_chains["root"].append(est_df["pop_size_root_sp1"].tolist())
-            eco_theta_chains["sp1"].append(est_df["pop_size_sp1"].tolist())
-            eco_theta_chains["sp2"].append(est_df["pop_size_sp2"].tolist())
-            eco_time_chains.append(est_df["root_height_sp1"].tolist())
+            eco_theta_chains["root"].append(est_df["pop_size_root_T1"].tolist())
+            eco_theta_chains["T1"].append(est_df["pop_size_T1"].tolist())
+            eco_theta_chains["T2"].append(est_df["pop_size_T2"].tolist())
+            eco_time_chains.append(est_df["root_height_T1"].tolist())
         for key in eco_theta_chains:
             theta_dict = calc_stats(
                 method="ecoevolity", rep=rep,
@@ -72,15 +79,14 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
             theta_dicts.append(theta_dict)
         time_dicts.append(calc_stats(
             method="ecoevolity", rep=rep,
-            true=true_df["root_height_sp1"][0],
+            true=true_times["T1"],
             chains=eco_time_chains))
 
-        # Calc and store stats for starbeast
-        star_theta_chains = dict(root=[], sp1=[], sp2=[])
+        # Calculate and store stats for starbeast
+        star_theta_chains = dict(root=[], T1=[], T2=[])
         star_time_chains = []
         for chain in range(1, star_chains+1):
             chain_dir = os.path.join(rep_dir, "starbeast-chain-{}".format(chain))
-            star_pattern = os.path.join(chain_dir, "star-{}-{}.o*".format(rep_id, chain))
             trees_path = os.path.join(chain_dir, "species.trees")
             trees = dp.TreeList.get(path=trees_path, schema='nexus')
             theta_chain = {key: [] for key in true_thetas}
@@ -89,7 +95,7 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
                 for node in tree:
                     if node.taxon:
                         theta_chain[node.taxon.label].append(float(node.annotations["dmv"].value[0]))
-                        if node.taxon.label == "sp1":
+                        if node.taxon.label == "T1":
                             time_chain.append(node.edge.length)
                     else:
                         theta_chain["root"].append(float(node.annotations["dmv"].value[0]))
@@ -105,10 +111,10 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
             theta_dicts.append(theta_dict)
         time_dicts.append(calc_stats(
             method="starbeast", rep=rep,
-            true=true_df["root_height_sp1"][0],
+            true=true_times["T1"],
             chains=star_time_chains))
 
-    # Output to file
+    # Output stats to file
     theta_df = pd.DataFrame(theta_dicts)
     theta_df.to_csv(os.path.join(dir, "summary-theta.csv"), index=False)
     time_df = pd.DataFrame(time_dicts)

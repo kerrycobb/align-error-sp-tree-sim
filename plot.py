@@ -39,15 +39,16 @@ def set_axis(ax, df):
 
 @click.command()
 @click.argument("dir", type=click.Path())
-def make_plot(dir):
+@click.argument("alignment", type=click.Path())
+def make_plot(dir, alignment):
     theta_dfs = []
     time_dfs = []
     for i in glob.glob(os.path.join(dir, "seed*-reps*")):
         try:
-            theta_dfs.append(pd.read_csv(os.path.join(i, "summary-theta.csv")))
-            time_dfs.append(pd.read_csv(os.path.join(i, "summary-time.csv")))
+            theta_dfs.append(pd.read_csv(os.path.join(i, alignment, "summary-theta.csv")))
+            time_dfs.append(pd.read_csv(os.path.join(i, alignment, "summary-time.csv")))
         except:
-            print("Warning: no summary .csv file in {}".format(i))
+            print("Warning: no summary .csv file in {}".format(i +"/"+alignment))
             pass
     theta_df = pd.concat(theta_dfs)
     time_df = pd.concat(time_dfs)
@@ -69,32 +70,32 @@ def make_plot(dir):
     f, ax = plt.subplots()
     set_axis(ax, star_time)
     f.suptitle("Starbeast Time")
-    plt.savefig(os.path.join(dir, "starbeast-time.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-time.svg"))
 
     f, ax = plt.subplots()
     set_axis(ax, star_theta)
     f.suptitle("Starbeast Theta")
-    plt.savefig(os.path.join(dir, "starbeast-theta.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-theta.svg"))
 
     f, ax = plt.subplots()
     set_axis(ax, star_root_theta)
     f.suptitle("Starbeast Root Theta")
-    plt.savefig(os.path.join(dir, "starbeast-root-theta.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-root-theta.svg"))
 
     f, ax = plt.subplots()
     set_axis(ax, eco_time)
     f.suptitle("Ecoevolity Time")
-    plt.savefig(os.path.join(dir, "ecoevolity-time.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-time.svg"))
 
     f, ax = plt.subplots()
     set_axis(ax, eco_theta)
     f.suptitle("Ecoevolity Theta")
-    plt.savefig(os.path.join(dir, "ecoevolity-theta.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-theta.svg"))
 
     f, ax = plt.subplots()
     set_axis(ax, eco_root_theta)
     f.suptitle("Ecoevolity Root Theta")
-    plt.savefig(os.path.join(dir, "ecoevolity-root-theta.svg"))
+    plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-root-theta.svg"))
 
 if __name__ == "__main__":
     make_plot()

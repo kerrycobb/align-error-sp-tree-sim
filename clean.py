@@ -5,13 +5,29 @@ import glob
 import shutil
 import re
 import yaml
-
-out_dirs = glob.glob("out-*")
-
+import fire
 
 
-for i in out_dirs:
-    for j in range(0, 100):
-        rep = str(j).zfill(3)
-        rep_dir = os.path.join(i, "seed1-reps100", "replicate-" + rep)
-        shutil.copy("configs/eco-config.yml", rep_dir)
+def clean(dir):
+    for i in glob.glob(os.path.join(dir, "rep-*")):
+        try:
+            os.remove(os.path.join(i, "alignment.nex"))
+        except:
+            pass
+        try:
+            os.remove(os.path.join(i, "starbeast.xml"))
+        except:
+            pass
+        for j in glob.glob(os.path.join(i, "ecoevo-chain-*")):
+            try:
+                shutil.rmtree(j)
+            except:
+                pass
+        for j in glob.glob(os.path.join(i, "starbeast-chain-*")):
+            try:
+                shutil.rmtree(j)
+            except:
+                pass
+
+if __name__ == "__main__":
+    fire.Fire(clean)

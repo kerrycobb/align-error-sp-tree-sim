@@ -53,7 +53,7 @@ def check_starbeast(dir, rep, chains, rerun, ssh=False):
                 qsub(
                     dir=chain_dir,
                     jobname="star-{}-{}".format(rep, chain),
-                    walltime="8:00:00",
+                    walltime="4:00:00",
                     script=" ".join(starbeast_script),
                     ssh=ssh)
     return completed
@@ -116,8 +116,7 @@ def check(dir, rerun=False, ssh=False):
     nsamples = int(eco_config["mcmc_settings"]["chain_length"] / eco_config["mcmc_settings"]["sample_frequency"])
     digits = int(math.log10(nreps))+1
     for rep in range(0, nreps):
-        rep = str(rep).zfill(digits)
-        rep_dir = os.path.join(dir, "replicate-{}".format(rep))
+        rep_dir = os.path.join(dir, "rep-{}".format(rep))
         completed_star += check_starbeast(
           dir=rep_dir, 
           rep=rep, 
