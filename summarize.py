@@ -119,6 +119,7 @@ def summarize(dir, eco_burnin=501, star_burnin=201):
     theta_df.to_csv(os.path.join(dir, "summary-theta.csv"), index=False)
     time_df = pd.DataFrame(time_dicts)
     time_df.to_csv(os.path.join(dir, "summary-time.csv"), index=False)
+
     print("Summary Complete")
 
 if __name__ == "__main__":

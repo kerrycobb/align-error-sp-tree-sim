@@ -46,12 +46,12 @@ global_comparison_settings:
     equal_population_sizes: false
     parameters:
         population_size:
-            value: 0.004
+            value: 0.002
             estimate: true
             prior:
                 gamma_distribution:
                     shape: 5.0
-                    scale: 0.0008
+                    scale: 0.0004
                     offset: 0.0
         freq_1:
             value: 0.5
