@@ -9,6 +9,8 @@ import os
 import dendropy as dp
 import random
 import numpy as np
+from tqdm import tqdm
+
 
 def simulate_species_tree(n_sp, birth_rate, death_rate,
         pop_size_shape, pop_size_scale, rng):
@@ -69,22 +71,34 @@ def gen_data(seed, config_path, eco_path, similarity_thresh=0.0):
     """
     similarity_thresh: minimum proportion of sites that must be conserved
     """
-    max_loci = 1000000 
+    max_loci = 100000 
     config = yaml.safe_load(open(config_path))
     eco_config = yaml.safe_load(open(eco_path))
     rng = random.Random(seed)
     
     # Create output directories
-    out_dir = os.path.join(
-            os.path.abspath(
-                "out-sp{sp}-gen{gen}-loc{loc}-len{len}".format(
-                    sp=config["nspecies"],
-                    gen=config["ngenomes"],
-                    loc=config["nloci"],
-                    len=config["locus_length"])),
-            "seed{}-reps{}".format(seed, config["nreps"]),
-            "singleton-prob-1.0")
-    os.makedirs(out_dir) 
+    if similarity_thresh == 0.0:
+        out_dir = os.path.join(
+                os.path.abspath(
+                    "out-sp{sp}-gen{gen}-loc{loc}-len{len}".format(
+                        sp=config["nspecies"],
+                        gen=config["ngenomes"],
+                        loc=config["nloci"],
+                        len=config["locus_length"])),
+                "seed{}-reps{}".format(seed, config["nreps"]),
+                "singleton-prob-1.0")
+        os.makedirs(out_dir) 
+    else:
+        out_dir = os.path.join(
+                os.path.abspath(
+                    "out-sp{sp}-gen{gen}-loc{loc}-len{len}".format(
+                        sp=config["nspecies"],
+                        gen=config["ngenomes"],
+                        loc=config["nloci"],
+                        len=config["locus_length"])),
+                "seed{}-reps{}".format(seed, config["nreps"]),
+                "sim-thresh-{}".format(similarity_thresh))
+        os.makedirs(out_dir) 
 
    # Copy configs into output directory
     config["seed"] = rng.randint(0, 1000000000)
@@ -95,15 +109,15 @@ def gen_data(seed, config_path, eco_path, similarity_thresh=0.0):
     discarded_species_trees = dp.TreeList()
 
     # Simulate data
-    for rep in range(0, config["nreps"]):
-        print("******************************************")
-        print("Rep: " + str(rep))
+    for rep in tqdm(range(0, config["nreps"])):
+        # print("******************************************")
+        # print("Rep: " + str(rep))
         rep_dir = os.path.join(out_dir, "rep-{}".format(rep))
         os.mkdir(rep_dir)
         state = "speciesTree"
         while True:
             if state == "speciesTree":
-                print("----Species Tree")
+                # print("----Species Tree")
                 sp_tree = simulate_species_tree(
                     n_sp=config["nspecies"],
                     birth_rate=config["birth_rate"],
@@ -117,8 +131,8 @@ def gen_data(seed, config_path, eco_path, similarity_thresh=0.0):
                 gene_trees = dp.TreeList()
             # Simulate a gene tree and an alignment
             elif state == "geneTree":
-                print("--------Locus: " + str(locus))
-                print("--------Attempt: " + str(loci_tried))
+                # print("--------Locus: " + str(locus))
+                # print("--------Attempt: " + str(loci_tried))
                 gene_tree = simulate_gene_tree(
                     sp_tree=sp_tree,
                     n_tips_per_sp=config["ngenomes"],
@@ -135,26 +149,28 @@ def gen_data(seed, config_path, eco_path, similarity_thresh=0.0):
                     state = "saveGene"
             # Check proportion of similarity
             elif state == "checkSimilarity":
-                print("------------Check Similarity")
+                # print("------------Check Similarity")
                 similar = check_similarity(
                     align_path=align_path,
                     similarity_thresh=similarity_thresh)
                 if similar:
-                    print("----------------Similar: True")
+                    # print("----------------Similar: True")
                     state = "saveGene"
                     loci_tried += 1
                 else:
-                    print("--------------------Similar: False")
+                    # print("--------------------Similar: False")
                     if loci_tried < max_loci - 1:
                         loci_tried += 1
                         state = "geneTree"
+                        # print("Discarding gene tree")
                     else:
                         state = "speciesTree"
                         discarded_species_trees.append(sp_tree)
-                        print("--------------------------------Discard Species Tree")
+                        print("Discarding species tree")
+                        # print("--------------------------------Discard Species Tree")
             # Add gene tree to list
             elif state == "saveGene":
-                print("-------------------Save Gene")
+                # print("-------------------Save Gene")
                 gene_tree.label = str("{}".format(locus))
                 gene_trees.append(gene_tree)
                 if locus < config["nloci"] - 1:
@@ -164,7 +180,8 @@ def gen_data(seed, config_path, eco_path, similarity_thresh=0.0):
                     state = "finish"
             # Simulations for current replicate complete
             elif state == "finish":
-                print("Finish")
+                # print("{} loci discarded".format(loci_tried - config["nloci"] - 1))
+                # print("Finish")
                 sp_tree.write(
                     path=os.path.join(rep_dir, "species_tree.nex"), 
                     schema="nexus")

@@ -178,7 +178,6 @@ class TestSimulateGeneTrees(TestBaseClass):
 
 
 class TestSimulateAlignments(TestBaseClass):
-
     def test_two_tip_tree(self):
         root_height = 0.01
         tree_str = "[&R] (s1_1:{0},s0_1:{0}):0.0;".format(root_height)
@@ -205,11 +204,9 @@ class TestSimulateAlignments(TestBaseClass):
         self.assertAlmostEqual(diffs_per_site, 2 * root_height, places=3)
 
 # class TestDropSingletons(TestBaseClass):           
+#     def drop_singleton_testing(self, nreps=1000, prob=0.5):
+        
 
-#     def drop_singleton_testing(self, nreps=20000, prob=0.5):
-    
-
-    # 
 
 
 

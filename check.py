@@ -53,7 +53,7 @@ def check_starbeast(dir, rep, chains, rerun, ssh=False):
                 qsub(
                     dir=chain_dir,
                     jobname="star-{}-{}".format(rep, chain),
-                    walltime="4:00:00",
+                    walltime="1:00:00",
                     script=" ".join(starbeast_script),
                     ssh=ssh)
     return completed
@@ -102,7 +102,7 @@ def check_ecoevolity(dir, rep, chains, rerun, nsamples, ssh=False):
                     ssh=ssh)
     return completed
 
-def check(dir, rerun=False, ssh=False):
+def check(dir, rerun=False, ssh=False, method="all"):
     dir = os.path.abspath(dir)
     config = yaml.safe_load(open(os.path.join(dir, "config.yml")))
     eco_config = yaml.safe_load(open(os.path.join(dir, "eco-config.yml")))
@@ -117,22 +117,25 @@ def check(dir, rerun=False, ssh=False):
     digits = int(math.log10(nreps))+1
     for rep in range(0, nreps):
         rep_dir = os.path.join(dir, "rep-{}".format(rep))
-        completed_star += check_starbeast(
-          dir=rep_dir, 
-          rep=rep, 
-          chains=starbeast_chains, 
-          rerun=rerun, 
-          ssh=ssh)
-        completed_eco += check_ecoevolity(
-            dir=rep_dir, 
-            rep=rep, 
-            chains=ecoevolity_chains, 
-            rerun=rerun, 
-            nsamples=nsamples,
-            ssh=ssh)
-
-    print("{} out of {} ecoevolity chains complete".format(completed_eco, total_eco))
-    print("{} out of {} starbeast chains complete".format(completed_star, total_star))
+        if method in ["all", "starbeast"]:
+            completed_star += check_starbeast(
+              dir=rep_dir, 
+              rep=rep, 
+              chains=starbeast_chains, 
+              rerun=rerun, 
+              ssh=ssh)
+        if method in ["all", "ecoevolity"]:
+            completed_eco += check_ecoevolity(
+                dir=rep_dir, 
+                rep=rep, 
+                chains=ecoevolity_chains, 
+                rerun=rerun, 
+                nsamples=nsamples,
+                ssh=ssh)
+    if method in ["all", "ecoevolity"]:
+        print("{} out of {} ecoevolity chains complete".format(completed_eco, total_eco))
+    if method in ["all", "starbeast"]:
+        print("{} out of {} starbeast chains complete".format(completed_star, total_star))
     if rerun:
         print("Incompleted chains restarted")
 

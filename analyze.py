@@ -18,26 +18,28 @@ from Bio.Align import MultipleSeqAlignment
 from Bio.Alphabet import generic_dna
 import dendropy as dp
 
-def clean(dir):
+def clean(dir, method):
     for i in glob.glob(os.path.join(dir, "rep-*")):
-        try:
-            os.remove(os.path.join(i, "alignment.nex"))
-        except:
-            pass
-        try:
-            os.remove(os.path.join(i, "starbeast.xml"))
-        except:
-            pass
-        for j in glob.glob(os.path.join(i, "ecoevo-chain-*")):
+        if method in ["all", "ecoevolity"]: 
             try:
-                rmtree(j)
+                os.remove(os.path.join(i, "alignment.nex"))
             except:
                 pass
-        for j in glob.glob(os.path.join(i, "starbeast-chain-*")):
+            for j in glob.glob(os.path.join(i, "ecoevo-chain-*")):
+                try:
+                    rmtree(j)
+                except:
+                    pass
+        if method in ["all", "starbeast"]:
             try:
-                rmtree(j)
+                os.remove(os.path.join(i, "starbeast.xml"))
             except:
                 pass
+            for j in glob.glob(os.path.join(i, "starbeast-chain-*")):
+                try:
+                    rmtree(j)
+                except:
+                    pass
 
 def gen_xml(dir, config):
     taxa = ["T{}".format(i) for i in range(1, config["nspecies"]+1)] 
@@ -58,7 +60,7 @@ def gen_xml(dir, config):
         alignment_dicts.append(dict(id=i, sequences=seq_dicts))
     starbeast_xml = template.render(
         chain_length=config["starbeast_chain_length"],
-        sample_freq=int(config["starbeast_chain_length"]/10000),
+        sample_freq=config["starbeast_sample_freq"],
         alignments=alignment_dicts,
         taxa=taxa,
         tips=tips,
@@ -107,20 +109,6 @@ def gen_ecoevol_alignment(dir, config):
     with open(os.path.join(dir, "alignment.nex"), "w") as fh:
         fh.writelines(ns)
     
-    # # seq_records = [] 
-    # # for key, value in d.items():
-    # #     d[key] = "".join(value)
-    # #     seq_records.append(SeqRecord(Seq("".join(value), SingleLetterAlphabet("01")), id=key))
-    # # AlignIO.write(
-    # #     MultipleSeqAlignment(seq_records),
-    # #     os.path.join(dir, "alignment.nex"),
-    # #     "nexus")
-
-    # new_alignment = dp.StandardCharacterMatrix.get(path=os.path.join(dir, "alignment.nex"), schema="nexus")
-    # new_alignment = dp.StandardCharacterMatrix.from_dict(d)
-    # # new_alignment.write(path=os.path.join(dir, "alignment.nex"), schema="nexus")
-    # print(new_alignment.as_string(schema="nexus"))
-
 def qsub(dir, jobname, walltime, script, ssh=False):
     qsub = [
         "/cm/shared/apps/torque/6.1.1.1.h3/bin/qsub",
@@ -202,22 +190,26 @@ def run_ecoevolity(dir, rep, rng, config, eco_config, ssh=False):
             script=" ".join(script),
             ssh=ssh)
 
-def run_analyses(dir, ssh=False, overwrite=False):
+def run_analyses(dir, ssh=False, overwrite=False, method="all"):
     dir = os.path.abspath(dir)
     if overwrite:
-        clean(dir)
+        clean(dir, method)
     config_path = os.path.join(dir, "config.yml")
     config = yaml.safe_load(open(config_path))
     eco_config_path = os.path.join(dir, "eco-config.yml")
     eco_config = yaml.safe_load(open(eco_config_path))
     rng = random.Random(config["seed"])
-    
+
     for rep in range(0, config["nreps"]):
         rep_dir = os.path.join(dir, "rep-{}".format(rep))
-        gen_xml(rep_dir, config)
-        gen_ecoevol_alignment(rep_dir, config)
-        run_starbeast(rep_dir, rep, config, rng, ssh=ssh)
-        run_ecoevolity(rep_dir, rep, rng, config, eco_config, ssh=ssh)
+
+        if method in ["all", "ecoevolity"]: 
+            gen_ecoevol_alignment(rep_dir, config)
+            run_ecoevolity(rep_dir, rep, rng, config, eco_config, ssh=ssh)
+       
+        if method in ["all", "starbeast"]:
+            gen_xml(rep_dir, config)
+            run_starbeast(rep_dir, rep, config, rng, ssh=ssh)
 
 if __name__ == "__main__":
     fire.Fire(run_analyses)
