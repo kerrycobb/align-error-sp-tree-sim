@@ -53,7 +53,7 @@ def check_starbeast(dir, rep, chains, rerun, ssh=False):
                 qsub(
                     dir=chain_dir,
                     jobname="star-{}-{}".format(rep, chain),
-                    walltime="1:00:00",
+                    walltime="4:00:00",
                     script=" ".join(starbeast_script),
                     ssh=ssh)
     return completed

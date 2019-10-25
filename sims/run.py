@@ -161,7 +161,7 @@ def run_starbeast(dir, rep, config, rng, ssh=False):
         qsub(
             dir=chain_dir,
             jobname="star-{}-{}".format(rep, chain),
-            walltime="1:00:00",
+            walltime="4:00:00",
             script=" ".join(script),
             ssh=ssh)
  
