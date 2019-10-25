@@ -69,8 +69,10 @@ def gen_xml(dir, config):
         pop_size_shape=config["pop_size_shape"],
         pop_size_scale=1/config["pop_size_scale"],
         birth_rate=config["birth_rate"])
-    with open(os.path.join(dir, "starbeast.xml"), 'w') as handle:
+    xml_path = os.path.join(dir, "starbeast.xml")
+    with open(xml_path, 'w') as handle:
         handle.write(starbeast_xml)
+    return xml_path
 
 def gen_ecoevol_alignment(dir, config):
     d = {}
@@ -110,60 +112,82 @@ def gen_ecoevol_alignment(dir, config):
         fh.writelines(ns)
     
 def qsub(dir, jobname, walltime, script, ssh=False):
-    qsub = [
-        "/cm/shared/apps/torque/6.1.1.1.h3/bin/qsub",
-        "-m", "n",
-        "-N", jobname,
-        "-l", "nodes=1:ppn=1",
-        "-l", "mem=1G",
-        "-l", "walltime={}".format(walltime),
-        "-j", "oe",
+    cmd = [
+        "myqsub",
+        "-N", jobname, 
         "-d", dir,
-        "-o", dir,
-        ]
-    if time.strptime(walltime, "%H:%M:%S") > time.strptime("1:0:0", "%H:%M:%S"):
-        rand = random.random()
-        if rand < .5:
-            qsub.extend([
-            "-q", "general",
-            "-W", "group_list=jro0014_lab",
-            "-W", "x=FLAGS:ADVRES:jro0014_lab",
-            ])
-        else:
-            qsub.extend([
-                "-q", "gen28",
-                "-W", "group_list=jro0014_lab",
-                "-W", "x=FLAGS:ADVRES:jro0014_s28",
-            ])
-    ssh_script = ""
+        "-t", walltime]
     if ssh:
-        ssh_script = "ssh kac0070@hopper.auburn.edu "
-    cmd = "{ssh}{qsub} <<< \"{script}\"".format(
-        ssh=ssh_script, qsub=" ".join(qsub), script=script)
-    proc = subprocess.call(cmd, shell=True)
+        cmd.append("-s")
+    cmd.append("\"{}\"".format(script)) 
+    subprocess.call(" ".join(cmd), shell=True)
+    # qsub = [
+    #     "/cm/shared/apps/torque/6.1.1.1.h3/bin/qsub",
+    #     "-m", "n",
+    #     "-N", jobname,
+    #     "-l", "nodes=1:ppn=1",
+    #     "-l", "mem=1G",
+    #     "-l", "walltime={}".format(walltime),
+    #     "-j", "oe",
+    #     "-d", dir,
+    #     "-o", dir,
+    #     ]
+    # if time.strptime(walltime, "%H:%M:%S") > time.strptime("1:0:0", "%H:%M:%S"):
+    #     rand = random.random()
+    #     if rand < .5:
+    #         qsub.extend([
+    #         "-q", "general",
+    #         "-W", "group_list=jro0014_lab",
+    #         "-W", "x=FLAGS:ADVRES:jro0014_lab",
+    #         ])
+    #     else:
+    #         qsub.extend([
+    #             "-q", "gen28",
+    #             "-W", "group_list=jro0014_lab",
+    #             "-W", "x=FLAGS:ADVRES:jro0014_s28",
+    #         ])
+    # ssh_script = ""
+    # if ssh:
+    #     ssh_script = "ssh kac0070@hopper.auburn.edu "
+    # cmd = "{ssh}{qsub} <<< \"{script}\"".format(
+    #     ssh=ssh_script, qsub=" ".join(qsub), script=script)
+    # proc = subprocess.call(cmd, shell=True)
 
-def run_starbeast(dir, rep, config, rng, ssh=False):
-    for chain in range(1, config["starbeast_chains"]+1):
-        xml = os.path.join(dir, "starbeast.xml")
-        chain_dir = os.path.join(dir, "starbeast-chain-{}".format(chain))
-        os.mkdir(chain_dir)
-        seed = str(rng.randint(1,1000000))
-        with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
-            fh.write(seed)
-        script = [
-            "module load beast \n",
-            "module load beagle \n",
-            "cd {}\n".format(chain_dir),
-            "beast",
-            "-beagle",
-            "-seed", seed,
-            xml]
-        qsub(
-            dir=chain_dir,
-            jobname="star-{}-{}".format(rep, chain),
-            walltime="4:00:00",
-            script=" ".join(script),
-            ssh=ssh)
+def run_starbeast(dir, seed, rep, chain, xml, rerun=False, ssh=False):
+    script = [
+        "module load beast \n",
+        "module load beagle \n",
+        "cd {}\n".format(dir),
+        "beast",
+        "-beagle",
+        "-seed", seed]
+    if rerun:
+        script.append("-overwrite")
+    script.append(xml)
+    qsub(dir=dir, jobname="star-{}-{}".format(rep, chain), walltime="20:00:00",
+            script=" ".join(script), ssh=ssh)
+   
+    # for chain in range(1, config["starbeast_chains"]+1):
+    #     xml = os.path.join(dir, "starbeast.xml")
+    #     chain_dir = os.path.join(dir, "starbeast-chain-{}".format(chain))
+    #     os.mkdir(chain_dir)
+    #     seed = str(rng.randint(1,1000000))
+    #     with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
+    #         fh.write(seed)
+    #     script = [
+    #         "module load beast \n",
+    #         "module load beagle \n",
+    #         "cd {}\n".format(chain_dir),
+    #         "beast",
+    #         "-beagle",
+    #         "-seed", seed,
+    #         xml]
+    #     qsub(
+    #         dir=chain_dir,
+    #         jobname="star-{}-{}".format(rep, chain),
+    #         walltime="20:00:00",
+    #         script=" ".join(script),
+    #         ssh=ssh)
  
 def run_ecoevolity(dir, rep, rng, config, eco_config, ssh=False):
     eco_config["comparisons"][0]["comparison"]["path"] = os.path.join(
@@ -206,10 +230,18 @@ def run_analyses(dir, ssh=False, overwrite=False, method="all"):
         if method in ["all", "ecoevolity"]: 
             gen_ecoevol_alignment(rep_dir, config)
             run_ecoevolity(rep_dir, rep, rng, config, eco_config, ssh=ssh)
-       
+
+        # Creat starbeast directories and run starbeast 
         if method in ["all", "starbeast"]:
-            gen_xml(rep_dir, config)
-            run_starbeast(rep_dir, rep, config, rng, ssh=ssh)
+            for chain in range(1, config["starbeast_chains"] + 1):
+                chain_dir = os.path.join(rep_dir, 
+                        "starbeast-chain-{}".format(chain))
+                os.mkdir(chain_dir)
+                seed = str(rng.randint(1,1000000))
+                with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
+                    fh.write(seed)
+                xml_path = gen_xml(rep_dir, config)
+                run_starbeast(chain_dir, seed, rep, chain, xml_path)
 
 if __name__ == "__main__":
     fire.Fire(run_analyses)

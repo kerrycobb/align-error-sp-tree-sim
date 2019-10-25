@@ -5,7 +5,7 @@ import os
 import yaml
 import glob
 import math
-from analyze import qsub
+from run import run_starbeast, run_ecoevolity
 import pandas as pd
 
 def check_output(pattern, ending):
@@ -39,23 +39,53 @@ def check_starbeast(dir, rep, chains, rerun, ssh=False):
             completed += 1
         else:
             if rerun:
+                xml_path = os.path.join(dir, "starbeast.xml")
                 with open(os.path.join(chain_dir, "seed.txt")) as fh:
                     seed = fh.readline()
-                starbeast_script = [
-                   "module load beast \n",
-                   "module load beagle \n",
-                   "cd {}\n".format(chain_dir),
-                   "beast",
-                   "-beagle",
-                   "-overwrite",  
-                   "-seed", seed,
-                   os.path.join(dir, "starbeast.xml")]
-                qsub(
-                    dir=chain_dir,
-                    jobname="star-{}-{}".format(rep, chain),
-                    walltime="4:00:00",
-                    script=" ".join(starbeast_script),
-                    ssh=ssh)
+                run_starbeast(chain_dir, seed, rep, chain, xml_path, 
+                        rerun=True, ssh=ssh)
+                # starbeast_script = [
+                #    "module load beast \n",
+                #    "module load beagle \n",
+                #    "cd {}\n".format(chain_dir),
+                #    "beast",
+                #    "-beagle",
+                #    "-overwrite",  
+                #    "-seed", seed,
+                #    os.path.join(dir, "starbeast.xml")]
+                # qsub(
+                #     dir=chain_dir,
+                #     jobname="star-{}-{}".format(rep, chain),
+                #     walltime="4:00:00",
+                #     script=" ".join(starbeast_script),
+                #     ssh=ssh)
+   
+    
+    # completed = 0
+    # for chain in range(1, chains+1):
+    #     chain_dir = os.path.join(dir, "starbeast-chain-{}".format(chain))
+    #     star_pattern = os.path.join(chain_dir, "star-{}-{}.o*".format(rep, chain))
+    #     if check_output(star_pattern, "End likelihood:"):
+    #         completed += 1
+    #     else:
+    #         if rerun:
+    #             with open(os.path.join(chain_dir, "seed.txt")) as fh:
+    #                 seed = fh.readline()
+    #             starbeast_script = [
+    #                "module load beast \n",
+    #                "module load beagle \n",
+    #                "cd {}\n".format(chain_dir),
+    #                "beast",
+    #                "-beagle",
+    #                "-overwrite",  
+    #                "-seed", seed,
+    #                os.path.join(dir, "starbeast.xml")]
+    #             qsub(
+    #                 dir=chain_dir,
+    #                 jobname="star-{}-{}".format(rep, chain),
+    #                 walltime="4:00:00",
+    #                 script=" ".join(starbeast_script),
+    #                 ssh=ssh)
     return completed
 
 def check_eco_output(log, nsamples):
@@ -81,25 +111,24 @@ def check_ecoevolity(dir, rep, chains, rerun, nsamples, ssh=False):
             pass
         else:
             if rerun:
-                try:
-                    os.remove(os.path.join(chain_dir, "ecoevolity-config-operator-run-1.log"))
-                    os.remove(os.path.join(chain_dir, "ecoevolity-config-state-run-1.log"))
-                except:
-                    pass
                 with open(os.path.join(chain_dir, "seed.txt")) as fh:
                     seed = fh.readline()
-                eco_script = [
-                    "cd {}\n".format(chain_dir),
-                    "ecoevolity-ar",
-                    "--seed", seed,
-                    "--relax-constant-sites",
-                    os.path.join(chain_dir, "ecoevolity-config.yml")]
-                qsub(
-                    dir=chain_dir,
-                    jobname="ecoevo-{}-{}".format(rep, chain),
-                    walltime="1:00:00",
-                    script=" ".join(eco_script),
-                    ssh=ssh)
+                eco_config_path = os.path.join(chain_dir, 
+                        "ecoevolity-config.yml")
+                run_ecoevolity(chain_dir, seed, rep, chain, eco_config_path, 
+                        rerun=True, ssh=ssh ) 
+                # eco_script = [
+                #     "cd {}\n".format(chain_dir),
+                #     "ecoevolity-ar",
+                #     "--seed", seed,
+                #     "--relax-constant-sites",
+                #     os.path.join(chain_dir, "ecoevolity-config.yml")]
+                # qsub(
+                #     dir=chain_dir,
+                #     jobname="ecoevo-{}-{}".format(rep, chain),
+                #     walltime="1:00:00",
+                #     script=" ".join(eco_script),
+                #     ssh=ssh)
     return completed
 
 def check(dir, rerun=False, ssh=False, method="all"):

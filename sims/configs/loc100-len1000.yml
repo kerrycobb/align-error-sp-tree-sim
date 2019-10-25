@@ -5,7 +5,7 @@ nloci: 100
 locus_length: 1000
 ecoevolity_chains: 4
 starbeast_chains: 2
-starbeast_chain_length: 30000000
+starbeast_chain_length: 20000000
 starbeast_sample_freq: 1000
 pop_size_shape: 5.0
 pop_size_scale: 0.0004
