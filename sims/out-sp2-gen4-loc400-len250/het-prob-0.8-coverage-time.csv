@@ -1,0 +1,5 @@
+method,interval,coverage
+ecoevolity,ci,0.89
+ecoevolity,hpd,0.9
+starbeast,ci,0.89
+starbeast,hpd,0.9

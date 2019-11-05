@@ -1,3 +1,4 @@
 __pycache__/
 *.svg
-out-*
+sims/out-*/seed*
+sims/tests/

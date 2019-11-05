@@ -91,7 +91,6 @@ def gen_ecoevol_alignment(dir, config):
                     d[record.id].append("1")
                 else:
                     raise Exception("Invalid character {}".format(j))
-    
     ns = []
     ns.append("#NEXUS\n")
     ns.append("BEGIN TAXA;\n")
@@ -112,48 +111,13 @@ def gen_ecoevol_alignment(dir, config):
         fh.writelines(ns)
     
 def qsub(dir, jobname, walltime, script, ssh=False):
-    cmd = [
-        "myqsub",
-        "-N", jobname, 
-        "-d", dir,
-        "-t", walltime]
+    cmd = ["myqsub", "-N", jobname, "-d", dir, "-t", walltime]
     if ssh:
         cmd.append("-s")
     cmd.append("\"{}\"".format(script)) 
     subprocess.call(" ".join(cmd), shell=True)
-    # qsub = [
-    #     "/cm/shared/apps/torque/6.1.1.1.h3/bin/qsub",
-    #     "-m", "n",
-    #     "-N", jobname,
-    #     "-l", "nodes=1:ppn=1",
-    #     "-l", "mem=1G",
-    #     "-l", "walltime={}".format(walltime),
-    #     "-j", "oe",
-    #     "-d", dir,
-    #     "-o", dir,
-    #     ]
-    # if time.strptime(walltime, "%H:%M:%S") > time.strptime("1:0:0", "%H:%M:%S"):
-    #     rand = random.random()
-    #     if rand < .5:
-    #         qsub.extend([
-    #         "-q", "general",
-    #         "-W", "group_list=jro0014_lab",
-    #         "-W", "x=FLAGS:ADVRES:jro0014_lab",
-    #         ])
-    #     else:
-    #         qsub.extend([
-    #             "-q", "gen28",
-    #             "-W", "group_list=jro0014_lab",
-    #             "-W", "x=FLAGS:ADVRES:jro0014_s28",
-    #         ])
-    # ssh_script = ""
-    # if ssh:
-    #     ssh_script = "ssh kac0070@hopper.auburn.edu "
-    # cmd = "{ssh}{qsub} <<< \"{script}\"".format(
-    #     ssh=ssh_script, qsub=" ".join(qsub), script=script)
-    # proc = subprocess.call(cmd, shell=True)
 
-def run_starbeast(dir, seed, rep, chain, xml, rerun=False, ssh=False):
+def run_starbeast(dir, seed, jobname, xml, rerun=False, ssh=False):
     script = [
         "module load beast \n",
         "module load beagle \n",
@@ -164,58 +128,28 @@ def run_starbeast(dir, seed, rep, chain, xml, rerun=False, ssh=False):
     if rerun:
         script.append("-overwrite")
     script.append(xml)
-    qsub(dir=dir, jobname="star-{}-{}".format(rep, chain), walltime="20:00:00",
+    qsub(dir=dir, jobname=jobname, walltime="200:00:00",
             script=" ".join(script), ssh=ssh)
    
-    # for chain in range(1, config["starbeast_chains"]+1):
-    #     xml = os.path.join(dir, "starbeast.xml")
-    #     chain_dir = os.path.join(dir, "starbeast-chain-{}".format(chain))
-    #     os.mkdir(chain_dir)
-    #     seed = str(rng.randint(1,1000000))
-    #     with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
-    #         fh.write(seed)
-    #     script = [
-    #         "module load beast \n",
-    #         "module load beagle \n",
-    #         "cd {}\n".format(chain_dir),
-    #         "beast",
-    #         "-beagle",
-    #         "-seed", seed,
-    #         xml]
-    #     qsub(
-    #         dir=chain_dir,
-    #         jobname="star-{}-{}".format(rep, chain),
-    #         walltime="20:00:00",
-    #         script=" ".join(script),
-    #         ssh=ssh)
- 
-def run_ecoevolity(dir, rep, rng, config, eco_config, ssh=False):
-    eco_config["comparisons"][0]["comparison"]["path"] = os.path.join(
-        dir, "alignment.nex")
-    for chain in range(1, config["ecoevolity_chains"]+1):
-        chain_dir = os.path.join(dir, "ecoevo-chain-{}".format(chain))
-        if not os.path.exists(chain_dir):
-            os.mkdir(chain_dir)
-        config_path = os.path.join(chain_dir, "ecoevolity-config.yml")
-        yaml.dump(eco_config, open(config_path, "w"))
-        seed = str(rng.randint(1, 1000000))
-        with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
-            fh.write(seed)
-        script = [
-            "cd {}\n".format(chain_dir),
-            "ecoevolity-ar",
-            "--seed", seed,
-            "--relax-constant-sites",
-            "ecoevolity-config.yml"]
-        qsub(
-            dir=chain_dir,
-            jobname="ecoevo-{}-{}".format(rep, chain),
-            walltime="1:00:00",
-            script=" ".join(script),
-            ssh=ssh)
+def run_ecoevolity(dir, seed, jobname, eco_config, rerun=False, ssh=False):
+    if rerun:
+        try:
+            os.remove(os.path.join(dir, "ecoevolity-config-operator-run-1.log"))
+            os.remove(os.path.join(dir, "ecoevolity-config-state-run-1.log"))
+        except:
+            pass       
+    script = [
+        "cd {}\n".format(dir),
+        "ecoevolity-ar",
+        "--seed", seed,
+        "--relax-constant-sites",
+        "ecoevolity-config.yml"]
+    qsub(dir=dir, jobname=jobname,
+            walltime="1:00:00", script=" ".join(script), ssh=ssh)
 
 def run_analyses(dir, ssh=False, overwrite=False, method="all"):
     dir = os.path.abspath(dir)
+    basename = os.path.basename(dir)
     if overwrite:
         clean(dir, method)
     config_path = os.path.join(dir, "config.yml")
@@ -227,10 +161,24 @@ def run_analyses(dir, ssh=False, overwrite=False, method="all"):
     for rep in range(0, config["nreps"]):
         rep_dir = os.path.join(dir, "rep-{}".format(rep))
 
+        # Create ecoevolity directories and files and run ecoevolity
         if method in ["all", "ecoevolity"]: 
             gen_ecoevol_alignment(rep_dir, config)
-            run_ecoevolity(rep_dir, rep, rng, config, eco_config, ssh=ssh)
-
+            eco_config["comparisons"][0]["comparison"]["path"] = os.path.join(
+                    rep_dir, "alignment.nex")
+            for chain in range(1, config["ecoevolity_chains"]+1):
+                chain_dir = os.path.join(rep_dir, "ecoevo-chain-{}".format(chain))
+                os.mkdir(chain_dir)
+                eco_config_path = os.path.join(
+                        chain_dir, "ecoevolity-config.yml")
+                yaml.dump(eco_config, open(eco_config_path, "w"))
+                seed = str(rng.randint(1, 1000000))
+                with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
+                    fh.write(seed)
+                jobname = "{}-{}-eco-{}-{}".format(
+                        basename, config["locus_length"], rep, chain) 
+                run_ecoevolity(dir=chain_dir, seed=seed, jobname=jobname, 
+                        eco_config=eco_config, ssh=ssh)
         # Creat starbeast directories and run starbeast 
         if method in ["all", "starbeast"]:
             for chain in range(1, config["starbeast_chains"] + 1):
@@ -241,7 +189,10 @@ def run_analyses(dir, ssh=False, overwrite=False, method="all"):
                 with open(os.path.join(chain_dir, "seed.txt"), "w") as fh:
                     fh.write(seed)
                 xml_path = gen_xml(rep_dir, config)
-                run_starbeast(chain_dir, seed, rep, chain, xml_path)
+                jobname = "{}-{}-star-{}-{}".format(
+                        basename, config["locus_length"], rep, chain)
+                run_starbeast(dir=chain_dir, seed=seed, jobname=jobname, 
+                        xml=xml_path, ssh=ssh)
 
 if __name__ == "__main__":
     fire.Fire(run_analyses)

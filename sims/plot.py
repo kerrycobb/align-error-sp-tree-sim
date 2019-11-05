@@ -34,8 +34,8 @@ def set_axis(ax, df, lim, interval):
             ecolor="#1f77b4",
             capsize=0.8
         )
-    ax.set_ylabel("Estimated Value")
-    ax.set_xlabel("True Value")
+    # ax.set_ylabel("Estimated Value")
+    # ax.set_xlabel("True Value")
     ax.set_xlim([0, lim])
     ax.set_ylim([0, lim])
     # ax.set_xlim([0, ax.get_ylim()[1]])
@@ -125,48 +125,49 @@ def make_plot(dir, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
     plt.style.use("ggplot")
 
     plot_params = [
-        (star_time, time_lim, "Starbeast Time", "starbeast-time.svg"),
-        (star_root_theta, theta_lim, "Starbeast Root Theta", "starbeast-root-theta.svg"),
-        (star_theta, theta_lim, "Starbeast Theta", "starbeast-theta.svg"),
-        (eco_time, time_lim, "Ecoevolity Time", "ecoevolity-time.svg"),
-        (eco_root_theta, theta_lim, "Ecoevolity Root Theta", "ecoevolity-root-theta.svg"),
-        (eco_theta, theta_lim, "Ecoevolity Theta", "ecoevolity-theta.svg")]
+        (star_time, time_lim, "Starbeast Time", "starbeast-time.pdf"),
+        (star_root_theta, theta_lim, "Starbeast Root Theta", "starbeast-root-theta.pdf"),
+        (star_theta, theta_lim, "Starbeast Theta", "starbeast-theta.pdf"),
+        (eco_time, time_lim, "Ecoevolity Time", "ecoevolity-time.pdf"),
+        (eco_root_theta, theta_lim, "Ecoevolity Root Theta", "ecoevolity-root-theta.pdf"),
+        (eco_theta, theta_lim, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
         
     for i in plot_params:
         f, ax = plt.subplots()    
         set_axis(ax, i[0], i[1], interval) 
-        f.suptitle(i[2])
-        plt.savefig(os.path.join(dir, alignment + "-" + i[3])) 
+        # f.suptitle(i[2])
+        plt.savefig(os.path.join(dir, alignment + "-" + i[3]), 
+            bbox_inches='tight', pad_inches=0) 
 
     # f, ax = plt.subplots()
-    # set_axis(ax, star_time, interval)
-    # f.suptitle("Starbeast Time")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-time.svg"))
+    # set_axis(ax, star_time, time_lim, interval)
+    # # f.suptitle("Starbeast Time")
+    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-time.pdf"))
 
     # f, ax = plt.subplots()
-    # set_axis(ax, star_theta, interval)
-    # f.suptitle("Starbeast Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-theta.svg"))
+    # set_axis(ax, star_theta, theta_lim, interval)
+    # # f.suptitle("Starbeast Theta")
+    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-theta.pdf"))
 
     # f, ax = plt.subplots()
-    # set_axis(ax, star_root_theta, interval)
-    # f.suptitle("Starbeast Root Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-root-theta.svg"))
+    # set_axis(ax, star_root_theta, theta_lim, interval)
+    # # f.suptitle("Starbeast Root Theta")
+    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-root-theta.pdf"))
 
     # f, ax = plt.subplots()
-    # set_axis(ax, eco_time, interval)
-    # f.suptitle("Ecoevolity Time")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-time.svg"))
+    # set_axis(ax, eco_time, time_lim, interval)n
+    # # f.suptitle("Ecoevolity Time")
+    # plt.savefig(os.path.join(dir, alignment + n "ecoevolity-time.pdf"))
 
     # f, ax = plt.subplots()
-    # set_axis(ax, eco_theta, interval)
-    # f.suptitle("Ecoevolity Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-theta.svg"))
+    # set_axis(ax, eco_theta, theta_lim, intervan
+    # # f.suptitle("Ecoevolity Theta")
+    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-theta.pdf"))
 
     # f, ax = plt.subplots()
-    # set_axis(ax, eco_root_theta, interval)
-    # f.suptitle("Ecoevolity Root Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-root-theta.svg"))
+    # set_axis(ax, eco_root_theta, theta_lim, interval)
+    # # f.suptitle("Ecoevolity Root Theta")
+    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-root-theta.pdf"))
 
 if __name__ == "__main__":
     make_plot()

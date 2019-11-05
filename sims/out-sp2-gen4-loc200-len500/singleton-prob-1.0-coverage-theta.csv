@@ -1,0 +1,13 @@
+method,interval,taxon,coverage
+ecoevolity,ci,T1,0.77
+ecoevolity,ci,T2,0.85
+ecoevolity,ci,root,0.92
+ecoevolity,hpd,T1,0.77
+ecoevolity,hpd,T2,0.84
+ecoevolity,hpd,root,0.93
+starbeast,ci,T1,0.99
+starbeast,ci,T2,0.94
+starbeast,ci,root,0.93
+starbeast,hpd,T1,0.97
+starbeast,hpd,T2,0.94
+starbeast,hpd,root,0.94
