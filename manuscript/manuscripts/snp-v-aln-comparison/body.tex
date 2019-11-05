@@ -21,53 +21,123 @@
 % information in the gene tree and branch lengths from the remaning
 % sequences might allow us to recover.
 
-% Likelihood-based inference under the multispecies coalescent is a powerful framework for estimating species trees,  divergence times, and  effective population sizes in the presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}. Likelihood-based approaches to species tree inference can be classified into two groups, based on how they model the evolution of orthologous DNA sites along gene trees within the species tree—those that assume (1) each site evolved along its own gene tree (i.e., each site is “unlinked”) \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, or (2) contiguous, linked sites evolved along a shared gene tree \citep{liuSpeciesTreesGene2007, ogilvieStarBEAST2BringsFaster2017, yangBPPProgramSpecies2015}. We will refer to these as unlinked and linked-character models, respectively. For both models, the gene tree of each locus (whether each locus is a single site or a segment of linked sites) is assumed to be independent of the gene trees of all other loci, conditional on the species tree. Methods using linked character models become intractable as the number of loci grows large \citep{bryantInferringSpeciesTrees2012}. Unlinked character methods on the other hand are more tractable for a large number of loci, because  estimating individual gene trees is avoided by integrating over all possible gene trees \citep{bryantInferringSpeciesTrees2012}. In practice, the model used depends on the data.
+Likelihood-based inference under the multispecies coalescent is a powerful 
+framework for estimating species trees,  divergence times, and  effective 
+population sizes in the presence of incomplete lineage sorting 
+\citep{xuChallengesSpeciesTree2016}. Likelihood--based approaches to species 
+tree inference can be classified into two groups, based on how they model the 
+evolution of orthologous DNA sites along gene trees within the species 
+tree---those that assume (1) each site evolved along its own gene tree 
+(i.e., each site is ``unlinked'') 
+\citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
+or (2) contiguous, linked sites evolved along a shared gene tree 
+\citep{liuSpeciesTreesGene2007, ogilvieStarBEAST2BringsFaster2017, 
+yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
+linked-character models, respectively. For both models, the gene tree of each 
+locus (whether each locus is a single site or a segment of linked sites) 
+is assumed to be independent of the gene 
+trees of all other loci, conditional on the species tree. Methods using linked 
+character models become intractable as the number of loci grows large 
+\citep{bryantInferringSpeciesTrees2012}. Unlinked-character models on the other 
+hand are more tractable for a large number of loci, because  estimating 
+individual gene trees is avoided by integrating over all possible gene trees 
+\citep{bryantInferringSpeciesTrees2012}. While unlinked-character models can 
+accomodate a larger number of loci than linked-character models, they do not 
+consider all of the information that is contained in the sequence data. As 
+linked-character models estimate the gene tree of each locus there is 
+information from the tree to inform estimates of parameters in the model. 
+Unlinked character models rely only on allele counts to inform parameter 
+estimates. This difference could make parameter estimates under linked-character 
+models more robust to error and bias in the sequence data.
 
-% \citep{wangEvolutionHybridIncompatibilities2013}
-Reduced-representation genomic data sets are becoming commonplace in phylogenetics, and usually comprise hundreds to thousands of loci as short as 50 contiguous nucleotides long or as long as full length gene transcripts. Investigators are thus faced with decisions about how best to use their data to infer a species tree. Should they use a linked-character method that assumes the sites within each locus evolved along a shared gene tree? Or, should they remove all but a single-nucleotide polymorphism (SNP) from each locus and use an unlinked-character model? Or, perhaps they should apply the unlinked-character method to all of their sites, even if this violates the assumption that each site evolved along an independent gene tree? Very little work has been done to help inform these types of decisions. 
+Reduced-representation genomic data sets acquired from high-throughput instruments
+are becoming commonplace in phylogenetics, and usually comprise hundreds to 
+thousands of loci as short as 50 nucleotides long and up to several thousand 
+base pairs long. 
+Investigators are thus faced with decisions about how best to use their data to 
+infer a species tree. Should they use a linked-character method that assumes the 
+sites within each locus evolved along a shared gene tree? Or, should they remove 
+all but a single-nucleotide polymorphism (SNP) from each locus and use an 
+unlinked-character model? Or, perhaps they should apply the unlinked-character 
+method to all of their sites, even if this violates the assumption that each 
+site evolved along an independent gene tree? Very little work has been done to 
+help inform these types of decisions. 
 
-An important consideration for choosing which character model to utilize are the many sources of error and acquisition bias that result from reduced representation library (RRL) sequencing and data processing.  Reduced-representation sequencing is achieved through separation of targeted regions of the genome from the rest of the genome and sequencing on a high-throughput sequencing instrument. Error is known to be introduced at many stages of RRL sequencing and there are sources of error unique to different approaches that are important to consider. It may also be important to consider whether this error is random or systematic as systematic error may be less predictable and more difficult to correct for. 
+An important consideration for choosing which character model to utilize are
+sources of error and bias that result from reduced representation methods,
+high throughput sequencing and the processing of these data. High throughput
+sequencing is now almost invariably performed on Illumina sequencing platforms
+which have been shown to have error rates as high as 0.25\% per base. 
+To prevent this error from affecting analyses performed with the data, it is not 
+uncommon to filter out variants that are not found above some minimum frequency 
+threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
+This filtering can change the frequency of true variants and introduce bias. 
+This filtering has been shown to have an effect on estimates derived from these 
+frequencies \citep{linckMinorAlleleFrequency2019}.
+
+Another 
+Sequence coverage---the mean number of unique reads representing each locus---is
+often highly variable among loci and among individuals. This poses a problem for
+accurately inferring the correct base at every position in a locus. It can also
+pose a problem for sampling 
+
+
 	
-Singleton site patterns here refer to sites in the alignment where one gene copy differs from all other gene copies in each species.
+Singleton site patterns here refer to sites in the alignment where one gene 
+copy differs from all other gene copies in each species.
 
 
 \section{Methods}
 \subsection{Simulations}
-We simulated data sets with three different locus lengths—1000, 500, and 250 linked characters—and then sampled from these alignments to create alignments with  error. We simulated 100 replicate data sets for each locus length and subsequent sampling routine. All data sets contained a total of 100,000 characters sampled from 2 diploid individuals ( 4 haploid gene copies) from each of two species. We chose this simple sample design to help ensure any differences in estimation accuracy or precision were due to the underlying models, and not due to differences in numerical algorithms for searching tree space.  We simulated two tip species trees under a pure birth process with a birth rate of 10 using the Python package \textit{Dendropy v.4.40.eb69003}.  We drew population sizes for each branch of the species tree from a Gamma distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 400 gene trees for the 1000, 500, and 250 locus length data sets respectively using the contained coalescent implemented in \textit{Dendropy}. In order to simulate data under a model compatible with the biallelic model implemented in \textit{Ecoevolity}, we simulated alignments of linked biallelic character data. We simulated linked biallelic character alignments using \textit{Seq-Gen v1.3.4} (Need to explain? – with a GTR model with base frequences {A=0, C=0, G=0.5, and T=0.5} and  transition rates of {AC=0, AG=0, AT=0, CG=0, CT=0, GT=1.0}) . 
+We simulated data sets with three different locus lengths—1000, 500, and 250 
+linked characters—and then sampled from these alignments to create alignments 
+with  error. We simulated 100 replicate data sets for each locus length and 
+subsequent sampling routine. All data sets contained a total of 100,000 
+characters sampled from 2 diploid individuals ( 4 haploid gene copies) from each 
+of two species. We chose this simple sample design to help ensure any 
+differences in estimation accuracy or precision were due to the underlying 
+models, and not due to differences in numerical algorithms for searching tree 
+space.  We simulated two tip species trees under a pure birth process with a 
+birth rate of 10 using the Python package \textit{Dendropy v.4.40.eb69003}.  
+We drew population sizes for each branch of the species tree from a Gamma 
+distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 
+400 gene trees for the 1000, 500, and 250 locus length data sets respectively 
+using the contained coalescent implemented in \textit{Dendropy}. In order to 
+simulate data under a model compatible with the biallelic model implemented in 
+\textit{Ecoevolity}, we simulated alignments of linked biallelic character data. 
+We simulated linked biallelic character alignments using \textit{Seq-Gen v1.3.4} 
+(Need to explain?---with a GTR model with base frequences {A=0, C=0, G=0.5, 
+and T=0.5} and  transition rates of {AC=0, AG=0, AT=0, CG=0, CT=0, GT=1.0}) . 
 
 \subsection{Introducing Site-pattern Errors}
-From each simulated dataset described above, we created four datasets by introducing two types of errors at two levels of severity. The first type of error we introduced was changing singleton character patterns (i.e., characters for which one gene copy was different from the gene copies) to invariant patterns by changing the singleton character state to match the other gene copies. We introduced this change with a probability of 0.2 and 0.4 to create two datasets from each simulated dataset. The second type of error we introduced was converting heterozygote haplotypes to homozygous. To do this, for each locus we randomly paired gene copies from within each species, and with a probability of 0.2 or 0.4 we randomly replaced one with the other. 
+From each simulated dataset described above, we created four datasets by 
+introducing two types of errors at two levels of severity. The first type of 
+error we introduced was changing singleton character patterns (i.e., characters 
+for which one gene copy was different from the gene copies) to invariant 
+patterns by changing the singleton character state to match the other gene 
+copies. We introduced this change with a probability of 0.2 and 0.4 to create 
+two datasets from each simulated dataset. The second type of error we introduced 
+was converting heterozygote haplotypes to homozygous. To do this, for each locus 
+we randomly paired gene copies from within each species, and with a probability 
+of 0.2 or 0.4 we randomly replaced one with the other. 
 
 \subsection{Inference}
-We inferred the divergence time between the two species and the effective population sizes of the root and tips of the species tree from each alignment under an unlinked-character model and under a linked-character model.
-
-Parameterization of divergence time and effective population size priors were the same as the distributions generating the data.
-
-We used \textit{Ecoevolity v0.3.2.a7e9bf2} to infer these parameters under the unlinked-character model. We ran four independent chains of \textit{Ecoevolity} with 75,000 steps and a sample frequency of 50 steps.
-
-Prior on divergence time was 20 which is equal to a birthrate of 10 * 2
-
-We used the \textit{StarBEAST2 v0.15.1} package in \textit{BEAST v2.5.2} to infer these parameters under the linked-character model. 
-
-We ran two independent chains of \textit{StarBEAST2} with 20 million steps and a sample frequency of 1000 steps. 
-
-To model sequence evolution in a comparable way to \textit{Ecoevolity} we used the same GTR model under which the data were simulated as explained above.
-
-Birth rate of 10
+We inferred the divergence time between the two species and the effective 
+population sizes of the root and tips of the species tree from each alignment 
+under an unlinked-character model and under a linked-character model.
+Parameterization of divergence time and effective population size priors were 
+the same as the distributions generating the data.
+We used \textit{Ecoevolity v0.3.2.a7e9bf2} to infer these parameters under the 
+unlinked-character model. We ran four independent chains of \textit{Ecoevolity} 
+with 75,000 steps and a sample frequency of 50 steps.
+We used the \textit{StarBEAST2 v0.15.1} package in \textit{BEAST v2.5.2} to 
+infer these parameters under the linked-character model. 
+We ran two independent chains of \textit{StarBEAST2} with 20 million steps and a 
+sample frequency of 1000 steps. 
+To model sequence evolution in a comparable way to \textit{Ecoevolity} we used 
+the same GTR model under which the data were simulated as explained above.
 
 \section{Results}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \section{Discussion}
