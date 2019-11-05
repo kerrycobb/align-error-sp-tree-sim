@@ -1,0 +1,63 @@
+\newcommand{\given}{\ensuremath{\,|\,}\xspace}
+\newcommand{\pr}{\ensuremath{p}}
+
+\newcommand{\ecoevolity}{ecoevolity\xspace}
+\newcommand{\beast}{starBEAST\xspace}
+\newcommand{\allsites}{all sites\xspace}
+\newcommand{\snps}{SNPs\xspace}
+\newcommand{\noerrors}{No errors}
+\newcommand{\singletoneighty}{20\% singleton errors}
+\newcommand{\singletonsixty}{40\% singleton errors}
+\newcommand{\heteighty}{20\% het errors}
+\newcommand{\hetsixty}{40\% het errors}
+
+
+\newcommand{\data}{\ensuremath{D}\xspace}
+\newcommand{\model}[1][]{\ensuremath{M_{#1}}\xspace}
+\newcommand{\parameters}[1][]{\ensuremath{\Theta_{#1}}\xspace}
+\newcommand{\parameter}[1][]{\ensuremath{\theta_{#1}}\xspace}
+\newcommand{\diff}[1]{\ensuremath{\mathrm{d}#1}}
+
+\newcommand{\distgamma}{\ensuremath{\textrm{Gamma}}\xspace}
+\newcommand{\distexponential}{\ensuremath{\textrm{Exponential}}\xspace}
+\newcommand{\dgamma}[2]{\ensuremath{\distgamma(\textrm{shape} = #1, \textrm{mean} = #2)}}
+\newcommand{\dexponential}[1]{\ensuremath{\distexponential(\textrm{mean} = #1)}}
+\newcommand{\gshape}{\ensuremath{k}\xspace}
+\newcommand{\gscale}{\ensuremath{\theta}\xspace}
+
+\newcommand{\nloci}[1][]{\ensuremath{m_{#1}\xspace}}
+
+\newcommand{\observedallelecount}[1][]{\ensuremath{n_{#1}}\xspace}
+\newcommand{\observedredallelecount}[1][]{\ensuremath{r_{#1}}\xspace}
+
+\newcommand{\nodeallelecount}[2]{\ensuremath{n_{#1}^{#2}}}
+\newcommand{\noderedallelecount}[2]{\ensuremath{r_{#1}^{#2}}}
+
+\newcommand{\allelecount}[1][]{\ensuremath{\nodeallelecount{#1}{}}\xspace}
+\newcommand{\redallelecount}[1][]{\ensuremath{\noderedallelecount{#1}{}}\xspace}
+
+\newcommand{\leafallelecounts}[1][]{\ensuremath{\mathbf{n}_{#1}}\xspace}
+\newcommand{\leafredallelecounts}[1][]{\ensuremath{\mathbf{r}_{#1}}\xspace}
+\newcommand{\maxleafallelecounts}{\ensuremath{\textrm{max}(\mathbf{n})}\xspace}
+
+\newcommand{\comparisondata}[1][]{\ensuremath{D_{#1}}\xspace}
+\newcommand{\alldata}[1][]{\ensuremath{\mathbf{D}}\xspace}
+
+\newcommand{\branchindex}{\ensuremath{x}\xspace}
+\newcommand{\allelecountbottom}[1][\branchindex]{\nodeallelecount{#1}{B}}
+\newcommand{\allelecounttop}[1][\branchindex]{\nodeallelecount{#1}{T}}
+\newcommand{\redallelecountbottom}[1][\branchindex]{\noderedallelecount{#1}{B}}
+\newcommand{\redallelecounttop}[1][\branchindex]{\noderedallelecount{#1}{T}}
+
+\newcommand{\rgmurate}{\ensuremath{u}\xspace}
+\newcommand{\grmurate}{\ensuremath{v}\xspace}
+\newcommand{\murate}[1][]{\ensuremath{\mu_{#1}}\xspace}
+\newcommand{\murates}[1][]{\ensuremath{\boldsymbol{\mu}_{#1}}\xspace}
+\newcommand{\gfreq}[1][]{\ensuremath{\pi_{#1}}\xspace}
+\newcommand{\gfreqs}[1][]{\ensuremath{\boldsymbol{\pi}_{#1}}\xspace}
+
+\newcommand{\genetree}[1][]{\ensuremath{g_{#1}}\xspace}
+\newcommand{\sptree}[1][]{\ensuremath{S_{#1}}\xspace}
+\newcommand{\sptrees}[1][]{\ensuremath{\mathbf{S}_{#1}}\xspace}
+
+\newcommand{\epopsize}[1][]{\ensuremath{N_{e}^{#1}}\xspace}
