@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import re
 
+
 def set_color(row):
     if row["ess"] < 200 and row["red_fac"] > 1.2:
         return "#f25a64"        # Red
@@ -21,19 +22,26 @@ def set_axis(ax, df, lim, interval):
     lower = "{}_lower".format(interval)
     upper = "{}_upper".format(interval)
     for ix, row in df.iterrows():
+        zorder = 200
+        if row["color"] != "#1f77b4":
+            zorder = 300
         ax.errorbar(
             x=row["true"],
             y=row["mean"],
             yerr=[[row["mean"] - row[lower]], [row[upper] - row["mean"]]],
             marker="o",
-            markersize=2.5,
+            markersize=6.0,
+            markeredgewidth = 2.0,
             markeredgecolor=row["color"],
             markerfacecolor="none",
-            elinewidth=0.5,
+            elinewidth=1.5,
             linestyle="",
-            ecolor="#1f77b4",
-            capsize=0.8
+            # ecolor="#1f77b4",
+            ecolor=row["color"],
+            capsize=1.5,
+            zorder = zorder,
         )
+    ax.tick_params(axis = "both", which = "major", labelsize = 12)
     # ax.set_ylabel("Estimated Value")
     # ax.set_xlabel("True Value")
     lim_buffer = lim * 0.05
@@ -41,7 +49,15 @@ def set_axis(ax, df, lim, interval):
     ax.set_ylim([0 - lim_buffer, lim + lim_buffer])
     # ax.set_xlim([0, ax.get_ylim()[1]])
     # ax.set_ylim([0, ax.get_ylim()[1]])
-    ax.plot([0, ax.get_xlim()[1]], [0, ax.get_ylim()[1]], linestyle="--", linewidth=.5, color="#1f77b4")
+    identity_line, = ax.plot(
+            [ax.get_xlim()[0], ax.get_xlim()[1]],
+            [ax.get_ylim()[0], ax.get_ylim()[1]])
+    plt.setp(identity_line,
+            color = '0.7',
+            linestyle = '-',
+            linewidth = 1.5,
+            marker = '',
+            zorder = 100)
 
 def get_max_values(dir_name, statistic = "mean"):
     max_time = float("-inf")
