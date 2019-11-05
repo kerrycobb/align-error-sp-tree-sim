@@ -1,0 +1,73 @@
+\documentclass[border=10pt,varwidth=30cm]{standalone}
+\usepackage{graphicx,capt-of}
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage[cm]{sfmath}
+\usepackage{xspace}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcounter{subfloat}
+\renewcommand{\thesubfloat}{\Alph{subfloat}}
+\newcommand{\image}[2]{%
+    \stepcounter{subfloat}%
+    \begin{tabular}[t]{@{}c@{}}
+    \thesubfloat. #1 \\
+    #2
+    \end{tabular}%
+}
+\newcommand{\insertlabel}{%
+    \small
+    \stepcounter{subfloat}%
+    \thesubfloat}
+\newcommand{\trm}[1]{\ensuremath{\textrm{\sffamily #1}}}
+
+\input{../../manuscript/utils/notation.tex}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \begin{tabular}{@{}cccccc@{}}
+        & \multicolumn{1}{c}{\LARGE \beast}
+        &
+        & \multicolumn{2}{c}{\LARGE \ecoevolity}
+        & \\
+        \cline{2-2}\cline{4-5}
+        & & & & & \\
+        &
+        &
+        & \multicolumn{1}{c}{\Large \allsites}
+        & \multicolumn{1}{c}{\Large \snps}
+        & \\
+        \multirow{5}{*}[-10em]{\begin{sideways}\Large Estimated divergence time\end{sideways}}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-1.0-starbeast-root-theta}.pdf}
+        &
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-1.0-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-1.0-snp-ecoevolity-root-theta}.pdf}
+        & \multirow{1}{*}[7em]{\begin{sideways}\large \noerrors\end{sideways}} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.8-starbeast-root-theta}.pdf}
+        &
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.8-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.8-snp-ecoevolity-root-theta}.pdf}
+        & \multirow{1}{*}[10em]{\begin{sideways}\large \singletoneighty\end{sideways}} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.8-starbeast-root-theta}.pdf}
+        &
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.8-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.8-snp-ecoevolity-root-theta}.pdf}
+        & \multirow{1}{*}[8.5em]{\begin{sideways}\large \heteighty\end{sideways}} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.6-starbeast-root-theta}.pdf}
+        &
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.6-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/singleton-prob-0.6-snp-ecoevolity-root-theta}.pdf}
+        & \multirow{1}{*}[10em]{\begin{sideways}\large \singletonsixty\end{sideways}} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.6-starbeast-root-theta}.pdf}
+        &
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.6-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100-len1000/het-prob-0.6-snp-ecoevolity-root-theta}.pdf}
+        & \multirow{1}{*}[8.5em]{\begin{sideways}\large \hetsixty\end{sideways}} \\
+        & \multicolumn{4}{c}{\Large True divergence time} & \\
+    \end{tabular}
+\end{figure}
+
+\end{document}
