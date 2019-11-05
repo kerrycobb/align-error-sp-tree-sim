@@ -43,14 +43,14 @@ def set_axis(ax, df, lim, interval):
     ax.plot([0, ax.get_xlim()[1]], [0, ax.get_ylim()[1]], linestyle="--", linewidth=.5, color="#1f77b4")
 
 @click.command()
-@click.argument("dir", type=click.Path())
+@click.argument("dir_name", type=click.Path())
 @click.argument("alignment", type=click.Path())
-def make_plot(dir, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
+def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
     theta_dfs = []
     theta_cov_dfs = []
     time_dfs = []
     time_cov_dfs = []
-    for i in glob.glob(os.path.join(dir, "seed*-reps*")):
+    for i in glob.glob(os.path.join(dir_name, "seed*-reps*")):
         seed = re.split(r'/|-', i)[5] 
         try:
             # Get theta summary and coverage
@@ -76,21 +76,21 @@ def make_plot(dir, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
     cat_theta_cov_df = pd.concat(theta_cov_dfs)\
        .groupby(["method", "interval", "taxon"])["coverage"]\
        .mean().reset_index()
-    cat_theta_cov_df.to_csv(os.path.join(dir,
+    cat_theta_cov_df.to_csv(os.path.join(dir_name,
             "{}-coverage-theta.csv".format(alignment)), index=False)
     
     cat_time_cov_df = pd.concat(time_cov_dfs)\
        .groupby(["method", "interval"])["coverage"]\
        .mean().reset_index()  
-    cat_time_cov_df.to_csv(os.path.join(dir, 
+    cat_time_cov_df.to_csv(os.path.join(dir_name, 
             "{}-coverage-time.csv".format(alignment)), index=False)
 
     # Read in summary csv and output merged summary csv files 
     theta_df = pd.concat(theta_dfs)
-    theta_df.to_csv(os.path.join(dir, 
+    theta_df.to_csv(os.path.join(dir_name, 
             "{}-summary-theta.csv".format(alignment)), index=False)
     time_df = pd.concat(time_dfs)
-    time_df.to_csv(os.path.join(dir, 
+    time_df.to_csv(os.path.join(dir_name, 
             "{}-summary-time.csv".format(alignment)), index=False)
 
     # Make sure data will fit within defined limits of plots
@@ -136,38 +136,38 @@ def make_plot(dir, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
         f, ax = plt.subplots()    
         set_axis(ax, i[0], i[1], interval) 
         # f.suptitle(i[2])
-        plt.savefig(os.path.join(dir, alignment + "-" + i[3]), 
+        plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
             bbox_inches='tight', pad_inches=0) 
 
     # f, ax = plt.subplots()
     # set_axis(ax, star_time, time_lim, interval)
     # # f.suptitle("Starbeast Time")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-time.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-time.pdf"))
 
     # f, ax = plt.subplots()
     # set_axis(ax, star_theta, theta_lim, interval)
     # # f.suptitle("Starbeast Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-theta.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-theta.pdf"))
 
     # f, ax = plt.subplots()
     # set_axis(ax, star_root_theta, theta_lim, interval)
     # # f.suptitle("Starbeast Root Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "starbeast-root-theta.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-root-theta.pdf"))
 
     # f, ax = plt.subplots()
     # set_axis(ax, eco_time, time_lim, interval)n
     # # f.suptitle("Ecoevolity Time")
-    # plt.savefig(os.path.join(dir, alignment + n "ecoevolity-time.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + n "ecoevolity-time.pdf"))
 
     # f, ax = plt.subplots()
     # set_axis(ax, eco_theta, theta_lim, intervan
     # # f.suptitle("Ecoevolity Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-theta.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + "-" + "ecoevolity-theta.pdf"))
 
     # f, ax = plt.subplots()
     # set_axis(ax, eco_root_theta, theta_lim, interval)
     # # f.suptitle("Ecoevolity Root Theta")
-    # plt.savefig(os.path.join(dir, alignment + "-" + "ecoevolity-root-theta.pdf"))
+    # plt.savefig(os.path.join(dir_name, alignment + "-" + "ecoevolity-root-theta.pdf"))
 
 if __name__ == "__main__":
     make_plot()
