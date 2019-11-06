@@ -43,12 +43,7 @@ hand are more tractable for a large number of loci, because  estimating
 individual gene trees is avoided by integrating over all possible gene trees 
 \citep{bryantInferringSpeciesTrees2012}. While unlinked-character models can 
 accomodate a larger number of loci than linked-character models, they do not 
-consider all of the information that is contained in the sequence data. As 
-linked-character models estimate the gene tree of each locus there is 
-information from the tree to inform estimates of parameters in the model. 
-Unlinked character models rely only on allele counts to inform parameter 
-estimates. This difference could make parameter estimates under linked-character 
-models more robust to error and bias in the sequence data.
+consider all of the information that is contained in the sequence data. 
 
 Reduced-representation genomic data sets acquired from high-throughput instruments
 are becoming commonplace in phylogenetics, and usually comprise hundreds to 
@@ -62,28 +57,32 @@ the unlinked-character method to all of their sites, even if this violates the
 assumption that each site evolved along an independent gene tree? Very little 
 work has been done to help inform these types of decisions. 
 
-An important consideration for choosing which character model to utilize are
+An important consideration for choosing the character model to utilize are
 sources of error and bias that result from reduced representation methods,
 high throughput sequencing and the processing of these data. High throughput
 sequencing is now almost invariably performed on Illumina sequencing platforms
-which have been shown to have error rates as high as 0.25\% per base. 
-To prevent this error from affecting analyses performed with the data, it is not 
+which have been shown to have error rates as high as 0.25\% per base 
+\citep{@pfeifferSystematicEvaluationError2018}. 
+To avoid introducing this error into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
 threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
-This filtering can change the frequency of true variants and introduce bias. 
-This filtering has been shown to have an effect on estimates derived from these 
-frequencies \citep{linckMinorAlleleFrequency2019}.
+This filtering can alter allele frequencies and introduce bias which has been 
+shown to have an effect on estimates derived from these frequencies \citep{linckMinorAlleleFrequency2019}.
 
-Another 
 Sequence coverage---the mean number of unique reads representing each locus---is
-often highly variable among loci and among individuals. This poses a problem for
-accurately inferring the correct base at every position in a locus. It can also
-pose a problem for sampling 
+often highly variable among loci and among individuals. Higher coverage increases 
+confidence of calling variants and distinguishing variants from error. 
+At low coverage true variants not present at frequencies meeting the minimum threshold
+may be filtered by processing tools 
 
+As linked-character models estimate the gene tree of each locus there is 
+information contained in the gene trees to inform estimates of parameters in the model. 
+Unlinked character models rely only on allele counts to inform parameter 
+estimates. This difference could make parameter estimates under linked-character 
+models more robust to error and bias in the sequence data.
 
-	
-Singleton site patterns here refer to sites in the alignment where one gene 
-copy differs from all other gene copies in each species.
+% Singleton site patterns here refer to sites in the alignment where one gene 
+% copy differs from all other gene copies in each species.
 
 
 \section{Methods}
@@ -92,7 +91,7 @@ We simulated data sets with three different locus lengths—1000, 500, and 250
 linked characters—and then sampled from these alignments to create alignments 
 with  error. We simulated 100 replicate data sets for each locus length and 
 subsequent sampling routine. All data sets contained a total of 100,000 
-characters sampled from 2 diploid individuals ( 4 haploid gene copies) from each 
+characters sampled from two diploid individuals (4 haploid gene copies) from each 
 of two species. We chose this simple sample design to help ensure any 
 differences in estimation accuracy or precision were due to the underlying 
 models, and not due to differences in numerical algorithms for searching tree 
@@ -108,10 +107,10 @@ simulate data under a model compatible with the biallelic model implemented in
 \ecoevolity, we simulated alignments of linked biallelic character data. 
 We simulated linked biallelic character alignments using
 \seqgen (Version 1.3.4)
-\citationNeeded
+\citep{@rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
-frequencies of G and T equal to 0.5. Transition rates for all base changes were 
-with the exception of the rates between G and T which had a rate of 1.0. 
+frequencies of G and T equal to 0.5. The transition rate for all base changes was 
+0 with the exception of the rate between G and T which was 1.0. 
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
@@ -135,12 +134,12 @@ the same as the distributions generating the data.
 We used \ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
 to infer these parameters under the 
-unlinked-character model. We ran four independent chains of \ecoevolity
-with 75,000 steps and a sample frequency of 50 steps.
-We used the
-\beast (Version 0.15.1) \citationNeeded
-package in
-\beastcore (Version 2.5.2) \citationNeeded
+unlinked-character model.
+% Say something about the changes to the way the root Ne is estimated?
+We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
+frequency of 50 steps.
+We used the \beast (Version 0.15.1) \citep{@ogilvieStarBEAST2BringsFaster2017} 
+package in \beastcore (Version 2.5.2) \citep{@bouckaertBEASTSoftwarePlatform2014}
 to infer these parameters under the linked-character model. 
 We ran two independent chains of \beast with 20 million steps and a 
 sample frequency of 1000 steps. 
@@ -148,6 +147,26 @@ To model sequence evolution in \beast in a comparable way to \ecoevolity we used
 the same GTR model under which the data were simulated as explained above.
 
 \section{Results}
+
+When there is no model violation we see the expected coverage. 95\% of the time
+the true value is within the 95\% credible interval.
+
+We also see that when there is no model violation both \ecoevolity and \beast
+have high accuracy and precision when all of the data are used. 
+
+However when only 
+a single SNP per locus are used, the precision of \ecoevolity declines precipitously.
+The precision of \ecoevolity estimates using a single SNP per locus declines as 
+the number of loci declines.      
+
+Estimates of divergence time and effective population size consistent between \beast
+and \ecoevolity when estimated with perfect data that do not violate the model
+and all of the data are included.
+
+
+
+
+
 
 Time results for 1000bp loci (Figure~\ref{fig:time1000}).
 
@@ -157,5 +176,13 @@ Time results for 250bp loci (Figure~\ref{fig:time250}).
 
 \section{Discussion}
 
+As expected linked-sequence model was more robust to model violation.
+
+
+
 
 \section{Conclusions}
+
+Practitioners may want to compare both models if the number of loci and taxa
+permit it. Or maybe perform analyses on parts of the tree with recent divergence
+time to compare results 

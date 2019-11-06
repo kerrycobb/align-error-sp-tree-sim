@@ -1,3 +1,17 @@
 \embedHeightFigure{0.8}{../../../sims/plots-tex/cropped-grid-root-theta-250bp.pdf}{
-    Caption here \ldots
+Accuracy and precision of estimates of root effective population size scaled by
+the muation rate ($N_e\mu$\end) with 250 base pair loci. The left column shows 
+estimates from \beast. The center column shows estimates from \ecoevolity using 
+all sites and the right column shows estimates from \ecoevolity using a single 
+SNP per locus. The top row are estimates with no violation of the model (no errors). 
+Rows labelled 20\% and 40\% singleton errors are estimates from alignments from 
+which singleton site patterns were changed to invariant sites with probabilities
+0.2 and 0.4 respectively. Rows labelled 20\% and 40\% het errors are estimates 
+from alignments from which one copy of randomly paired gene copies within each
+species was replaced with the other with with probabilities 0.2 and 0.4 respectively.
+Each plotted circle and associated error bars represent the posterior mean and 95\%
+credible interval. Circles and error bars are colored yellow if the effective 
+sample size of the estimate was less than 200, are colored red if the potential 
+scale reduction factor was greater than 1.2, and are colored green if both were 
+true. We generated the plots using matplotlib Version 3.1.1 \citep{matplotlib}. 
 }{fig:roottheta250}
