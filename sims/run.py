@@ -74,15 +74,16 @@ def gen_xml(dir, config):
         handle.write(starbeast_xml)
     return xml_path
 
-def gen_ecoevol_alignment(dir, config):
+def gen_ecoevol_alignment(dir, config, snp=False):
     d = {}
     for i in range(1, config["nspecies"]+1):
         for j in range(1, config["ngenomes"]+1):
             tax = "T{}_{}".format(i, j) 
             d[tax] = [] 
-    for i in range(0, config["nloci"]):
-        align_path = os.path.join(dir, "alignment-{}.phy".format(i))
+    if snp:
+        align_path = os.path.join(dir, "snp-alignment.phy".format(i))
         alignment = AlignIO.read(open(align_path), "phylip") 
+        nchar = alignment.get_alignment_length() 
         for record in alignment:
             for j in record.seq:
                 if j == "T":
@@ -91,6 +92,21 @@ def gen_ecoevol_alignment(dir, config):
                     d[record.id].append("1")
                 else:
                     raise Exception("Invalid character {}".format(j))
+    else:
+        nchar = 0
+        for i in range(0, config["nloci"]):
+            align_path = os.path.join(dir, "alignment-{}.phy".format(i))
+            alignment = AlignIO.read(open(align_path), "phylip") 
+            nchar += alignment.get_alignment_length() 
+            for record in alignment:
+                for j in record.seq:
+                    nchar += 1
+                    if j == "T":
+                        d[record.id].append("0")
+                    elif j == "G":
+                        d[record.id].append("1")
+                    else:
+                        raise Exception("Invalid character {}".format(j))
     ns = []
     ns.append("#NEXUS\n")
     ns.append("BEGIN TAXA;\n")
@@ -100,7 +116,7 @@ def gen_ecoevol_alignment(dir, config):
         ns.append("'{}'\n".format(key))
     ns.append(";\nEND;\n")
     ns.append("BEGIN CHARACTERS;\n")
-    ns.append("DIMENSIONS NCHAR={};\n".format(config["locus_length"] * config["nloci"]))
+    ns.append("DIMENSIONS NCHAR={};\n".format(nchar))
     ns.append("FORMAT DATATYPE=STANDARD SYMBOLS=\"01\" MISSING=?;\n")
     ns.append("MATRIX\n")
     for key, value in d.items():
@@ -147,7 +163,7 @@ def run_ecoevolity(dir, seed, jobname, eco_config, rerun=False, ssh=False):
     qsub(dir=dir, jobname=jobname,
             walltime="1:00:00", script=" ".join(script), ssh=ssh)
 
-def run_analyses(dir, ssh=False, overwrite=False, method="all"):
+def run_analyses(dir, ssh=False, overwrite=False, method="all", snp=False):
     dir = os.path.abspath(dir)
     basename = os.path.basename(dir)
     if overwrite:
@@ -163,7 +179,7 @@ def run_analyses(dir, ssh=False, overwrite=False, method="all"):
 
         # Create ecoevolity directories and files and run ecoevolity
         if method in ["all", "ecoevolity"]: 
-            gen_ecoevol_alignment(rep_dir, config)
+            gen_ecoevol_alignment(rep_dir, config, snp=snp)
             eco_config["comparisons"][0]["comparison"]["path"] = os.path.join(
                     rep_dir, "alignment.nex")
             for chain in range(1, config["ecoevolity_chains"]+1):
