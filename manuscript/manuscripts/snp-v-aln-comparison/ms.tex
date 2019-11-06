@@ -4,6 +4,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[english]{babel}
 \input{../../utils/preamble.tex}
 \input{../../utils/environments.tex}
 \input{../../utils/macros.tex}
@@ -12,8 +13,8 @@
 \newcommand{\jroedit}[2]{\sout{#1}{\color{pauburn}{#2}}}
 % \newcommand{\jroedit}[2]{#2}
 
-\newcommand{\ifembed}[2]{#1}
-% \newcommand{\ifembed}[2]{#2}
+% \newcommand{\ifembed}[2]{#1}
+\newcommand{\ifembed}[2]{#2}
 % \newcommand{\ifdoublespacing}[2]{#1}
 \newcommand{\ifdoublespacing}[2]{#2}
 % \newcommand{\iflinenumbers}[2]{#1}
@@ -26,7 +27,7 @@
 
 \usepackage[round]{natbib}
 
-\title{Comparing linked versus unlinked nucleotide models for species-tree inference}
+\title{Comparing linked versus unlinked character models for species-tree inference}
 
 \author[1]{Kerry Cobb}
 \author[1]{Jamie R.\ Oaks \thanks{Corresponding author: \href{mailto:joaks@auburn.edu}{\tt joaks@auburn.edu}}}
@@ -69,15 +70,17 @@
 
 % \newpage
 
-\begin{abstract}
-    \input{abstract.tex}
+% \begin{abstract}
+%     \input{abstract.tex}
 
-    \vspace{6pt}
-    \noindent\textbf{KEY WORDS:
-        continuous-time Markov chain models,
-        phylogenetics
-    }
-\end{abstract}
+%     \vspace{6pt}
+%     \noindent\textbf{KEY WORDS:
+%         multi-species coalescent,
+%         species tree,
+%         phylogenetics,
+%         gene tree
+%     }
+% \end{abstract}
 
 \newpage
 

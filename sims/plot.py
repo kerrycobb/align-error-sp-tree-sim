@@ -30,18 +30,17 @@ def set_axis(ax, df, lim, interval):
             y=row["mean"],
             yerr=[[row["mean"] - row[lower]], [row[upper] - row["mean"]]],
             marker="o",
-            markersize=6.0,
-            markeredgewidth = 2.0,
+            markersize=8.0,
+            markeredgewidth = 2.5,
             markeredgecolor=row["color"],
             markerfacecolor="none",
-            elinewidth=1.5,
+            elinewidth=2.0,
             linestyle="",
             # ecolor="#1f77b4",
             ecolor=row["color"],
-            capsize=1.5,
+            capsize=2.0,
             zorder = zorder,
         )
-    ax.tick_params(axis = "both", which = "major", labelsize = 12)
     # ax.set_ylabel("Estimated Value")
     # ax.set_xlabel("True Value")
     lim_buffer = lim * 0.05
@@ -58,6 +57,11 @@ def set_axis(ax, df, lim, interval):
             linewidth = 1.5,
             marker = '',
             zorder = 100)
+    # Increase size of tick labels
+    ax.tick_params(axis = "both", which = "major", labelsize = 16)
+    # Only show up to 5 ticks and labels
+    ax.xaxis.set_major_locator(plt.MaxNLocator(5))
+    ax.yaxis.set_major_locator(plt.MaxNLocator(5))
 
 def get_max_values(dir_name, statistic = "mean"):
     max_time = float("-inf")

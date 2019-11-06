@@ -53,15 +53,14 @@ models more robust to error and bias in the sequence data.
 Reduced-representation genomic data sets acquired from high-throughput instruments
 are becoming commonplace in phylogenetics, and usually comprise hundreds to 
 thousands of loci as short as 50 nucleotides long and up to several thousand 
-base pairs long. 
-Investigators are thus faced with decisions about how best to use their data to 
-infer a species tree. Should they use a linked-character method that assumes the 
-sites within each locus evolved along a shared gene tree? Or, should they remove 
-all but a single-nucleotide polymorphism (SNP) from each locus and use an 
-unlinked-character model? Or, perhaps they should apply the unlinked-character 
-method to all of their sites, even if this violates the assumption that each 
-site evolved along an independent gene tree? Very little work has been done to 
-help inform these types of decisions. 
+base pairs long. Investigators are thus faced with decisions about how best to 
+use their data to infer a species tree. Should they use a linked-character 
+method that assumes the sites within each locus evolved along a shared gene 
+tree? Or, should they remove all but a single-nucleotide polymorphism (SNP) from 
+each locus and use an unlinked-character model? Or, perhaps they should apply 
+the unlinked-character method to all of their sites, even if this violates the 
+assumption that each site evolved along an independent gene tree? Very little 
+work has been done to help inform these types of decisions. 
 
 An important consideration for choosing which character model to utilize are
 sources of error and bias that result from reduced representation methods,
@@ -98,16 +97,21 @@ of two species. We chose this simple sample design to help ensure any
 differences in estimation accuracy or precision were due to the underlying 
 models, and not due to differences in numerical algorithms for searching tree 
 space.  We simulated two tip species trees under a pure birth process with a 
-birth rate of 10 using the Python package \textit{Dendropy v.4.40.eb69003}.  
+birth rate of 10 using the \python package
+\dendropy
+\citep[Version 4.40; dev branch commit eb69003;][]{Dendropy}.  
 We drew population sizes for each branch of the species tree from a Gamma 
 distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 
 400 gene trees for the 1000, 500, and 250 locus length data sets respectively 
-using the contained coalescent implemented in \textit{Dendropy}. In order to 
+using the contained coalescent implemented in \dendropy. In order to 
 simulate data under a model compatible with the biallelic model implemented in 
-\textit{Ecoevolity}, we simulated alignments of linked biallelic character data. 
-We simulated linked biallelic character alignments using \textit{Seq-Gen v1.3.4} 
-(Need to explain?---with a GTR model with base frequences {A=0, C=0, G=0.5, 
-and T=0.5} and  transition rates of {AC=0, AG=0, AT=0, CG=0, CT=0, GT=1.0}) . 
+\ecoevolity, we simulated alignments of linked biallelic character data. 
+We simulated linked biallelic character alignments using
+\seqgen (Version 1.3.4)
+\citationNeeded
+with a GTR model with base frequencies of A and C equal to 0 and base 
+frequencies of G and T equal to 0.5. Transition rates for all base changes were 
+with the exception of the rates between G and T which had a rate of 1.0. 
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
@@ -122,23 +126,34 @@ we randomly paired gene copies from within each species, and with a probability
 of 0.2 or 0.4 we randomly replaced one with the other. 
 
 \subsection{Inference}
-We inferred the divergence time between the two species and the effective 
+We performed Bayesian inference to estimate the divergence time between the two species and the effective 
 population sizes of the root and tips of the species tree from each alignment 
-under an unlinked-character model and under a linked-character model.
-Parameterization of divergence time and effective population size priors were 
+under both an unlinked-character model and a linked-character model. For each 
+model we parameterized the prior distributions on divergence time and effective
+population size with the same parameters under which the data were generated. 
 the same as the distributions generating the data.
-We used \textit{Ecoevolity v0.3.2.a7e9bf2} to infer these parameters under the 
-unlinked-character model. We ran four independent chains of \textit{Ecoevolity} 
+We used \ecoevolity
+\citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
+to infer these parameters under the 
+unlinked-character model. We ran four independent chains of \ecoevolity
 with 75,000 steps and a sample frequency of 50 steps.
-We used the \textit{StarBEAST2 v0.15.1} package in \textit{BEAST v2.5.2} to 
-infer these parameters under the linked-character model. 
-We ran two independent chains of \textit{StarBEAST2} with 20 million steps and a 
+We used the
+\beast (Version 0.15.1) \citationNeeded
+package in
+\beastcore (Version 2.5.2) \citationNeeded
+to infer these parameters under the linked-character model. 
+We ran two independent chains of \beast with 20 million steps and a 
 sample frequency of 1000 steps. 
-To model sequence evolution in a comparable way to \textit{Ecoevolity} we used 
+To model sequence evolution in \beast in a comparable way to \ecoevolity we used 
 the same GTR model under which the data were simulated as explained above.
 
 \section{Results}
 
+Time results for 1000bp loci (Figure~\ref{fig:time1000}).
+
+Time results for 500bp loci (Figure~\ref{fig:time500}).
+
+Time results for 250bp loci (Figure~\ref{fig:time250}).
 
 \section{Discussion}
 
