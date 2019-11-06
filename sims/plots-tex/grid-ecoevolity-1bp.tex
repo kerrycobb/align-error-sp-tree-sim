@@ -1,0 +1,48 @@
+\documentclass[border=10pt,varwidth=30cm]{standalone}
+\usepackage{graphicx,capt-of}
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage[cm]{sfmath}
+\usepackage{xspace}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcounter{subfloat}
+\renewcommand{\thesubfloat}{\Alph{subfloat}}
+\newcommand{\image}[2]{%
+    \stepcounter{subfloat}%
+    \begin{tabular}[t]{@{}c@{}}
+    \thesubfloat. #1 \\
+    #2
+    \end{tabular}%
+}
+\newcommand{\insertlabel}{%
+    \small
+    \stepcounter{subfloat}%
+    \thesubfloat}
+\newcommand{\trm}[1]{\ensuremath{\textrm{\sffamily #1}}}
+
+\input{../../manuscript/utils/notation.tex}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \begin{tabular}{@{}ccc@{}}
+        & \multicolumn{2}{c}{\LARGE \ecoevolity results with unlinked characters} \\[2ex]
+        & \multicolumn{1}{c}{\Large \noerrors}
+        & \multicolumn{1}{c}{\Large \singletonsixty} \\
+        \multirow{6}{*}[-3.5em]{\begin{sideways}\Large Estimated value\end{sideways}}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-1.0-ecoevolity-time}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-0.6-ecoevolity-time}.pdf} \\
+        & \multicolumn{2}{c}{\Large True divergence time} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-1.0-ecoevolity-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-0.6-ecoevolity-theta}.pdf} \\
+        & \multicolumn{2}{c}{\Large True descendant $N_e\mu$} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-1.0-ecoevolity-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc100000-len1/singleton-prob-0.6-ecoevolity-root-theta}.pdf} \\
+        & \multicolumn{2}{c}{\Large True ancestral $N_e\mu$} \\
+    \end{tabular}
+\end{figure}
+
+\end{document}
