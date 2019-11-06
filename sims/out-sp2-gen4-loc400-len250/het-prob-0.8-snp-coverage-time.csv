@@ -1,0 +1,3 @@
+method,interval,coverage
+ecoevolity,ci,0.95
+ecoevolity,hpd,0.99
