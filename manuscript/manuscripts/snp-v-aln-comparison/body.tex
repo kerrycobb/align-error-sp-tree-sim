@@ -88,7 +88,7 @@ the raw sequence reads to avoid aligning paralogous sequences.
 This is often done by setting an upper threshold on the number of variable
 sites within a locus \citationNeeded.
 Such a strategy will also filter out the most variable alignments
-of orthologous loci, thus introducing an acquistion bias.
+of orthologous loci, thus introducing an acquisition bias.
 
 % Sequence coverage---the mean number of unique reads representing each locus---is
 % often highly variable among loci and among individuals. Higher coverage increases 
@@ -98,7 +98,7 @@ of orthologous loci, thus introducing an acquistion bias.
 
 Given all of these potential problems throughout the data collection process,
 phylogeneticists should assume their high-throughput genomic data set suffers
-from errors and acquistion biases.
+from errors and acquisition biases.
 Do linked and unlinked character models differ in their robustness to such
 errors?
 Linked-character models can leverage shared information among linked sites
@@ -107,42 +107,66 @@ Thus, these models may be able to correctly infer the general shape and depth
 of a gene tree, even if the haplotypes at some of the tips have errors.
 Unlinked character models have very little information about each gene tree,
 and rely on the frequency of allele counts across many characters to inform the
-model about the relative probabilies of all possible gene trees
+model about the relative probabilities of all possible gene trees
 (\jrocomment{Figure showing this difference?}).
 Given this reliance on accurate allele count frequencies, we predict that
 unlinked character models will be more sensitive to errors and acquisition
 biases in genomic data.
 Our goal is to simulate data sets with varying degrees of errors length of loci
 to test this prediction that linked character models are more robust to the
-types of errors conatined in high-throughput sequence data sets.
+types of errors contained in high-throughput sequence data sets.
 Our results support this prediction, but also show that region of parameter
 space where the differences between linked and unlinked character models is
 revealed is quite limited.
 
 
 \section{Methods}
-\subsection{Simulations}
-We simulated data sets with three different locus lengths---1000, 500, and 250 
-linked characters---and then sampled from these alignments to create alignments 
-with  error. We simulated 100 replicate data sets for each locus length. 
-All data sets contained a total of 100,000 
-characters sampled from two diploid individuals (4 haploid gene copies) from each 
-of two species. We chose this simple sample design to help ensure any 
-differences in estimation accuracy or precision were due to the underlying 
-models, and not due to differences in numerical algorithms for searching tree 
-space.  We simulated two tip species trees under a pure birth process with a 
+\subsection{Simulations of error-free data sets}
+For our simulations, we assumed a simple two-tipped species tree
+with one ancestral population with a constant effective size
+of
+\epopsize[\rootpopindex]
+that diverged at time \divtime into
+two descendent populations (terminal branches) with constant
+effective sizes of
+\epopsize[\descendantpopindex{1}]
+and
+\epopsize[\descendantpopindex{2}]
+\jrocomment{(Figure X)}.
+For two diploid individuals sampled from each of the terminal
+populations (4 sampled gene copies per population),
+we simulated 100,000 orthologous biallelic characters under a finite-sites,
+continuous-time Markov chain (CTMC) model of evolution.
+We simulated 100 data sets comprised of loci of three different lengths---1000,
+500, and 250 linked characters.
+We assume each locus is effectively unlinked and has no intralocus
+recombination, i.e., each locus evolved along a single gene tree that is
+independent of the other loci, conditional on the species tree.
+We chose this simple species tree model for our simulations to help ensure any
+differences in estimation accuracy or precision were due to differences in
+underlying linked and unlinked character models,
+and \emph{not} due to differences in numerical algorithms for searching species
+and gene tree space.
+Furthermore, we simulated biallelic characters, because unlinked-character MSC
+models
+\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}
+that are most comparable to linked-character models
+\citep{Heled2010,ogilvieStarBEAST2BringsFaster2017}
+are limited to characters with (at most) two states.
+
+We simulated the two-tipped species trees under a pure birth-process with a
 birth rate of 10 using the \python package
 \dendropy
-\citep[Version 4.40; dev branch commit eb69003;][]{Dendropy}.  
+\citep[Version 4.40; \jrocomment{XXX} branch commit eb69003;][]{Dendropy}.  
+This is equivalent to the divergence time being Exponentially distributed with
+a rate of 20.
 We drew population sizes for each branch of the species tree from a Gamma 
 distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 
 400 gene trees for the 1000, 500, and 250 locus length data sets respectively 
-using the contained coalescent implemented in \dendropy. In order to 
-simulate data under a model compatible with the biallelic model implemented in 
-\ecoevolity, we simulated alignments of linked biallelic character data. 
+using the contained coalescent implemented in \dendropy.
 We simulated linked biallelic character alignments using
 \seqgen (Version 1.3.4)
-\citep{@rambautSeqGenApplicationMonte1997}
+\citep{rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
 0 with the exception of the rate between G and T which was 1.0. 
