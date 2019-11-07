@@ -69,29 +69,50 @@ sites, even if this violates the assumption that each site evolved along an
 independent gene tree?
 Little work has been done to help inform these types of decisions. 
 
-An important consideration for choosing the character model to utilize are
-sources of error and bias that result from reduced representation methods,
-high throughput sequencing and the processing of these data. High throughput
-sequencing is now almost invariably performed on Illumina sequencing platforms
-which have been shown to have error rates as high as 0.25\% per base 
+An important consideration for choosing a multi-species coalescent model is
+sources of error and bias that result from reduced-representation protocols,
+high-throughput sequencing technologies, and the processing of these data.
+\jrocomment{Blurb about PCR biases/error?}
+Current high-throughput sequencing technologies have high rates of error.
+For example, Illumina sequencing platforms have been shown to have error rates
+as high as 0.25\% per base 
 \citep{@pfeifferSystematicEvaluationError2018}. 
-To avoid introducing this error into analyses performed with the data, it is not 
+To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
 threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
-This filtering can alter allele frequencies and introduce bias which has been 
-shown to have an effect on estimates derived from these frequencies \citep{linckMinorAlleleFrequency2019}.
+This filtering can also introduce errors and biases which has been 
+shown to have an effect on estimates derived from the assembled alignments
+\citep{Harvey2015,linckMinorAlleleFrequency2019}.
+Furthermore, decisions have to be made during or after processing
+the raw sequence reads to avoid aligning paralogous sequences.
+This is often done by setting an upper threshold on the number of variable
+sites within a locus \citationNeeded.
+Such a strategy will also filter out the most variable alignments
+of orthologous loci, thus introducing an acquistion bias.
 
-Sequence coverage---the mean number of unique reads representing each locus---is
-often highly variable among loci and among individuals. Higher coverage increases 
-confidence of calling variants and distinguishing variants from error. 
-At low coverage true variants not present at frequencies meeting the minimum threshold
-may be filtered by processing tools 
+% Sequence coverage---the mean number of unique reads representing each locus---is
+% often highly variable among loci and among individuals. Higher coverage increases 
+% confidence of calling variants and distinguishing variants from error. 
+% At low coverage true variants not present at frequencies meeting the minimum threshold
+% may be filtered by processing tools 
 
-As linked-character models estimate the gene tree of each locus there is 
-information contained in the gene trees to inform estimates of parameters in the model. 
-Unlinked character models rely only on allele counts to inform parameter 
-estimates. This difference could make parameter estimates under linked-character 
-models more robust to error and bias in the sequence data.
+Given all of these potential problems throughout the data collection process,
+phylogeneticists should assume their high-throughput genomic data set suffers
+from errors and acquistion biases.
+Do linked and unlinked character models differ in their robustness to such
+errors?
+Linked-character models can leverage shared information among linked sites
+about each underlying gene tree.
+Thus, these models may be able to correctly infer the general shape and depth
+of a gene tree, even if the haplotypes at some of the tips have errors.
+Unlinked character models have very little information about each gene tree,
+and rely on the frequency of allele counts across many characters to inform the
+model about the relative probabilies of all possible gene trees
+(\jrocomment{Figure showing this difference?}).
+Given this reliance on accurate allele count frequencies, we predict
+that unlinked character models will be more sensitive to the types of error
+and biases contained in high-throughput sequence data sets.
+Our goal is to use simulations to test this prediction.
 
 % Singleton site patterns here refer to sites in the alignment where one gene 
 % copy differs from all other gene copies in each species.
