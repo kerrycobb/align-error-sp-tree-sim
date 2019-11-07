@@ -81,16 +81,14 @@ Unlinked character models rely only on allele counts to inform parameter
 estimates. This difference could make parameter estimates under linked-character 
 models more robust to error and bias in the sequence data.
 
-% Singleton site patterns here refer to sites in the alignment where one gene 
-% copy differs from all other gene copies in each species.
 
 
 \section{Methods}
 \subsection{Simulations}
-We simulated data sets with three different locus lengths—1000, 500, and 250 
-linked characters—and then sampled from these alignments to create alignments 
-with  error. We simulated 100 replicate data sets for each locus length and 
-subsequent sampling routine. All data sets contained a total of 100,000 
+We simulated data sets with three different locus lengths---1000, 500, and 250 
+linked characters---and then sampled from these alignments to create alignments 
+with  error. We simulated 100 replicate data sets for each locus length. 
+All data sets contained a total of 100,000 
 characters sampled from two diploid individuals (4 haploid gene copies) from each 
 of two species. We chose this simple sample design to help ensure any 
 differences in estimation accuracy or precision were due to the underlying 
@@ -116,7 +114,7 @@ frequencies of G and T equal to 0.5. The transition rate for all base changes wa
 From each simulated dataset described above, we created four datasets by 
 introducing two types of errors at two levels of severity. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
-for which one gene copy was different from the gene copies) to invariant 
+for which one gene copy was different from the other gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
@@ -168,54 +166,56 @@ total of 7,600.
 
 
 % Coverage
-The 95\% credible intervals for both divergence times and effective population 
+The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in both \beast and \ecoevolity had 
 the expected frequentist coverage in that the true value was within 95\% of the 
 estimated credible intervals. This confirms that the sequence data were simulated
-under the same model as those used for inference in \beast and \starbeast.
+under the same model as those used for inference in \beast and \ecoevolity.
 
 
 % ESS and PSRF
 We computed the effective sample size (ESS) for each parameter estimate and considered
 a value of 200 to indicate adequate mixing of a chain. 
-We also computed the potential scale reduction factor (PSRF) for each estimate and following 
-consider a value of less than 1.2 to indicate adequate 
-convergence of independent chains \citep{gelman1998}. 
-The effective sample size was greater than 200 for most \ecoevolity paramter estimates
-regardless of locus length and type of or amount of error. 
+We also computed the potential scale reduction factor (PSRF) for each estimate 
+considered a value of less than 1.2 to indicate adequate convergence of 
+independent chains \citep{gelman1998}. 
+The effective sample size was greater than 200 for most \ecoevolity paramter
+estimates regardless of locus length and type of or amount of error. 
 Likewise the potential scale reduciton factor was less than 1.2 for most \ecoevolity parameter estimates.
 
-The proportion of estimates with PSRF values less than 1.2 was very low across 
+The proportion of estimates with PSRF values greater than 1.2 was very low across 
 all \beast analyses indicating convergence of most chains.
 The proportion of \beast divergence time estimates with ESS values less than 200 
 increased at more recent divergence times as locus length decreased but were 
 consistent across different types and degrees of error.
 The proportion of \beast root effective populaation size estimates with ESS 
-values less than 200 was high across all analyses. However it was low for most estimates
-of effective population size at the tips of the tree. With estimates made with 250 
-bp loci there was a high proportion of low ESS values for estimates of small 
-effective population sizes at the tip of the tree.
+values less than 200 was high across all analyses. 
+Estimates of descendant effective population size had better ESS values across all 
+analyses with the exception of estimates of small effective population sizes from 
+250 bp loci.
 
+% Single SNP 
+The accuracy and precision of parameter estimates by \ecoevolity was much greater
+when all sites of the alignment were used than when a single SNP per locus was used.  
+There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
+different types and degress of error or the length of loci when using a single SNP per locus. 
 
 % Time
+The accuracy and precision of divergence time estimates by \beast were very good for all 
+alignment lengths and types and degrees error. When all of the data were used and 
+there was no error \ecoevolity produced estimates with accuracy and precision
+comparable to \beast. However when alignments contained errors, \ecoevolity
+underestimated very recent divergence times. 
+
 For estimates of divergence time when there is no model violation and all data 
-are used both \ecoevolity and \beast
-have high accuracy and precision when all of the data are used. The accuracy and
-precision of divergence time estimates with \ecoevolity remains high for most 
-types and degrees of error except at very recent divergence times where accuracy
-and precision decline with greater degrees of error.
+are used both \ecoevolity and \beast have high accuracy and precision.
 
-When only a single SNP per locus is used, the accuracy and precision of \ecoevolity 
-declines precipitously.
-
-The accuracy and precision of \ecoevolity estimates using a single SNP per locus 
-also declines as the number of loci decreases.        
-
-
-
+The accuracy and precision of divergence time estimates with \ecoevolity remains 
+high for most types and degrees of error except at very recent divergence times 
+where accuracy and precision decline with greater degrees of both types of error.
 
 % Effective Population Size
-
+The accuracy and precision of descendant effective population size
 
 
 
@@ -238,7 +238,8 @@ Time results for 250bp loci (Figure~\ref{fig:time250}).
 
 As expected the linked-sequence model was more robust to model violation.
 
-But only in a small range of parameter space when divergence time is recent.
+But only in a small range of parameter space when divergence time is recent. This
+around the average coalescent time
 
 Ecoevolity performs better when all of the data are used as it results in a much larger 
 amount of data. It has previously been shown that including all sites including 
@@ -253,9 +254,19 @@ Poor MCMC performance in \beast does not appear to correlate with poor parameter
 estimates. The distribution of estimates is generally as good or better than those 
 from \ecoevolity. 
 
+Comparison of run times???
 
-\section{Conclusions}
+How is the frequency of the 9 possible site patterns varying, especially with time
+
+As loci get longer, there is more information and the posterior has a more 
+narrow range and is easier for MCMC.
 
 Practitioners may want to compare both models if the number of loci and taxa
 permit it. Or maybe perform analyses on parts of the tree with recent divergence
-time to compare results 
+time to compare results
+
+Looking for inflated effective population sizes in an internal node could be
+indicative of a problem with estimates.
+
+\section{Conclusions}
+
