@@ -208,20 +208,33 @@ effective size of the descendant populations.
 We added an option to \ecoevolity to compile a version where the prior is
 specified as the absolute effective size of the root population,
 which matches the model in \beast and the model we used to generate the data.
-We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
-frequency of 50 steps.
-We ran two independent chains of \beast with 20 million steps and a 
+
+For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
+analyses with 75,000 steps and a sample frequency of 50 steps.
+For \beast, we ran two independent MCMC analyses with 20 million steps and a
 sample frequency of 5000 steps. 
+Based on preliminary analyses of simulated data sets without errors,
+we chose to discard the first 501 and 201 samples from
+the MCMC chains of \ecoevolity and \beast, leaving 4000 and
+7600 posterior samples for each data set, respectively.
+
+
+\subsection{Simulating unlinked characters}
+All of the simulations above violate the assumption of the \ecoevolity
+model that all the sites are unlinked
+\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}.
+In order to help verify that the generative model of our simulation pipeline
+matched the underlying model of \ecoevolity, and to confirm that any behavior
+of the method was not being caused by the linkage violation,
+we simulated an additional 100 data sets of 100,000 biallelic characters as
+described above, except that the characters  were unlinked
+(i.e., each character evolved along an independent gene tree).
+From each of these, we created another data set where singleton site patterns
+were converted to invariant sites with a probability of 0.4.
+We analyzed each of these data sets with \ecoevolity as described above.
 
 
 \section{Results}
-
-We conservatively discarded the first 501 samples from the posterior of each 
-\ecoevolity chain leaving 1,000 samples for each of the four chains and a combined
-total of 4000.
-We conservatively discarded the first 201 samples from the posterior of each 
-\beast chain leaving 3,800 samples for each of the two chains and a combined
-total of 7,600.
 
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
