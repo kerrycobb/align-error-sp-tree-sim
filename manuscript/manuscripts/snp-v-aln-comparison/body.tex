@@ -34,7 +34,7 @@ tree---those that assume (1) each site evolved along its own gene tree
 (i.e., each site is ``unlinked'') 
 \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
 or (2) contiguous, linked sites evolved along a shared gene tree 
-\citep{liuSpeciesTreesGene2007, ogilvieStarBEAST2BringsFaster2017, 
+\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
 yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
 linked-character models, respectively. For both models, the gene tree of each 
 locus (whether each locus is a single site or a segment of linked sites) 
@@ -76,7 +76,7 @@ high-throughput sequencing technologies, and the processing of these data.
 Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
 as high as 0.25\% per base 
-\citep{@pfeifferSystematicEvaluationError2018}. 
+\citep{pfeifferSystematicEvaluationError2018}. 
 To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
 threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
@@ -196,8 +196,8 @@ for inference of these parameters under an unlinked-character model.
 % Say something about the changes to the way the root Ne is estimated?
 We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
 frequency of 50 steps.
-We used the \beast (Version 0.15.1) \citep{@ogilvieStarBEAST2BringsFaster2017} 
-package in \beastcore (Version 2.5.2) \citep{@bouckaertBEASTSoftwarePlatform2014}
+We used the \beast (Version 0.15.1) \citep{ogilvieStarBEAST2BringsFaster2017} 
+package in \beastcore (Version 2.5.2) \citep{bouckaertBEASTSoftwarePlatform2014}
 to infer these parameters under the linked-character model. 
 We ran two independent chains of \beast with 20 million steps and a 
 sample frequency of 5000 steps. 
