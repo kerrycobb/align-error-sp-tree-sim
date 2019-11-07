@@ -142,7 +142,7 @@ We used the \beast (Version 0.15.1) \citep{@ogilvieStarBEAST2BringsFaster2017}
 package in \beastcore (Version 2.5.2) \citep{@bouckaertBEASTSoftwarePlatform2014}
 to infer these parameters under the linked-character model. 
 We ran two independent chains of \beast with 20 million steps and a 
-sample frequency of 1000 steps. 
+sample frequency of 5000 steps. 
 To model sequence evolution in \beast in a comparable way to \ecoevolity we used 
 the same GTR model under which the data were simulated as explained above.
 
@@ -158,52 +158,61 @@ the same GTR model under which the data were simulated as explained above.
 % StarBEAST vs Ecoevolity Ne
 
 
-
-
 % MCMC
-When there is no model violation we see the expected coverage. 95\% of the time
-the true value is within the 95\% credible interval for both \ecoevolity and \beast.
+We conservatively discarded the first 501 samples from the posterior of each 
+\ecoevolity chain leaving 1,000 samples for each of the four chains and a combined
+total of 4000.
+We conservatively discarded the first 201 samples from the posterior of each 
+\beast chain leaving 3,800 samples for each of the two chains and a combined
+total of 7,600.
 
-We conservatively discarded the first 501 samples from the posterior samples from 
-\ecoevolity.
 
-We conservatively discarded the first 201 samples from the posterior samples from 
-\beast 
-
+% Coverage
+The 95\% credible intervals for both divergence times and effective population 
+sizes estimated from alignments without error in both \beast and \ecoevolity had 
+the expected frequentist coverage in that the true value was within 95\% of the 
+estimated credible intervals. This confirms that the sequence data were simulated
+under the same model as those used for inference in \beast and \starbeast.
 
 
 % ESS and PSRF
-
-We computed the effective sample size (ESS) for each estimate and somewhat arbitrarily
-designate a value of 200 as adequate.
-
-We also computed the potential scale reduction facctor for each estimate and following 
-with \citep{gelman1998} consider a value of less than 1.2 to be adequate. 
-
+We computed the effective sample size (ESS) for each parameter estimate and considered
+a value of 200 to indicate adequate mixing of a chain. 
+We also computed the potential scale reduction factor (PSRF) for each estimate and following 
+consider a value of less than 1.2 to indicate adequate 
+convergence of independent chains \citep{gelman1998}. 
 The effective sample size was greater than 200 for most \ecoevolity paramter estimates
-regardless of locus length or amount of error. 
+regardless of locus length and type of or amount of error. 
 Likewise the potential scale reduciton factor was less than 1.2 for most \ecoevolity parameter estimates.
 
-The number of \beast parameter estimates with ESS values less than 200 were consistent across
-different types and degrees of error but increased as locus size decreased. 
-
-
-% Coverage 
-
-
-% Ecoevolity 1 bp
-
+The proportion of estimates with PSRF values less than 1.2 was very low across 
+all \beast analyses indicating convergence of most chains.
+The proportion of \beast divergence time estimates with ESS values less than 200 
+increased at more recent divergence times as locus length decreased but were 
+consistent across different types and degrees of error.
+The proportion of \beast root effective populaation size estimates with ESS 
+values less than 200 was high across all analyses. However it was low for most estimates
+of effective population size at the tips of the tree. With estimates made with 250 
+bp loci there was a high proportion of low ESS values for estimates of small 
+effective population sizes at the tip of the tree.
 
 
 % Time
-We also see that when there is no model violation both \ecoevolity and \beast
-have high accuracy and precision when all of the data are used. 
+For estimates of divergence time when there is no model violation and all data 
+are used both \ecoevolity and \beast
+have high accuracy and precision when all of the data are used. The accuracy and
+precision of divergence time estimates with \ecoevolity remains high for most 
+types and degrees of error except at very recent divergence times where accuracy
+and precision decline with greater degrees of error.
 
-However when only a single SNP per locus are used, the precision of \ecoevolity 
+When only a single SNP per locus is used, the accuracy and precision of \ecoevolity 
 declines precipitously.
 
-The precision of \ecoevolity estimates using a single SNP per locus also declines 
-as the number of loci decreases.        
+The accuracy and precision of \ecoevolity estimates using a single SNP per locus 
+also declines as the number of loci decreases.        
+
+
+
 
 % Effective Population Size
 
@@ -211,27 +220,7 @@ as the number of loci decreases.
 
 
 
-% The MCMC chains for all analyses converged very
-% quickly; we conservatively removed the first 401 samples,
-% resulting in 3300 samples from the posterior (1100
-% samples from three chains) for each analysis. To assess
-% convergence and mixing, we plotted histograms of
-% the potential scale reduction factor across the three
-% independent chains and the effective sample size for
-% the log-likelihood and divergence times (Supplementary
-% Figs. S7–S10 available on Dryad). Mixing was poorer
-% when there was more prior uncertainty in the root
-% population size (Supplementary Figs. S9 and S10
-% available on Dryad). However, given the expected
-% frequentist behavior for how often the true parameter
-% values were contained within the 95% confidence
-% intervals (Fig. 2, Supplementary Figs. S2 and S3 available
-% on Dryad), and the weak relationship between the ESS
-% and estimation error (Supplementary Fig. S11 available
-% on Dryad), we do not expect MCMC mixing had a large
-% effect on our simulation results under the most extreme
-% levels of uncertainty in the root population size that we
-% simulated.
+% Ecoevolity 1 bp
 
 
 
@@ -260,7 +249,9 @@ Unsurprisingly MCMC performance declines with decreasing decreasing locus length
 There is less information contained in the shorter loci to inform gene tree estimation 
 and there would be expected to be more error in gene tree estimation.
 
-
+Poor MCMC performance in \beast does not appear to correlate with poor parameter 
+estimates. The distribution of estimates is generally as good or better than those 
+from \ecoevolity. 
 
 
 \section{Conclusions}
