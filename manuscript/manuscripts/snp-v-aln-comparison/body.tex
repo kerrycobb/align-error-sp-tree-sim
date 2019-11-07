@@ -22,7 +22,7 @@
 % sequences might allow us to recover.
 
 Likelihood-based inference under the multispecies coalescent is a powerful 
-framework for estimating species trees,  divergence times, and  effective 
+framework for estimating species trees, divergence times, and effective 
 population sizes in the presence of incomplete lineage sorting 
 \citep{xuChallengesSpeciesTree2016}.
 \jrocomment{More intro to phylogenetics/species trees here}
@@ -70,12 +70,27 @@ independent gene tree?
 Little work has been done to help inform these types of decisions. 
 
 An important consideration for choosing a multi-species coalescent model is
-sources of error and bias that result from reduced-representation protocols,
+the sources of error and bias that result from reduced-representation protocols,
 high-throughput sequencing technologies, and the processing of these data.
+Most reduced-representation sequencing workflows employ amplification of DNA  
+using polymerase chain reaction (PCR) which can introduce mutational error at a 
+rate of up to 1.5 × 10−4 substitutions per base \citep{potapovExaminingSourcesError2017}.
+
+
+
+
+
 \jrocomment{Blurb about PCR biases/error?}
 Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
 as high as 0.25\% per base 
+
+% Sequence coverage---the mean number of unique reads representing each locus---is
+% often highly variable among loci and among individuals. Higher coverage increases 
+% confidence of calling variants and distinguishing variants from error. 
+% At low coverage true variants not present at frequencies meeting the minimum threshold
+% may be filtered by processing tools 
+
 \citep{@pfeifferSystematicEvaluationError2018}. 
 To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
@@ -90,11 +105,7 @@ sites within a locus \citationNeeded.
 Such a strategy will also filter out the most variable alignments
 of orthologous loci, thus introducing an acquisition bias.
 
-% Sequence coverage---the mean number of unique reads representing each locus---is
-% often highly variable among loci and among individuals. Higher coverage increases 
-% confidence of calling variants and distinguishing variants from error. 
-% At low coverage true variants not present at frequencies meeting the minimum threshold
-% may be filtered by processing tools 
+
 
 Given all of these potential problems throughout the data collection process,
 phylogeneticists should assume their high-throughput genomic data set suffers
