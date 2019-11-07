@@ -48,20 +48,26 @@ hand are more tractable for a large number of loci, because  estimating
 individual gene trees is avoided by integrating over all possible gene trees 
 \citep{bryantInferringSpeciesTrees2012}.
 Whereas unlinked-character models can accomodate a larger number of loci than
-linked-character models, most datasets comprise linked sites and
+linked-character models, most genetic data sets comprise linked sites and
 unlinked-character models are unable to utilize this information.
 
-Reduced-representation genomic data sets acquired from high-throughput instruments
-are becoming commonplace in phylogenetics, and usually comprise hundreds to 
-thousands of loci as short as 50 nucleotides long and up to several thousand 
-base pairs long. Investigators are thus faced with decisions about how best to 
-use their data to infer a species tree. Should they use a linked-character 
-method that assumes the sites within each locus evolved along a shared gene 
-tree? Or, should they remove all but a single-nucleotide polymorphism (SNP) from 
-each locus and use an unlinked-character model? Or, perhaps they should apply 
-the unlinked-character method to all of their sites, even if this violates the 
-assumption that each site evolved along an independent gene tree? Very little 
-work has been done to help inform these types of decisions. 
+Reduced-representation genomic data sets acquired from high-throughput
+instruments are becoming commonplace in phylogenetics \citep{Leache2017}, and
+usually comprise hundreds to thousands of loci as short as 50 nucleotides long
+and up to several thousand base pairs long.
+Investigators are thus faced with decisions about how best to 
+use their data to infer a species tree.
+Should they use a linked-character method that assumes the sites within each
+locus evolved along a shared gene tree?
+Ideally, the answer would be ``yes,'' however this is not always
+computationally feasible and the model could be violated by intralocus
+recombination.
+Alternatively, should investigators remove all but a single-nucleotide
+polymorphism (SNP) from each locus and use an unlinked-character model?
+Or, perhaps they should apply the unlinked-character method to all of their
+sites, even if this violates the assumption that each site evolved along an
+independent gene tree?
+Little work has been done to help inform these types of decisions. 
 
 An important consideration for choosing the character model to utilize are
 sources of error and bias that result from reduced representation methods,
