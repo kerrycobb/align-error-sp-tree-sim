@@ -157,7 +157,8 @@ copies. We introduced this change with a probability of 0.2 and 0.4 to create
 two datasets from each simulated dataset. The second type of error we introduced 
 was missing heterozygous gene copies. To do this, for each locus 
 we randomly paired gene copies from within each species, and with a probability 
-of 0.2 or 0.4 we randomly replaced one with the other. 
+of 0.2 or 0.4 we randomly replaced one with the other.
+
 
 \subsection{Inference}
 We performed Bayesian inference to estimate the divergence time between the two species and the effective 
@@ -184,15 +185,6 @@ the same GTR model under which the data were simulated as explained above.
 
 \section{Results}
 
-%Outline
-% MCMC
-% ESS and PSRF Trends
-% Coverage
-% Ecoevolity 1bp
-% StarBEAST vs Ecoevolity Time
-% StarBEAST vs Ecoevolity Ne
-
-
 % MCMC
 We conservatively discarded the first 501 samples from the posterior of each 
 \ecoevolity chain leaving 1,000 samples for each of the four chains and a combined
@@ -201,7 +193,6 @@ We conservatively discarded the first 201 samples from the posterior of each
 \beast chain leaving 3,800 samples for each of the two chains and a combined
 total of 7,600.
 
-
 % Coverage
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
@@ -209,7 +200,6 @@ frequentist coverage in that the true value was within approximately 95\% of the
 estimated credible intervals. 
 This confirms that the sequence data were simulated under the same model as 
 those used for inference in \beast. 
-
 
 % ESS and PSRF
 We computed the effective sample size (ESS) for each parameter estimate and considered
@@ -237,7 +227,7 @@ The accuracy and precision of parameter estimates by \ecoevolity was much greate
 when all sites of the alignment were used than when a single SNP per locus was used.  
 There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
 different types and degress of error or the length of loci when using a single SNP per locus. 
-% (\fig{}~\ref{fig:valsimsmodelopt})
+(\fig{}~\ref{fig:fig-time-1000.tex})
 
 % Time
 The accuracy and precision of divergence time estimates by \beast were very good for all 
@@ -247,19 +237,21 @@ estimates with accuracy and precision comparable to \beast.
 However when alignments contained errors, \ecoevolity underestimated very recent 
 divergence times with increasing severity as the degree of error increased. 
 
-
 % Effective Population Size
 The accuracy and precision of estimates of descendant effective population sizes 
-by \beast was much lower than for time and was negatively affected by both types
-of error. 
+by \beast was lower than for time and was negatively affected by both types
+of error for all descendant population sizes.
+The results for each type and degree of error were consistent across different 
+locus lengths.
 \beast underestimated descendant effective population sizes with increasing severity 
 as the degree of error increased.
-The accuaracy and precision of  
-
-
-
-
-
+The accuaracy and precision of \ecoevolity was comparable to \beast when all of 
+the data were used and there was no error. \ecoevolity was also negatively affected
+by both types of error with increasing severity as the degree of error increased
+and this impact was no affected by locus length.
+Descendant effective population size estimates made from alignments with 40\%
+missing singleton and 40\% missing heterozygote error wtih \beast had higher
+accuracy and precision than estimates made with \ecoevolity.   
 
 % Ecoevolity 1 bp
 
