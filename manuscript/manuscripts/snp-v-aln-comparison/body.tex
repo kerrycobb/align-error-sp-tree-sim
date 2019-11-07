@@ -24,7 +24,10 @@
 Likelihood-based inference under the multispecies coalescent is a powerful 
 framework for estimating species trees,  divergence times, and  effective 
 population sizes in the presence of incomplete lineage sorting 
-\citep{xuChallengesSpeciesTree2016}. Likelihood--based approaches to species 
+\citep{xuChallengesSpeciesTree2016}.
+\jrocomment{More intro to phylogenetics/species trees here}
+
+Likelihood-based approaches to species 
 tree inference can be classified into two groups, based on how they model the 
 evolution of orthologous DNA sites along gene trees within the species 
 tree---those that assume (1) each site evolved along its own gene tree 
@@ -36,14 +39,17 @@ yangBPPProgramSpecies2015}. We will refer to these as unlinked and
 linked-character models, respectively. For both models, the gene tree of each 
 locus (whether each locus is a single site or a segment of linked sites) 
 is assumed to be independent of the gene 
-trees of all other loci, conditional on the species tree. Methods using linked 
-character models become intractable as the number of loci grows large 
-\citep{bryantInferringSpeciesTrees2012}. Unlinked-character models on the other 
+trees of all other loci, conditional on the species tree.
+Methods using linked character models become computationally expensive as the
+number of loci grows large, due to the estimation or numerical integration of
+all of the gene trees \citep{bryantInferringSpeciesTrees2012}.
+Unlinked-character models on the other 
 hand are more tractable for a large number of loci, because  estimating 
 individual gene trees is avoided by integrating over all possible gene trees 
-\citep{bryantInferringSpeciesTrees2012}. While unlinked-character models can 
-accomodate a larger number of loci than linked-character models, they do not 
-consider all of the information that is contained in the sequence data. 
+\citep{bryantInferringSpeciesTrees2012}.
+Whereas unlinked-character models can accomodate a larger number of loci than
+linked-character models, most datasets comprise linked sites and
+unlinked-character models are unable to utilize this information.
 
 Reduced-representation genomic data sets acquired from high-throughput instruments
 are becoming commonplace in phylogenetics, and usually comprise hundreds to 
