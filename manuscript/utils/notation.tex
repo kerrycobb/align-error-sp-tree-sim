@@ -65,4 +65,9 @@
 \newcommand{\sptree}[1][]{\ensuremath{S_{#1}}\xspace}
 \newcommand{\sptrees}[1][]{\ensuremath{\mathbf{S}_{#1}}\xspace}
 
+\newcommand{\divtime}[1][]{\ensuremath{\tau_{#1}}\xspace}
+\newcommand{\descendantpopindex}[1]{\ensuremath{D{#1}}}
+\newcommand{\rootpopindex}[1][]{\ensuremath{R{#1}}\xspace}
 \newcommand{\epopsize}[1][]{\ensuremath{N_{e}^{#1}}\xspace}
+\newcommand{\rootpopsize}{\epopsize[\rootpopindex]\xspace}
+\newcommand{\tippopsize}[1][]{\epopsize[\descendantpopindex{1}]\xspace}
