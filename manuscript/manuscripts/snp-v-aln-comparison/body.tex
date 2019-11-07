@@ -169,13 +169,13 @@ We simulated linked biallelic character alignments using
 \citep{rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
-0 with the exception of the rate between G and T which was 1.0. 
+0, except for the rate between G and T which was 1.0. 
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
 introducing two types of errors at two levels of severity. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
-for which one gene copy was different from the other gene copies) to invariant 
+for which one gene copy was different from the other seven gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
@@ -185,24 +185,33 @@ of 0.2 or 0.4 we randomly replaced one with the other.
 
 
 \subsection{Inference}
-We performed Bayesian inference to estimate the divergence time between the two species and the effective 
-population sizes of the root and tips of the species tree from each alignment 
-under both an unlinked-character model and a linked-character model. For each 
-model we parameterized the prior distributions on divergence time and effective
-population size with the same parameters under which the data were generated. 
-We used \ecoevolity
+For each simulated data set,
+we approximated the posterior distribution of the divergence time (\divtime)
+and effective population sizes
+(\rootpopsize, \tippopsize[1], and \tippopsize[2])
+under an
+unlinked-character model using
+\ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
-for inference of these parameters under an unlinked-character model.
-% Say something about the changes to the way the root Ne is estimated?
+and a linked-character model using the
+\beast
+\citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} 
+package in
+\beastcore
+\citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
+For both methods, we specified a CTMC model of character evolution and prior
+distributions that matched the model and distributions from which the data were
+generated.
+The prior on the effective size of the root population in the original
+implementation of \ecoevolity was parameterized to be relative to the mean
+effective size of the descendant populations.
+We added an option to \ecoevolity to compile a version where the prior is
+specified as the absolute effective size of the root population,
+which matches the model in \beast and the model we used to generate the data.
 We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
 frequency of 50 steps.
-We used the \beast (Version 0.15.1) \citep{ogilvieStarBEAST2BringsFaster2017} 
-package in \beastcore (Version 2.5.2) \citep{bouckaertBEASTSoftwarePlatform2014}
-to infer these parameters under the linked-character model. 
 We ran two independent chains of \beast with 20 million steps and a 
 sample frequency of 5000 steps. 
-We used the same model of sequence evolution as was used to generate the data
-as explained above.
 
 
 \section{Results}
@@ -226,16 +235,16 @@ a value of 200 to indicate adequate mixing of a chain.
 We also computed the potential scale reduction factor (PSRF) for each estimate 
 considered a value of less than 1.2 to indicate adequate convergence of 
 independent chains \citep{gelman1998}. 
-The effective sample size was greater than 200 for most \ecoevolity paramter
+The effective sample size was greater than 200 for most \ecoevolity parameter
 estimates regardless of locus length and type of or amount of error. 
-Likewise the potential scale reduciton factor was less than 1.2 for most \ecoevolity parameter estimates.
+Likewise the potential scale reduction factor was less than 1.2 for most \ecoevolity parameter estimates.
 
 The proportion of estimates with PSRF values greater than 1.2 was very low across 
 all \beast analyses indicating convergence of most chains.
 The proportion of \beast divergence time estimates with ESS values less than 200 
 increased at more recent divergence times as locus length decreased but were 
 consistent across different types and degrees of error.
-The proportion of \beast root effective populaation size estimates with ESS 
+The proportion of \beast root effective population size estimates with ESS 
 values less than 200 was high across all analyses. 
 Estimates of descendant effective population size had better ESS values across all 
 analyses with the exception of estimates of small effective population sizes from 
@@ -260,7 +269,7 @@ The results for each type and degree of error were consistent across different
 locus lengths.
 \beast underestimated descendant effective population sizes with increasing severity 
 as the degree of error increased.
-The accuaracy and precision of \ecoevolity was comparable to \beast when all of 
+The accuracy and precision of \ecoevolity was comparable to \beast when all of 
 the data were used and there was no error. \ecoevolity was also negatively affected
 by both types of error with increasing severity as the degree of error increased
 and this impact was no affected by locus length.
