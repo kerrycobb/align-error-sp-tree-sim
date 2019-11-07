@@ -130,7 +130,7 @@ for which one gene copy was different from the other gene copies) to invariant
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
-was converting heterozygote haplotypes to homozygous. To do this, for each locus 
+was missing heterozygous gene copies. To do this, for each locus 
 we randomly paired gene copies from within each species, and with a probability 
 of 0.2 or 0.4 we randomly replaced one with the other. 
 
@@ -179,10 +179,11 @@ total of 7,600.
 
 % Coverage
 The 95\% credible intervals for divergence times and effective population 
-sizes estimated from alignments without error in both \beast and \ecoevolity had 
-the expected frequentist coverage in that the true value was within 95\% of the 
-estimated credible intervals. This confirms that the sequence data were simulated
-under the same model as those used for inference in \beast.
+sizes estimated from alignments without error in \beast had the expected 
+frequentist coverage in that the true value was within approximately 95\% of the 
+estimated credible intervals. 
+This confirms that the sequence data were simulated under the same model as 
+those used for inference in \beast. 
 
 
 % ESS and PSRF
@@ -211,23 +212,26 @@ The accuracy and precision of parameter estimates by \ecoevolity was much greate
 when all sites of the alignment were used than when a single SNP per locus was used.  
 There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
 different types and degress of error or the length of loci when using a single SNP per locus. 
+% (\fig{}~\ref{fig:valsimsmodelopt})
 
 % Time
 The accuracy and precision of divergence time estimates by \beast were very good for all 
-alignment lengths and types and degrees error. When all of the data were used and 
-there was no error \ecoevolity produced estimates with accuracy and precision
-comparable to \beast. However when alignments contained errors, \ecoevolity
-underestimated very recent divergence times. 
+alignment lengths and types and degrees error. 
+When all of the data were used and there was no error \ecoevolity produced 
+estimates with accuracy and precision comparable to \beast. 
+However when alignments contained errors, \ecoevolity underestimated very recent 
+divergence times with increasing severity as the degree of error increased. 
 
-For estimates of divergence time when there is no model violation and all data 
-are used both \ecoevolity and \beast have high accuracy and precision.
-
-The accuracy and precision of divergence time estimates with \ecoevolity remains 
-high for most types and degrees of error except at very recent divergence times 
-where accuracy and precision decline with greater degrees of both types of error.
 
 % Effective Population Size
-The accuracy and precision of descendant effective population size
+The accuracy and precision of estimates of descendant effective population sizes 
+by \beast was much lower than for time and was negatively affected by both types
+of error. 
+\beast underestimated descendant effective population sizes with increasing severity 
+as the degree of error increased.
+The accuaracy and precision of  
+
+
 
 
 
@@ -251,7 +255,7 @@ Time results for 250bp loci (Figure~\ref{fig:time250}).
 As expected the linked-sequence model was more robust to model violation.
 
 But only in a small range of parameter space when divergence time is recent. This
-around the average coalescent time
+is around the mean coalescent time
 
 Ecoevolity performs better when all of the data are used as it results in a much larger 
 amount of data. It has previously been shown that including all sites including 
