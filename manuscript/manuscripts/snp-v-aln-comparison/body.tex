@@ -34,7 +34,7 @@ tree---those that assume (1) each site evolved along its own gene tree
 (i.e., each site is ``unlinked'') 
 \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
 or (2) contiguous, linked sites evolved along a shared gene tree 
-\citep{liuSpeciesTreesGene2007, ogilvieStarBEAST2BringsFaster2017, 
+\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
 yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
 linked-character models, respectively. For both models, the gene tree of each 
 locus (whether each locus is a single site or a segment of linked sites) 
@@ -75,15 +75,11 @@ high-throughput sequencing technologies, and the processing of these data.
 Most reduced-representation sequencing workflows employ amplification of DNA  
 using polymerase chain reaction (PCR) which can introduce mutational error at a 
 rate of up to 1.5 × 10−4 substitutions per base \citep{potapovExaminingSourcesError2017}.
-
-
-
-
-
-\jrocomment{Blurb about PCR biases/error?}
+Furthermore, amplification of different genome regions can be highly variable 
+resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}. 
 Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
-as high as 0.25\% per base 
+as high as 0.25\% per base. 
 
 % Sequence coverage---the mean number of unique reads representing each locus---is
 % often highly variable among loci and among individuals. Higher coverage increases 
@@ -101,7 +97,7 @@ shown to have an effect on estimates derived from the assembled alignments
 Furthermore, decisions have to be made during or after processing
 the raw sequence reads to avoid aligning paralogous sequences.
 This is often done by setting an upper threshold on the number of variable
-sites within a locus \citationNeeded.
+sites within a locus \citep{}. 
 Such a strategy will also filter out the most variable alignments
 of orthologous loci, thus introducing an acquisition bias.
 
@@ -136,13 +132,13 @@ revealed is quite limited.
 For our simulations, we assumed a simple two-tipped species tree
 with one ancestral population with a constant effective size
 of
-\epopsize[\rootpopindex]
+\rootpopsize
 that diverged at time \divtime into
 two descendent populations (terminal branches) with constant
 effective sizes of
-\epopsize[\descendantpopindex{1}]
+\tippopsize[1]
 and
-\epopsize[\descendantpopindex{2}]
+\tippopsize[2]
 \jrocomment{(Figure X)}.
 For two diploid individuals sampled from each of the terminal
 populations (4 sampled gene copies per population),
@@ -180,13 +176,13 @@ We simulated linked biallelic character alignments using
 \citep{rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
-0 with the exception of the rate between G and T which was 1.0. 
+0, except for the rate between G and T which was 1.0. 
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
 introducing two types of errors at two levels of severity. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
-for which one gene copy was different from the other gene copies) to invariant 
+for which one gene copy was different from the other seven gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
@@ -196,34 +192,56 @@ of 0.2 or 0.4 we randomly replaced one with the other.
 
 
 \subsection{Inference}
-We performed Bayesian inference to estimate the divergence time between the two species and the effective 
-population sizes of the root and tips of the species tree from each alignment 
-under both an unlinked-character model and a linked-character model. For each 
-model we parameterized the prior distributions on divergence time and effective
-population size with the same parameters under which the data were generated. 
-We used \ecoevolity
+For each simulated data set,
+we approximated the posterior distribution of the divergence time (\divtime)
+and effective population sizes
+(\rootpopsize, \tippopsize[1], and \tippopsize[2])
+under an
+unlinked-character model using
+\ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
-for inference of these parameters under an unlinked-character model.
-% Say something about the changes to the way the root Ne is estimated?
-We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
-frequency of 50 steps.
-We used the \beast (Version 0.15.1) \citep{@ogilvieStarBEAST2BringsFaster2017} 
-package in \beastcore (Version 2.5.2) \citep{@bouckaertBEASTSoftwarePlatform2014}
-to infer these parameters under the linked-character model. 
-We ran two independent chains of \beast with 20 million steps and a 
+and a linked-character model using the
+\beast
+\citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} 
+package in
+\beastcore
+\citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
+For both methods, we specified a CTMC model of character evolution and prior
+distributions that matched the model and distributions from which the data were
+generated.
+The prior on the effective size of the root population in the original
+implementation of \ecoevolity was parameterized to be relative to the mean
+effective size of the descendant populations.
+We added an option to \ecoevolity to compile a version where the prior is
+specified as the absolute effective size of the root population,
+which matches the model in \beast and the model we used to generate the data.
+
+For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
+analyses with 75,000 steps and a sample frequency of 50 steps.
+For \beast, we ran two independent MCMC analyses with 20 million steps and a
 sample frequency of 5000 steps. 
-We used the same model of sequence evolution as was used to generate the data
-as explained above.
+Based on preliminary analyses of simulated data sets without errors,
+we chose to discard the first 501 and 201 samples from
+the MCMC chains of \ecoevolity and \beast, leaving 4000 and
+7600 posterior samples for each data set, respectively.
+
+
+\subsection{Simulating unlinked characters}
+All of the simulations above violate the assumption of the \ecoevolity
+model that all characters are unlinked
+\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}.
+In order to help verify that the generative model of our simulation pipeline
+matched the underlying model of \ecoevolity, and to confirm that any behavior
+of the method was not being caused by the linkage violation,
+we simulated an additional 100 data sets of 100,000 biallelic characters as
+described above, except that the characters  were unlinked
+(i.e., each character evolved along an independent gene tree).
+From each of these, we created another data set where singleton site patterns
+were converted to invariant sites with a probability of 0.4.
+We analyzed each of these data sets with \ecoevolity as described above.
 
 
 \section{Results}
-
-We conservatively discarded the first 501 samples from the posterior of each 
-\ecoevolity chain leaving 1,000 samples for each of the four chains and a combined
-total of 4000.
-We conservatively discarded the first 201 samples from the posterior of each 
-\beast chain leaving 3,800 samples for each of the two chains and a combined
-total of 7,600.
 
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
@@ -237,16 +255,16 @@ a value of 200 to indicate adequate mixing of a chain.
 We also computed the potential scale reduction factor (PSRF) for each estimate 
 considered a value of less than 1.2 to indicate adequate convergence of 
 independent chains \citep{gelman1998}. 
-The effective sample size was greater than 200 for most \ecoevolity paramter
+The effective sample size was greater than 200 for most \ecoevolity parameter
 estimates regardless of locus length and type of or amount of error. 
-Likewise the potential scale reduciton factor was less than 1.2 for most \ecoevolity parameter estimates.
+Likewise the potential scale reduction factor was less than 1.2 for most \ecoevolity parameter estimates.
 
 The proportion of estimates with PSRF values greater than 1.2 was very low across 
 all \beast analyses indicating convergence of most chains.
 The proportion of \beast divergence time estimates with ESS values less than 200 
 increased at more recent divergence times as locus length decreased but were 
 consistent across different types and degrees of error.
-The proportion of \beast root effective populaation size estimates with ESS 
+The proportion of \beast root effective population size estimates with ESS 
 values less than 200 was high across all analyses. 
 Estimates of descendant effective population size had better ESS values across all 
 analyses with the exception of estimates of small effective population sizes from 
@@ -271,7 +289,7 @@ The results for each type and degree of error were consistent across different
 locus lengths.
 \beast underestimated descendant effective population sizes with increasing severity 
 as the degree of error increased.
-The accuaracy and precision of \ecoevolity was comparable to \beast when all of 
+The accuracy and precision of \ecoevolity was comparable to \beast when all of 
 the data were used and there was no error. \ecoevolity was also negatively affected
 by both types of error with increasing severity as the degree of error increased
 and this impact was no affected by locus length.
