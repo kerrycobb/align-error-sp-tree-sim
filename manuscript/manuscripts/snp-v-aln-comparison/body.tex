@@ -220,6 +220,14 @@ For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
 analyses with 75,000 steps and a sample frequency of 50 steps.
 For \beast, we ran two independent MCMC analyses with 20 million steps and a
 sample frequency of 5000 steps. 
+To assess convergence and mixing of the \ecoevolity and \beast MCMC chains, we
+computed the effective sample size
+\citep[ESS;][]{Gong2014}
+and potential scale reduction factor
+\citep[PSRF; the square root of Equation 1.1 in][]{Brooks1998}
+from the samples of each parameter, and considered an ESS value greater
+than 200 and PSRF less than 1.2 \citep{gelman1998} to indicate adequate mixing
+of a chain. 
 Based on preliminary analyses of simulated data sets without errors,
 we chose to discard the first 501 and 201 samples from
 the MCMC chains of \ecoevolity and \beast, leaving 4000 and
@@ -250,11 +258,6 @@ estimated credible intervals.
 This confirms that the sequence data were simulated under the same model as 
 those used for inference in \beast. 
 
-We computed the effective sample size (ESS) for each parameter estimate and considered
-a value of 200 to indicate adequate mixing of a chain. 
-We also computed the potential scale reduction factor (PSRF) for each estimate 
-considered a value of less than 1.2 to indicate adequate convergence of 
-independent chains \citep{gelman1998}. 
 The effective sample size was greater than 200 for most \ecoevolity parameter
 estimates regardless of locus length and type of or amount of error. 
 Likewise the potential scale reduction factor was less than 1.2 for most \ecoevolity parameter estimates.
