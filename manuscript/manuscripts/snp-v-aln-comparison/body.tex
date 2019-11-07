@@ -179,8 +179,8 @@ for which one gene copy was different from the other gene copies) to invariant
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
-was missing heterozygous gene copies. To do this, for each locus 
-we randomly paired gene copies from within each species, and with a probability 
+was missing heterozygous gene copies. To do this, we randomly paired gene copies 
+from within each species for each locus, and with a probability 
 of 0.2 or 0.4 we randomly replaced one with the other.
 
 
@@ -190,11 +190,9 @@ population sizes of the root and tips of the species tree from each alignment
 under both an unlinked-character model and a linked-character model. For each 
 model we parameterized the prior distributions on divergence time and effective
 population size with the same parameters under which the data were generated. 
-the same as the distributions generating the data.
 We used \ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
-to infer these parameters under the 
-unlinked-character model.
+for inference of these parameters under an unlinked-character model.
 % Say something about the changes to the way the root Ne is estimated?
 We ran four independent chains of \ecoevolity with 75,000 steps and a sample 
 frequency of 50 steps.
@@ -203,13 +201,12 @@ package in \beastcore (Version 2.5.2) \citep{@bouckaertBEASTSoftwarePlatform2014
 to infer these parameters under the linked-character model. 
 We ran two independent chains of \beast with 20 million steps and a 
 sample frequency of 5000 steps. 
-To model sequence evolution in \beast in a comparable way to \ecoevolity we used 
-the same GTR model under which the data were simulated as explained above.
+We used the same model of sequence evolution as was used to generate the data
+as explained above.
 
 
 \section{Results}
 
-% MCMC
 We conservatively discarded the first 501 samples from the posterior of each 
 \ecoevolity chain leaving 1,000 samples for each of the four chains and a combined
 total of 4000.
@@ -217,7 +214,6 @@ We conservatively discarded the first 201 samples from the posterior of each
 \beast chain leaving 3,800 samples for each of the two chains and a combined
 total of 7,600.
 
-% Coverage
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
 frequentist coverage in that the true value was within approximately 95\% of the 
@@ -225,7 +221,6 @@ estimated credible intervals.
 This confirms that the sequence data were simulated under the same model as 
 those used for inference in \beast. 
 
-% ESS and PSRF
 We computed the effective sample size (ESS) for each parameter estimate and considered
 a value of 200 to indicate adequate mixing of a chain. 
 We also computed the potential scale reduction factor (PSRF) for each estimate 
@@ -246,14 +241,11 @@ Estimates of descendant effective population size had better ESS values across a
 analyses with the exception of estimates of small effective population sizes from 
 250 bp loci.
 
-% Single SNP 
 The accuracy and precision of parameter estimates by \ecoevolity was much greater
 when all sites of the alignment were used than when a single SNP per locus was used.  
 There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
 different types and degress of error or the length of loci when using a single SNP per locus. 
-(\fig{}~\ref{fig:fig-time-1000.tex})
 
-% Time
 The accuracy and precision of divergence time estimates by \beast were very good for all 
 alignment lengths and types and degrees error. 
 When all of the data were used and there was no error \ecoevolity produced 
@@ -261,7 +253,6 @@ estimates with accuracy and precision comparable to \beast.
 However when alignments contained errors, \ecoevolity underestimated very recent 
 divergence times with increasing severity as the degree of error increased. 
 
-% Effective Population Size
 The accuracy and precision of estimates of descendant effective population sizes 
 by \beast was lower than for time and was negatively affected by both types
 of error for all descendant population sizes.
