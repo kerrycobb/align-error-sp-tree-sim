@@ -146,22 +146,93 @@ sample frequency of 1000 steps.
 To model sequence evolution in \beast in a comparable way to \ecoevolity we used 
 the same GTR model under which the data were simulated as explained above.
 
+
 \section{Results}
 
-When there is no model violation we see the expected coverage. 95\% of the time
-the true value is within the 95\% credible interval.
+%Outline
+% MCMC
+% ESS and PSRF Trends
+% Coverage
+% Ecoevolity 1bp
+% StarBEAST vs Ecoevolity Time
+% StarBEAST vs Ecoevolity Ne
 
+
+
+
+% MCMC
+When there is no model violation we see the expected coverage. 95\% of the time
+the true value is within the 95\% credible interval for both \ecoevolity and \beast.
+
+We conservatively discarded the first 501 samples from the posterior samples from 
+\ecoevolity.
+
+We conservatively discarded the first 201 samples from the posterior samples from 
+\beast 
+
+
+
+% ESS and PSRF
+
+We computed the effective sample size (ESS) for each estimate and somewhat arbitrarily
+designate a value of 200 as adequate.
+
+We also computed the potential scale reduction facctor for each estimate and following 
+with \citep{gelman1998} consider a value of less than 1.2 to be adequate. 
+
+The effective sample size was greater than 200 for most \ecoevolity paramter estimates
+regardless of locus length or amount of error. 
+Likewise the potential scale reduciton factor was less than 1.2 for most \ecoevolity parameter estimates.
+
+The number of \beast parameter estimates with ESS values less than 200 were consistent across
+different types and degrees of error but increased as locus size decreased. 
+
+
+% Coverage 
+
+
+% Ecoevolity 1 bp
+
+
+
+% Time
 We also see that when there is no model violation both \ecoevolity and \beast
 have high accuracy and precision when all of the data are used. 
 
-However when only 
-a single SNP per locus are used, the precision of \ecoevolity declines precipitously.
-The precision of \ecoevolity estimates using a single SNP per locus declines as 
-the number of loci declines.      
+However when only a single SNP per locus are used, the precision of \ecoevolity 
+declines precipitously.
 
-Estimates of divergence time and effective population size consistent between \beast
-and \ecoevolity when estimated with perfect data that do not violate the model
-and all of the data are included.
+The precision of \ecoevolity estimates using a single SNP per locus also declines 
+as the number of loci decreases.        
+
+% Effective Population Size
+
+
+
+
+
+% The MCMC chains for all analyses converged very
+% quickly; we conservatively removed the first 401 samples,
+% resulting in 3300 samples from the posterior (1100
+% samples from three chains) for each analysis. To assess
+% convergence and mixing, we plotted histograms of
+% the potential scale reduction factor across the three
+% independent chains and the effective sample size for
+% the log-likelihood and divergence times (Supplementary
+% Figs. S7–S10 available on Dryad). Mixing was poorer
+% when there was more prior uncertainty in the root
+% population size (Supplementary Figs. S9 and S10
+% available on Dryad). However, given the expected
+% frequentist behavior for how often the true parameter
+% values were contained within the 95% confidence
+% intervals (Fig. 2, Supplementary Figs. S2 and S3 available
+% on Dryad), and the weak relationship between the ESS
+% and estimation error (Supplementary Fig. S11 available
+% on Dryad), we do not expect MCMC mixing had a large
+% effect on our simulation results under the most extreme
+% levels of uncertainty in the root population size that we
+% simulated.
+
 
 
 
@@ -176,7 +247,18 @@ Time results for 250bp loci (Figure~\ref{fig:time250}).
 
 \section{Discussion}
 
-As expected linked-sequence model was more robust to model violation.
+As expected the linked-sequence model was more robust to model violation.
+
+But only in a small range of parameter space when divergence time is recent.
+
+Ecoevolity performs better when all of the data are used as it results in a much larger 
+amount of data. It has previously been shown that including all sites including 
+constant sites has a great positive impact than simply addding more data that 
+do not violate the model \citep{Oaks2018ecoevolity}
+
+Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
+There is less information contained in the shorter loci to inform gene tree estimation 
+and there would be expected to be more error in gene tree estimation.
 
 
 
