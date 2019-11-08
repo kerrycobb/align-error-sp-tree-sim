@@ -333,50 +333,43 @@ estimates. The distribution of estimates is generally as good or better than tho
 from \ecoevolity. 
 
 
-
-
 %
 The degree to which a dataset will be affected by error from missing heterozygotes
 and missing singletons will be highly dependent on the depth of sequencing coverage
 and on how the data are processed. 
 
-The program Stacks2 first identifies alleles
-then merges alleles together to create consensus loci.
+There will be a lower probability of sampling both alleles at a locus when locus 
+coverage is low. There may be a high probability of missing alleles from any 
+locus in individuals with overall low coverage. 
 
-Amount of error will be dependent on coverage and on bioinformatic processing.
-If error is coming from bioinformatic processing then all singletons would 
-be removed and error would be expected to be even worse than what is seen 
-in our results. 
+The program Stacks2 first identifies alleles then merges alleles together to 
+create consensus loci \citep{rochetteStacksAnalyticalMethods2019}. 
 
-ipyrad uses a minimum depth of coverage per base to call variants with a default
-value of 6 \citep{PyRADeatonAssemblyNovo2014}. 
+Pyrad first aligns reads to identify loci and then calls variants from loci 
+based on variant coverage \citep{PyRADeatonAssemblyNovo2014}.
 
+There may be a difference in how low coverage affects each tool.
 
-
-If sequencing depth at a locus is low, then there is a possibility that one 
-allele will be missed. This will also be dependant on the minimum number of 
-reads that are required to identify an allele. The program Stacks2 has a default 
-of 3 \citep{rochetteStacksAnalyticalMethods2019}. 
+If minor allele frequency filtering is performed then all singletons will be
+missing and bias would be expected to be more severe than in our analyses.
 
 
-
-
-
-Assuring to see affect of bias limited to small region of parameter space and
-only large at most severe error rates.
+%
+It is reassuring to see affect of bias limited to small region of parameter 
+space and only large at most severe error rates.
 40\% error rates likely higher than real data sets (I think? citations?).
 However, real data likely contain a mix of errors/biases from
-various steps in data collection process.
-Also, real data were not generated under the model with no prior
-misspecification.
-Violations of the model might make methods more sensitive
-to lower rates of error.
+various steps in data collection process. We did not evaluate the how mutational
+error or inaccurate base calls would bias estimates.
+Also, real data would not be generated under a model with no prior misspecification.
+Violations of the model might make methods more sensitive to lower rates of error.
 
 
 What can invesitagors look for as warning signs that their results
 are affected by such errors/biases?
 - Low coverage at some loci or in some individuals
-
+It is important to obtain high coverage reduce the probability of allelic dropout
+and missing singletons. 
 
 Our results raise interesting questions that can be further explored\ldots
 \begin{itemize}
