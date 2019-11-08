@@ -358,14 +358,14 @@ together to create consensus loci \citep{rochetteStacksAnalyticalMethods2019}.
 Pyrad first aligns reads to identify loci and then calls variants from loci 
 based on variant coverage \citep{PyRADeatonAssemblyNovo2014}.
 
-There may be a difference in how low coverage and genotyping or mutational error in reads
+There may be a difference in how low coverage and basecalling or mutational error in reads
 affects different strategies to data processing.
 
 
 
 %
 Filtering of minor allele frequencies that do not meet a minimum threshold has 
-been discussed as a way to eliminate the impact of genotyping and mutational 
+been discussed as a way to eliminate the impact of basecalling and mutational 
 error \citep{linckMinorAlleleFrequency2019}.
 Filtering alleles with counts of less than 3 ensures that all alleles have been 
 found in at least two diploid inidividuals which would minimize the incorporation 
@@ -409,6 +409,8 @@ Our results raise interesting questions that can be further explored\ldots
         Will linked-site models remain robust
     \item What erroneous site patterns have the largest affect on
         the likelihood? Can we model and correct for these?
+    \item Are larger population sample sizes more robust? Perhaps it is better
+        to sequence a larger number of individuals at lower coverage.
     \item We essentially had no model misspecification.
         what happens when our priors are wrong/diffuse?
         Will this amplify affect of errors/biases?
