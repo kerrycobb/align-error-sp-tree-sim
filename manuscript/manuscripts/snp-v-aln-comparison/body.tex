@@ -207,6 +207,11 @@ effective size of the descendant populations.
 We added an option to \ecoevolity to compile a version where the prior is
 specified as the absolute effective size of the root population,
 which matches the model in \beast and the model we used to generate the data.
+Because the linked sites violates the unlinked-character model of
+\ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity},
+we also analyzed each data set after removing all but (at most)
+one variable character per locus, while correcting the likelihood
+for sampling only variable characters.
 
 For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
 analyses with 75,000 steps and a sample frequency of 50 steps.
@@ -249,12 +254,6 @@ all of the data and scripts necessary to produce our results.
 
 \section{Results}
 
-The 95\% credible intervals for divergence times and effective population 
-sizes estimated from alignments without error in \beast had the expected 
-frequentist coverage in that the true value was within approximately 95\% of the 
-estimated credible intervals. 
-This confirms that the sequence data were simulated under the same model as 
-that used for inference in \beast. 
 
 
 \subsection{MCMC convergence and mixing}
@@ -268,39 +267,85 @@ applied to data sets with errors.
 This is in contrast to \beast, for which the frequency and degree of poor MCMC
 behavior is largely unaffected by the type or severity of errors.
 The proportion of \beast root effective population size estimates with ESS 
-values less than 200 was high across all analyses \rootfigsp. 
-Estimates of descendant effective population size had better ESS values across all 
+values less than 200 was high across all analyses \rootfigsp;
+estimates of descendant effective population size had better ESS values across all 
 analyses with the exception of estimates of small effective population sizes from 
 250 bp loci \thetafigsp.
 
-The accuracy and precision of parameter estimates by \ecoevolity was much greater
-when all sites of the alignment were used than when a single SNP per locus was used \mainfigsp.  
-There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
-different types and degress of error or the length of loci when using a single SNP per locus \mainfigsp. 
+\subsection{Analyzing all sites versus SNPs with \ecoevolity}
+When analyzing the simulated data sets without errors, the precision of
+parameter estimates by \ecoevolity was much greater when all sites of the
+alignment were used than when a single SNP per locus was used \mainfigsp.
+This was true across the different lengths of loci.
+Only analyzing SNPs does make \ecoevolity more robust to the errors
+we introduced.
+However, this robustness is due to the lack of information in the
+SNP data leading to wide credible intervals, and in the case of
+population size parameters, the marginal posteriors essentially
+match the prior distribution \thetafigsp.
+Our discussion of the behavior of \ecoevolity below focus on the estimates with
+all characters, unless mentioned otherwise.
 
-The accuracy and precision of divergence time estimates by \beast were very good for all 
-alignment lengths and types and degrees error \timefigsp. 
-When all of the data were used and there was no error \ecoevolity produced 
-estimates with accuracy and precision comparable to \beast \timefigsp. 
-However when alignments contained errors, \ecoevolity underestimated very recent 
-divergence times with increasing severity as the degree of error increased \timefigsp. 
+\subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
+    models}
+The divergence time estimates of \beast were very accurate and precise for all
+alignment lengths and types and degrees error, despite poor MCMC mixing (i.e.,
+low ESS values) for shorter loci \timefigsp. 
+For data sets without error (and when all characters are analyzed), the
+accuracy and precision of \ecoevolity's divergence time estimates were
+comparable to \beast \timefigsp.
+However when alignments contained errors, \ecoevolity underestimated very
+recent divergence times with increasing severity as the degree of error
+increased \timefigsp; estimates of larger divergence times were unaffected.
 
-The accuracy and precision of estimates of descendant effective population sizes 
-by \beast was lower than for time and was negatively affected by both types
-of error for all descendant population sizes \thetafigsp.
-The results for each type and degree of error were consistent across different 
-locus lengths \thetafigsp.
-\beast underestimated descendant effective population sizes with increasing severity 
-as the degree of error increased \thetafigsp.
-The accuracy and precision of descendant effective population sizes in 
-\ecoevolity was comparable to \beast when all of 
-the data were used and there was no error \thetafigsp. 
-\ecoevolity was also negatively affected
-by both types of error with increasing severity as the degree of error increased
-and this impact was no affected by locus length.
-Descendant effective population size estimates made from alignments with 40\%
-missing singleton and 40\% missing heterozygote error wtih \beast had higher
-accuracy and precision than estimates made with \ecoevolity \thetafigsp.   
+The biased underestimation of divergence times by \ecoevolity in the face of
+errors was coupled with overestimation of the ancestral effective population
+sizes (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+When analyzing the alignments without errors, \ecoevolity essentially returned
+the prior distribution on the effective size of the ancestral population
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+Despite poor MCMC mixing, \beast consistently estimated the effective size of
+the ancestral population better than \ecoevolity and was unaffected by errors
+in the data
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250});
+the precision of \beast's estimates of \rootpopsize increased with locus
+length.
+
+The estimates of the effective size of the descendant populations
+are largely similar between \beast and \ecoevolity;
+both methods underestimate the descendant population sizes when
+the data sets contain errors, and this downward bias is generally
+worse for \ecoevolity
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+The degree of underestimation increases with the rate of errors in the data
+sets for both \beast and \ecoevolity, and the results were largely consistent
+across different locus lengths.
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+
+\subsection{Performance of \ecoevolity with unlinked characters}
+The above results of \ecoevolity when analyzing data sets comprising linked
+loci are susceptible to a violation of its unlinked-character model.
+To rule out the possibility that the greater sensitivity of \ecoevolity to the
+errors we simulated is due to this violation, we simulated unlinked data sets
+and introduced singleton errors at a rate of 40\%.
+Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
+biases in parameter estimates with the data sets of unlinked characters
+(\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+\jrocomment{[These results still need to be incorporated]}.
+
+\subsection{Coverage of credible intervals}
+The 95\% credible intervals for divergence times and effective population sizes
+estimated from alignments without error in \beast had the expected coverage
+frequency in that the true value was within approximately 95\% of the estimated
+credible intervals. 
+This was also true for \ecoevolity when analyzing data sets simulated with
+unlinked characters (i.e., no linked sites) \cref{fig:ecoevolityunlinked}.
+The expected coverage behavior of \beast and \ecoevolity helps to confirm that
+the sequence data were simulated under the same model as that used for
+inference by these methods. 
+As seen previously \citep{Oaks2018ecoevolity}, the coverage of \ecoevolity is
+short when analyzing linked loci, due to the model violation.
+
 
 \section{Discussion}
 
