@@ -254,12 +254,6 @@ all of the data and scripts necessary to produce our results.
 
 \section{Results}
 
-The 95\% credible intervals for divergence times and effective population 
-sizes estimated from alignments without error in \beast had the expected 
-frequentist coverage in that the true value was within approximately 95\% of the 
-estimated credible intervals. 
-This confirms that the sequence data were simulated under the same model as 
-that used for inference in \beast. 
 
 
 \subsection{MCMC convergence and mixing}
@@ -327,6 +321,31 @@ The degree of underestimation increases with the rate of errors in the data
 sets for both \beast and \ecoevolity, and the results were largely consistent
 across different locus lengths.
 (\cref{fig:theta1000,fig:theta500,fig:theta250}).
+
+\subsection{Performance of \ecoevolity with unlinked characters}
+The above results of \ecoevolity when analyzing data sets comprising linked
+loci are susceptible to a violation of its unlinked-character model.
+To rule out the possibility that the greater sensitivity of \ecoevolity to the
+errors we simulated is due to this violation, we simulated unlinked data sets
+and introduced singleton errors at a rate of 40\%.
+Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
+biases in parameter estimates with the data sets of unlinked characters
+(\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+\jrocomment{[These results still need to be incorporated]}.
+
+\subsection{Coverage of credible intervals}
+The 95\% credible intervals for divergence times and effective population sizes
+estimated from alignments without error in \beast had the expected coverage
+frequency in that the true value was within approximately 95\% of the estimated
+credible intervals. 
+This was also true for \ecoevolity when analyzing data sets simulated with
+unlinked characters (i.e., no linked sites) \cref{fig:ecoevolityunlinked}.
+The expected coverage behavior of \beast and \ecoevolity helps to confirm that
+the sequence data were simulated under the same model as that used for
+inference by these methods. 
+As seen previously \citep{Oaks2018ecoevolity}, the coverage of \ecoevolity is
+short when analyzing linked loci, due to the model violation.
+
 
 \section{Discussion}
 
