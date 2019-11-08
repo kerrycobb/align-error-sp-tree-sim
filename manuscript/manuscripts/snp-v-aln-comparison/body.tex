@@ -1,7 +1,7 @@
 \section{Introduction}
 
 Shared ancestry is a fundamental attribute of life and phylogenetic methods 
-provide a statistical base for understanding the evolutionary history of organisms.
+provide a statistical basis for understanding the evolutionary history of organisms.
 A significant challenge to phylogentic reconstructions of this history is the 
 discordance that can arise between the genealogical histories of genes and 
 histories of divergence among species \citep{maddisonGeneTreesSpecies1997}.
@@ -71,17 +71,12 @@ Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
 as high as 0.25\% per base. 
 
-
-% Sequence coverage---the mean number of unique reads representing each locus---is
-% often highly variable among loci and among individuals. Higher coverage increases 
-% confidence of calling variants and distinguishing variants from error. 
-% At low coverage true variants not present at frequencies meeting the minimum threshold
-% may be filtered by processing tools 
-
 \citep{pfeifferSystematicEvaluationError2018}. 
 To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
 threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
+The effect of this filtering will be more pronounced in data sets with low or 
+highly variable coverage.
 This filtering can also introduce errors and biases which has been 
 shown to have an effect on estimates derived from the assembled alignments
 \citep{Harvey2015,linckMinorAlleleFrequency2019}.
@@ -91,8 +86,6 @@ This is often done by setting an upper threshold on the number of variable
 sites within a locus \citep{harveySimilarityThresholdsUsed2015}. 
 Such a strategy will also filter out the most variable alignments
 of orthologous loci, thus introducing an acquisition bias.
-
-
 
 Given all of these potential problems throughout the data collection process,
 phylogeneticists should assume their high-throughput genomic data set suffers
@@ -258,64 +251,77 @@ that used for inference in \beast.
 
 
 \subsection{MCMC convergence and mixing}
-Most sets \beast and \ecoevolity MCMC chains yielded samples of parameters with
+Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
 a PSRF less than 1.2, indicative of convergence,
 however, we do see poor mixing (ESS < 200) of the \beast chains as the length
-of loci decreases
-(\cref{fig:time1000,fig:time500,fig:time250,fig:roottheta1000,fig:roottheta500,fig:roottheta250,fig:theta1000,fig:theta500,fig:theta250};
+of loci decreases \mainfigsp;
 yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
 We only see evidence of poor mixing and convergence for \ecoevolity when
 applied to data sets with errors.
 This is in contrast to \beast, for which the frequency and degree of poor MCMC
 behavior is largely unaffected by the type or severity of errors.
 The proportion of \beast root effective population size estimates with ESS 
-values less than 200 was high across all analyses \rootfigs. 
+values less than 200 was high across all analyses \rootfigsp. 
 Estimates of descendant effective population size had better ESS values across all 
 analyses with the exception of estimates of small effective population sizes from 
-250 bp loci \thetafigs.
+250 bp loci \thetafigsp.
 
 The accuracy and precision of parameter estimates by \ecoevolity was much greater
-when all sites of the alignment were used than when a single SNP per locus was used \mainfigs.  
+when all sites of the alignment were used than when a single SNP per locus was used \mainfigsp.  
 There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
-different types and degress of error or the length of loci when using a single SNP per locus \mainfigs. 
+different types and degress of error or the length of loci when using a single SNP per locus \mainfigsp. 
 
 The accuracy and precision of divergence time estimates by \beast were very good for all 
-alignment lengths and types and degrees error \timefigs. 
+alignment lengths and types and degrees error \timefigsp. 
 When all of the data were used and there was no error \ecoevolity produced 
-estimates with accuracy and precision comparable to \beast \timefigs. 
+estimates with accuracy and precision comparable to \beast \timefigsp. 
 However when alignments contained errors, \ecoevolity underestimated very recent 
-divergence times with increasing severity as the degree of error increased \timefigs. 
+divergence times with increasing severity as the degree of error increased \timefigsp. 
 
 The accuracy and precision of estimates of descendant effective population sizes 
 by \beast was lower than for time and was negatively affected by both types
-of error for all descendant population sizes \thetafigs.
+of error for all descendant population sizes \thetafigsp.
 The results for each type and degree of error were consistent across different 
-locus lengths \thetafigs.
+locus lengths \thetafigsp.
 \beast underestimated descendant effective population sizes with increasing severity 
-as the degree of error increased \thetafigs.
+as the degree of error increased \thetafigsp.
 The accuracy and precision of descendant effective population sizes in 
 \ecoevolity was comparable to \beast when all of 
-the data were used and there was no error \thetafigs. 
+the data were used and there was no error \thetafigsp. 
 \ecoevolity was also negatively affected
 by both types of error with increasing severity as the degree of error increased
 and this impact was no affected by locus length.
 Descendant effective population size estimates made from alignments with 40\%
 missing singleton and 40\% missing heterozygote error wtih \beast had higher
-accuracy and precision than estimates made with \ecoevolity \thetafigs.   
+accuracy and precision than estimates made with \ecoevolity \thetafigsp.   
 
 \section{Discussion}
 
+Consistent with what has been shown with previous work, \ecoevolity performed 
+better when all sites were utilized despite violating the assumption that all 
+sites are unlinked \citep{Oaks2018ecoevolity}. All parameter estimates were very
+poor when only a single SNP per locus was used. 
 
-As expected the linked-sequence model was more robust to model violation.
-But only in a small range of parameter space when divergence time is recent. This
-is around the mean coalescent time
+As expected the linked-character model of \ecoevolity was more robust to model 
+violation than the unlinked-character model of \starbeast and yielded less biased 
+estimates of divergence time and effective population sizes. 
+We only see bias at very recent divergence times, where \ecoevolity
+underestimates the divergence time and overestimates the ancestral pop size.
+The affect dissapears when divergence time is larger than about $8N_e\mu$.
+This suggests that the unlinked model is sensitive to the errors
+when lineages do not coalesce within the terminal branches,
+but is robust to the errors when they do.
 
-
-
-Ecoevolity performs better when all of the data are used as it results in a much larger 
-amount of data. It has previously been shown that including all sites including 
-constant sites has a great positive impact than simply addding more data that 
-do not violate the model \citep{Oaks2018ecoevolity}
+Inflated pop size of internal branch.
+We are seeing values indicating an average divergence between individuals of up
+to 3\% \rootfigs, which is much higher than our prior mean expectation (0.4\%).
+Seeing such biologially unrealistically large internal pop sizes could indicate
+biased div time estimates.
+However, there is little information in the data about pop sizes of ancestral
+branches; so, unfortunately, the parameter that might serve as an indicator
+of a problem is going to have very large credible intervals.
+But, many of our posterior estimates of root pop size are well beyond the
+prior.
 
 
 Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
@@ -327,18 +333,35 @@ from \ecoevolity.
 As loci get longer, there is more information and the posterior has a more 
 narrow range and is easier for MCMC.
 
-
-
 Practitioners may want to compare both models if the number of loci and taxa
 permit it. Or maybe perform analyses on parts of the tree with recent divergence
 time to compare results 
 
-We only see bias at very recent divergence times, where \ecoevolity
-underestimates the div time and overestimates the ancestral pop size.
-The affect dissapears when div time is larger than about $8N_e\mu$.
-This suggests that the unlinked model is sensitive to the errors
-when lineages do not coalesce within the terminal branches,
-but is robust to the errors when they do.
+
+%
+The degree to which a dataset will be affected by error from missing heterozygotes
+and missing singletons will be highly dependent on the depth of sequencing coverage
+and on how the data are processed. The program Stacks2 first identifies alleles
+then merges alleles together to create consensus loci.
+
+
+\subsection{Practical Guidance}
+
+Amount of error will be dependent on coverage and on bioinformatic processing.
+If error is coming from bioinformatic processing then all singletons would 
+be removed and error would be expected to be even worse than what is seen 
+in our results. 
+
+ipyrad uses a minimum depth of coverage per base to call variants with a default
+value of 6 \citep{PyRADeatonAssemblyNovo2014}. 
+
+
+
+If sequencing depth at a locus is low, then there is a possibility that one 
+allele will be missed. This will also be dependant on the minimum number of 
+reads that are required to identify an allele. The program Stacks2 has a default 
+of 3 \citep{rochetteStacksAnalyticalMethods2019}. 
+
 
 Assuring to see affect of bias limited to small region of parameter space and
 only large at most severe error rates.
@@ -350,18 +373,11 @@ misspecification.
 Violations of the model might make methods more sensitive
 to lower rates of error.
 
+
 What can invesitagors look for as warning signs that their results
 are affected by such errors/biases?
-Inflated pop size of internal branch.
-We are seeing values indicating an average divergence between individuals of up
-to 3\%, which is much higher than our prior mean expectation (0.4\%).
-Seeing such biologially unrealistically large internal pop sizes could indicate
-biased div time estimates.
-However, there is little information in the data about pop sizes of ancestral
-branches; so, unfortunately, the parameter that might serve as an indicator
-of a problem is going to have very large credible intervals.
-But, many of our posterior estimates of root pop size are well beyond the
-prior.
+- Low coverage at some loci or in some individuals
+
 
 Our results raise interesting questions that can be further explored\ldots
 \begin{itemize}
