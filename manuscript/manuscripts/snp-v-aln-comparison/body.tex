@@ -333,18 +333,23 @@ across different locus lengths.
 Consistent with what has been shown with previous work, \ecoevolity performed 
 better when all sites were utilized despite violating the assumption that all 
 sites are unlinked \citep{Oaks2018ecoevolity}. All parameter estimates were very
-poor when only a single SNP per locus was used. 
+poor when only a single SNP per locus was used even without model violation. 
+When all of the sites were included, \ecoevolity does nearly as well as \beast 
+when there is no model violation caused by error.
 
+% Starbeast vs ecoevolity
 As expected the linked-character model of \ecoevolity was more robust to model 
 violation than the unlinked-character model of \beast and yielded less biased 
 estimates of divergence time and effective population sizes. 
-We only see bias at very recent divergence times, where \ecoevolity
+We only see biased estimated of divergence time at very recent times, 
+where \ecoevolity
 underestimates the divergence time and overestimates the ancestral pop size.
 This affect dissapears when divergence time is larger than about $8N_e\mu$.
 This suggests that the unlinked model is sensitive to the errors
 when lineages do not coalesce within the terminal branches,
 but is robust to the errors when they do.
 
+% Root pop size
 Inflated pop size of internal branch.
 We are seeing values indicating an average divergence between individuals of up
 to 3\% \rootfigs, which is much higher than our prior mean expectation (0.4\%).
@@ -356,51 +361,7 @@ of a problem is going to have very large credible intervals.
 But, many of our posterior estimates of root pop size are well beyond the
 prior.
 
-Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
-There is less information contained in the shorter loci to inform gene tree estimation 
-and there would be expected to be more uncertaintly in gene tree estimation.
-This uncertainly results in a wider distribution of parameter space over that
-must be explored.
-Poor MCMC performance in \beast does not appear to correlate with poor parameter 
-estimates. The distribution of estimates is generally as good or better than those 
-from \ecoevolity. 
-
-
-%
-The degree to which a dataset will be affected by error from missing heterozygotes
-and missing singletons will be highly dependent on the depth of sequencing coverage
-and on how the data are processed. 
-
-There will be a lower probability of sampling both alleles at a locus when locus 
-coverage is low. There may be a high probability of missing alleles from any 
-locus in individuals with overall low coverage. 
-
-Furthermore even if both alleles at a locus are sequenced, they must be sequenced
-at high enough coverage to meet the filtering thresholds during data processing.
-The method used to process and filter data could have an effect?
-For example the program Stacks2 first identifies alleles then merges them 
-together to create consensus loci \citep{rochetteStacksAnalyticalMethods2019}. 
-
-Pyrad first aligns reads to identify loci and then calls variants from loci 
-based on variant coverage \citep{PyRADeatonAssemblyNovo2014}.
-
-There may be a difference in how low coverage and basecalling or mutational error in reads
-affects different strategies to data processing.
-
-
-
-%
-Filtering of minor allele frequencies that do not meet a minimum threshold has 
-been discussed as a way to eliminate the impact of basecalling and mutational 
-error \citep{linckMinorAlleleFrequency2019}.
-Filtering alleles with counts of less than 3 ensures that all alleles have been 
-found in at least two diploid inidividuals which would minimize the incorporation 
-of error into analyses \citep{rochetteStacksAnalyticalMethods2019}.
-Minor allele frequency filtering of singleton sites would eliminate all sites 
-and likely produce error much greater than that observed in our analyses.
-
-
-%
+% Severity 
 It is reassuring to see affect of bias limited to small region of parameter 
 space and only large at most severe error rates.
 40\% error rates likely higher than real data sets (I think? citations?).
@@ -410,10 +371,46 @@ error or inaccurate base calls would bias estimates.
 Also, real data would not be generated under a model with no prior misspecification.
 Violations of the model might make methods more sensitive to lower rates of error.
 
+% Locus length
+Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
+There is less information contained in the shorter loci to inform gene tree estimation 
+and it is expected that there to be more uncertaintly in gene tree estimation.
+This uncertainly results in a wider posterior distribution of that must be 
+sampled from.
+Poor MCMC performance in \beast does not appear to correlate with poor parameter 
+estimates. The distribution of estimates is generally as good or better than those 
+from \ecoevolity. 
 
-What can investigators look for as warning signs that their results
-are affected by such errors/biases?
-- Low coverage at some loci or in some individuals
+
+% Application
+The degree to which a dataset will be affected by error from missing alleles 
+and missing singletons will be highly dependent on the depth of sequencing coverage
+and on how the data are processed. Lower coverage at a locus could arise due 
+to amplification bias but also due to stochastic variance. Furthermore,
+mean coverage will likely vary across individual samples resulting in greater 
+likelihood of allelic dropout those individuals. Most processing pipelines set 
+a minimum coverage threshold for variants and alleles. 
+
+Filtering of minor allele frequencies that do not meet a minimum threshold has 
+been discussed as a way to eliminate the impact of basecalling and mutational 
+error \citep{linckMinorAlleleFrequency2019}.
+Filtering alleles with counts of less than 3 ensures that all alleles have been 
+found in at least two diploid inidividuals which would minimize the incorporation 
+of error into analyses \citep{rochetteStacksAnalyticalMethods2019}.
+Minor allele frequency filtering of singleton sites would eliminate all sites 
+and likely produce error much greater than that observed in our analyses.
+Minor allele frequency filtering has been shown to bias estimates of population 
+structure \citep{linckMinorAlleleFrequency2019}.
+
+
+% Recommendations
+% What can investigators look for as warning signs that their results
+% are affected by such errors/biases?
+Investigators should be careful when sequence coverage is low within some
+individual samples are at some loci as this can result in missing data.
+Improbably large root or internal node effective population sizes especially if 
+they are larger than the prior. 
+
 
 What can they do to avoid errors/biases?
 It is important to obtain high coverage reduce the probability of allelic dropout
@@ -421,6 +418,17 @@ and missing singletons.
 Filter PCR clones which can account for as much as 60\% of sequenced reads 
 \citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014} by using single molecule tagging, randomly sheared libraries or PCR free
 techniques.
+
+
+% Future directions
+
+
+We chose this simple species tree model for our simulations to help ensure any
+differences in estimation accuracy or precision were due to differences in
+underlying linked and unlinked character models,
+and \emph{not} due to differences in numerical algorithms for searching species
+and gene tree space.
+F
 
 Our results raise interesting questions that can be further explored\ldots
 \begin{itemize}
@@ -436,7 +444,8 @@ Our results raise interesting questions that can be further explored\ldots
     \item What erroneous site patterns have the largest affect on
         the likelihood? Can we model and correct for these?
     \item Are larger population sample sizes more robust? Perhaps it is better
-        to sequence a larger number of individuals at lower coverage.
+        to sequence a larger number of individuals at lower coverage 
+        \cite{fumagalliAssessingEffectSequencing2013}.
     \item We essentially had no model misspecification.
         what happens when our priors are wrong/diffuse?
         Will this amplify affect of errors/biases?
