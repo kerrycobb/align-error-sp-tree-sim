@@ -1,31 +1,12 @@
 \section{Introduction}
 
-% How does an MSA model compare to BC model as the number and length of loci
-% change?
 
-% When we have multi-locus sequence data, should we analyze all the data under
-% a biallelic-character model, or only keep (at most) one site per locus?
-
-% How do MSA and BC models compare in term of robustness to data-acquistion
-% biases?
-% BC can be very sensitive \citep{Oaks2018ecoevolity}.
-% Will MSA fair better?
-% Information from each site under a BC model is the counts of alleles.
-% Thus, it's not surprising these models are sensitive when these counts are off.
-% BC gleans information from many sites to directly inform the species
-% tree by integrating out the gene trees; we have very little information
-% about any of the gene trees.
-% In comparison, information from aligned sequences of linked sites can
-% potentially contain much more information about the underlying gene tree.
-% Thus, if an acquistion bias causes some tips to be missing, the
-% information in the gene tree and branch lengths from the remaning
-% sequences might allow us to recover.
+Shared ancestry is a fundamental 
 
 Likelihood-based inference under the multispecies coalescent is a powerful 
-framework for estimating species trees,  divergence times, and  effective 
+framework for estimating species trees, divergence times, and effective 
 population sizes in the presence of incomplete lineage sorting 
 \citep{xuChallengesSpeciesTree2016}.
-\jrocomment{More intro to phylogenetics/species trees here}
 
 Likelihood-based approaches to species 
 tree inference can be classified into two groups, based on how they model the 
@@ -70,12 +51,25 @@ independent gene tree?
 Little work has been done to help inform these types of decisions. 
 
 An important consideration for choosing a multi-species coalescent model is
-sources of error and bias that result from reduced-representation protocols,
+the sources of error and bias that result from reduced-representation protocols,
 high-throughput sequencing technologies, and the processing of these data.
-\jrocomment{Blurb about PCR biases/error?}
+Most reduced-representation sequencing workflows employ amplification of DNA  
+using polymerase chain reaction (PCR) which can introduce mutational error at a 
+rate of up to $1.5\times10^{-5}$ substitutions per base \citep{potapovExaminingSourcesError2017}.
+Furthermore, amplification of different genome regions can be highly variable 
+resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}. 
 Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
-as high as 0.25\% per base 
+as high as 0.25\% per base. 
+
+
+
+% Sequence coverage---the mean number of unique reads representing each locus---is
+% often highly variable among loci and among individuals. Higher coverage increases 
+% confidence of calling variants and distinguishing variants from error. 
+% At low coverage true variants not present at frequencies meeting the minimum threshold
+% may be filtered by processing tools 
+
 \citep{pfeifferSystematicEvaluationError2018}. 
 To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
@@ -86,15 +80,11 @@ shown to have an effect on estimates derived from the assembled alignments
 Furthermore, decisions have to be made during or after processing
 the raw sequence reads to avoid aligning paralogous sequences.
 This is often done by setting an upper threshold on the number of variable
-sites within a locus \citationNeeded.
+sites within a locus \citep{harveySimilarityThresholdsUsed2015}. 
 Such a strategy will also filter out the most variable alignments
 of orthologous loci, thus introducing an acquisition bias.
 
-% Sequence coverage---the mean number of unique reads representing each locus---is
-% often highly variable among loci and among individuals. Higher coverage increases 
-% confidence of calling variants and distinguishing variants from error. 
-% At low coverage true variants not present at frequencies meeting the minimum threshold
-% may be filtered by processing tools 
+
 
 Given all of these potential problems throughout the data collection process,
 phylogeneticists should assume their high-throughput genomic data set suffers
@@ -254,51 +244,54 @@ all of the data and scripts necessary to produce our results.
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
 frequentist coverage in that the true value was within approximately 95\% of the 
-estimated credible intervals. 
-This confirms that the sequence data were simulated under the same model as 
-those used for inference in \beast. 
+estimated credible intervals 
+This is confirms that the sequence data were simulated under the same model as 
+that used for inference in \beast. 
 
 The effective sample size was greater than 200 for most \ecoevolity parameter
-estimates regardless of locus length and type of or amount of error. 
-Likewise the potential scale reduction factor was less than 1.2 for most \ecoevolity parameter estimates.
+estimates regardless of locus length and type or amount of error \mainfigs. 
+Likewise the potential scale reduction factor was less than 1.2 for most 
+\ecoevolity parameter estimates \mainfigs.
 
 The proportion of estimates with PSRF values greater than 1.2 was very low across 
-all \beast analyses indicating convergence of most chains.
+all \beast analyses indicating convergence of most chains \mainfigs.
 The proportion of \beast divergence time estimates with ESS values less than 200 
 increased at more recent divergence times as locus length decreased but were 
-consistent across different types and degrees of error.
+consistent across different types and degrees of error \timefigs.
 The proportion of \beast root effective population size estimates with ESS 
-values less than 200 was high across all analyses. 
+values less than 200 was high across all analyses \rootfigs. 
 Estimates of descendant effective population size had better ESS values across all 
 analyses with the exception of estimates of small effective population sizes from 
-250 bp loci.
+250 bp loci \thetafigs.
 
 The accuracy and precision of parameter estimates by \ecoevolity was much greater
-when all sites of the alignment were used than when a single SNP per locus was used.  
+when all sites of the alignment were used than when a single SNP per locus was used \mainfigs.  
 There is no clear trend for the accuracy and precision of \ecoevolity estimates across the
-different types and degress of error or the length of loci when using a single SNP per locus. 
+different types and degress of error or the length of loci when using a single SNP per locus \mainfigs. 
 
 The accuracy and precision of divergence time estimates by \beast were very good for all 
-alignment lengths and types and degrees error. 
+alignment lengths and types and degrees error \timefigs. 
 When all of the data were used and there was no error \ecoevolity produced 
-estimates with accuracy and precision comparable to \beast. 
+estimates with accuracy and precision comparable to \beast \timefigs. 
 However when alignments contained errors, \ecoevolity underestimated very recent 
-divergence times with increasing severity as the degree of error increased. 
+divergence times with increasing severity as the degree of error increased \timefigs. 
 
 The accuracy and precision of estimates of descendant effective population sizes 
 by \beast was lower than for time and was negatively affected by both types
-of error for all descendant population sizes.
+of error for all descendant population sizes \thetafigs.
 The results for each type and degree of error were consistent across different 
-locus lengths.
+locus lengths \thetafigs.
 \beast underestimated descendant effective population sizes with increasing severity 
-as the degree of error increased.
-The accuracy and precision of \ecoevolity was comparable to \beast when all of 
-the data were used and there was no error. \ecoevolity was also negatively affected
+as the degree of error increased \thetafigs.
+The accuracy and precision of descendant effective population sizes in 
+\ecoevolity was comparable to \beast when all of 
+the data were used and there was no error \thetafigs. 
+\ecoevolity was also negatively affected
 by both types of error with increasing severity as the degree of error increased
 and this impact was no affected by locus length.
 Descendant effective population size estimates made from alignments with 40\%
 missing singleton and 40\% missing heterozygote error wtih \beast had higher
-accuracy and precision than estimates made with \ecoevolity.   
+accuracy and precision than estimates made with \ecoevolity \thetafigs.   
 
 % Ecoevolity 1 bp
 
@@ -308,13 +301,14 @@ accuracy and precision than estimates made with \ecoevolity.
 
 
 
-Time results for 1000bp loci (Figure~\ref{fig:time1000}).
-
-Time results for 500bp loci (Figure~\ref{fig:time500}).
-
-Time results for 250bp loci (Figure~\ref{fig:time250}).
 
 \section{Discussion}
+
+
+
+
+
+
 
 As expected the linked-sequence model was more robust to model violation.
 
