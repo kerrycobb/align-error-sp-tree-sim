@@ -6,6 +6,8 @@ import sys
 import glob
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import (inset_axes, InsetPosition,
+                                                  mark_inset)
 import re
 
 
@@ -31,7 +33,10 @@ def set_color(row):
         return "#1f77b4"        # Blue
 
 def set_axis(ax, df, lim, interval,
-        include_rmse = True):
+        include_rmse = True,
+        include_inset = False,
+        inset_min = -0.002,
+        inset_max = 0.029):
     lower = "{}_lower".format(interval)
     upper = "{}_upper".format(interval)
     for ix, row in df.iterrows():
@@ -87,6 +92,51 @@ def set_axis(ax, df, lim, interval,
                 transform = ax.transAxes,
                 size = 18.0,
                 zorder = 400)
+
+    if include_inset:
+        ax_inset = plt.axes([0,0,1,1])
+        inset_position = InsetPosition(ax, [0.56, 0.06, 0.43, 0.43])
+        ax_inset.set_axes_locator(inset_position)
+        for ix, row in df.iterrows():
+            zorder = 200
+            if row["color"] != "#1f77b4":
+                zorder = 300
+            ax_inset.errorbar(
+                x=row["true"],
+                y=row["mean"],
+                yerr=[[row["mean"] - row[lower]], [row[upper] - row["mean"]]],
+                marker="o",
+                markersize=8.0,
+                markeredgewidth = 2.5,
+                markeredgecolor=row["color"],
+                markerfacecolor="none",
+                elinewidth=2.0,
+                linestyle="",
+                # ecolor="#1f77b4",
+                ecolor=row["color"],
+                capsize=2.0,
+                zorder = zorder,
+            )
+        ax_inset.set_xlim([inset_min, inset_max])
+        ax_inset.set_ylim([inset_min, inset_max])
+        # ax.set_xlim([0, ax.get_ylim()[1]])
+        # ax.set_ylim([0, ax.get_ylim()[1]])
+        identity_line_inset, = ax_inset.plot(
+                [ax_inset.get_xlim()[0], ax_inset.get_xlim()[1]],
+                [ax_inset.get_ylim()[0], ax_inset.get_ylim()[1]])
+        plt.setp(identity_line_inset,
+                color = '0.7',
+                linestyle = '-',
+                linewidth = 1.5,
+                marker = '',
+                zorder = 100)
+        # Increase size of tick labels
+        ax_inset.tick_params(axis = "both", which = "major", labelsize = 10)
+        # Only show up to 5 ticks and labels
+        ax_inset.xaxis.set_major_locator(plt.MaxNLocator(2))
+        ax_inset.yaxis.set_major_locator(plt.MaxNLocator(2))
+        ax_inset.set_facecolor("white")
+        # mark_inset(ax, ax_inset, loc1 = 2, loc2 = 4, fc = "none", ec = "0.5")
 
 def get_max_values(dir_name, statistic = "mean"):
     max_time = float("-inf")
@@ -177,9 +227,14 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
             (eco_theta, max_theta, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
         
     for i in plot_params:
+        include_inset = False
+        if i[2].endswith("Time") and (not alignment.endswith("-snp")):
+            include_inset = True
         plt.close('all')
         f, ax = plt.subplots()    
-        set_axis(ax, i[0], i[1], interval) 
+        set_axis(ax, i[0], i[1], interval,
+                include_rmse = True,
+                include_inset = include_inset) 
         # f.suptitle(i[2])
         plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
             bbox_inches='tight', pad_inches=0) 
