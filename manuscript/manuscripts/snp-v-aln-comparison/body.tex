@@ -11,14 +11,21 @@ among gene trees. The multispecie coalescent (MSC) model has emerged as a
 powerful framework for estimating species trees along with other parameters of 
 interest such as divergence times, and effective population sizes in the 
 presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}.
-There are two classes of methods using the MSC model: approximate or summary 
-methods and full Likelihood methods. Full likelihood methods are ideal because they 
-integrate over gene trees and accomodate uncertainty, whereas summary methods 
-treat gene trees as observed data and are thus susceptible to bias arising from 
-error in gene tree estimation \citep{rannalaEfficientBayesianSpecies2017}.
+Full-likelihood Bayesian approaches are appealing, because of their ability to
+infer the species tree directly from character alignments while accommodating
+uncertainty in geneaological processes by integrating over gene trees
+\citep{rannalaEfficientBayesianSpecies2017}.
+%% This categorization does not capture methods that use phylogenetic invariants
+% There are two classes of methods using the MSC model: approximate or summary 
+% methods and full Likelihood methods. Full likelihood methods are ideal because they 
+% integrate over gene trees and accomodate uncertainty, whereas summary methods 
+% treat gene trees as observed data and are thus susceptible to bias arising from 
+% error in gene tree estimation \citep{rannalaEfficientBayesianSpecies2017}.
 
 Full likelihood approaches to species 
-tree inference can be further classified into two groups, based on how they model the 
+tree inference can be
+% further
+classified into two groups, based on how they model the 
 evolution of orthologous DNA sites along gene trees within the species 
 tree---those that assume (1) each site evolved along its own gene tree 
 (i.e., each site is ``unlinked'') 
@@ -254,7 +261,7 @@ that used for inference in \beast.
 Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
 a PSRF less than 1.2, indicative of convergence,
 however, we do see poor mixing (ESS < 200) of the \beast chains as the length
-of loci decreases \mainfigsp;
+of loci decreases (\mainfigs;
 yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
 We only see evidence of poor mixing and convergence for \ecoevolity when
 applied to data sets with errors.
@@ -306,7 +313,7 @@ when there is no model violation caused by error.
 
 % Starbeast vs ecoevolity
 As expected the linked-character model of \ecoevolity was more robust to model 
-violation than the unlinked-character model of \starbeast and yielded less biased 
+violation than the unlinked-character model of \beast and yielded less biased 
 estimates of divergence time and effective population sizes. 
 We only see biased estimated of divergence time at very recent times, 
 where \ecoevolity
@@ -378,7 +385,7 @@ What can they do to avoid errors/biases?
 It is important to obtain high coverage reduce the probability of allelic dropout
 and missing singletons. 
 Filter PCR clones which can account for as much as 60\% of sequenced reads 
-\citep{andrewsHarnessingPowerRADseq2016; smithBiasedEstimatesClonal2014} by using single molecule tagging, randomly sheared libraries or PCR free
+\citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014} by using single molecule tagging, randomly sheared libraries or PCR free
 techniques.
 
 
