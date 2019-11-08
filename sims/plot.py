@@ -2,11 +2,23 @@
 
 import click
 import os
+import sys
 import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
 
+
+def mean_squared_error(x, y):
+    if not len(x) == len(y):
+        raise ValueError('x and y must be the same length')
+    sse = 0.0
+    for i in range(len(x)):
+        sse += (x[i] - y[i]) ** 2
+    return sse / len(x)
+
+def root_mean_square_error(x, y):
+    return mean_squared_error(x, y) ** 0.5
 
 def set_color(row):
     if row["ess"] < 200 and row["red_fac"] > 1.2:
@@ -18,7 +30,8 @@ def set_color(row):
     else:
         return "#1f77b4"        # Blue
 
-def set_axis(ax, df, lim, interval):
+def set_axis(ax, df, lim, interval,
+        include_rmse = True):
     lower = "{}_lower".format(interval)
     upper = "{}_upper".format(interval)
     for ix, row in df.iterrows():
@@ -62,6 +75,18 @@ def set_axis(ax, df, lim, interval):
     # Only show up to 5 ticks and labels
     ax.xaxis.set_major_locator(plt.MaxNLocator(5))
     ax.yaxis.set_major_locator(plt.MaxNLocator(5))
+    if include_rmse:
+        x = list(df["true"])
+        y = list(df["mean"])
+        rmse = root_mean_square_error(x, y)
+        ax.text(0.02, 0.97,
+                "RMSE = {0:.2e}".format(
+                        rmse),
+                horizontalalignment = "left",
+                verticalalignment = "top",
+                transform = ax.transAxes,
+                size = 18.0,
+                zorder = 400)
 
 def get_max_values(dir_name, statistic = "mean"):
     max_time = float("-inf")
@@ -145,6 +170,11 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
         (eco_time, max_time, "Ecoevolity Time", "ecoevolity-time.pdf"),
         (eco_root_theta, max_root_theta, "Ecoevolity Root Theta", "ecoevolity-root-theta.pdf"),
         (eco_theta, max_theta, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
+    if alignment.endswith("-snp"):
+        plot_params = [
+            (eco_time, max_time, "Ecoevolity Time", "ecoevolity-time.pdf"),
+            (eco_root_theta, max_root_theta, "Ecoevolity Root Theta", "ecoevolity-root-theta.pdf"),
+            (eco_theta, max_theta, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
         
     for i in plot_params:
         plt.close('all')
