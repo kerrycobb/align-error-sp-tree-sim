@@ -307,7 +307,7 @@ violation than the unlinked-character model of \starbeast and yielded less biase
 estimates of divergence time and effective population sizes. 
 We only see bias at very recent divergence times, where \ecoevolity
 underestimates the divergence time and overestimates the ancestral pop size.
-The affect dissapears when divergence time is larger than about $8N_e\mu$.
+This affect dissapears when divergence time is larger than about $8N_e\mu$.
 This suggests that the unlinked model is sensitive to the errors
 when lineages do not coalesce within the terminal branches,
 but is robust to the errors when they do.
@@ -316,36 +316,32 @@ Inflated pop size of internal branch.
 We are seeing values indicating an average divergence between individuals of up
 to 3\% \rootfigs, which is much higher than our prior mean expectation (0.4\%).
 Seeing such biologially unrealistically large internal pop sizes could indicate
-biased div time estimates.
-However, there is little information in the data about pop sizes of ancestral
-branches; so, unfortunately, the parameter that might serve as an indicator
+biased divergence time estimates.
+However, there is little information in the data about effective population sizes 
+of ancestral branches; so, unfortunately, the parameter that might serve as an indicator
 of a problem is going to have very large credible intervals.
 But, many of our posterior estimates of root pop size are well beyond the
 prior.
 
-
 Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
 There is less information contained in the shorter loci to inform gene tree estimation 
-and there would be expected to be more error in gene tree estimation.
+and there would be expected to be more uncertaintly in gene tree estimation.
+This uncertainly results in a wider distribution of parameter space over that
+must be explored.
 Poor MCMC performance in \beast does not appear to correlate with poor parameter 
 estimates. The distribution of estimates is generally as good or better than those 
 from \ecoevolity. 
-As loci get longer, there is more information and the posterior has a more 
-narrow range and is easier for MCMC.
 
-Practitioners may want to compare both models if the number of loci and taxa
-permit it. Or maybe perform analyses on parts of the tree with recent divergence
-time to compare results 
+
 
 
 %
 The degree to which a dataset will be affected by error from missing heterozygotes
 and missing singletons will be highly dependent on the depth of sequencing coverage
-and on how the data are processed. The program Stacks2 first identifies alleles
+and on how the data are processed. 
+
+The program Stacks2 first identifies alleles
 then merges alleles together to create consensus loci.
-
-
-\subsection{Practical Guidance}
 
 Amount of error will be dependent on coverage and on bioinformatic processing.
 If error is coming from bioinformatic processing then all singletons would 
@@ -361,6 +357,9 @@ If sequencing depth at a locus is low, then there is a possibility that one
 allele will be missed. This will also be dependant on the minimum number of 
 reads that are required to identify an allele. The program Stacks2 has a default 
 of 3 \citep{rochetteStacksAnalyticalMethods2019}. 
+
+
+
 
 
 Assuring to see affect of bias limited to small region of parameter space and
