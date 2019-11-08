@@ -1,12 +1,24 @@
 \section{Introduction}
 
-Likelihood-based inference under the multispecies coalescent is a powerful 
-framework for estimating species trees, divergence times, and effective 
-population sizes in the presence of incomplete lineage sorting 
-\citep{xuChallengesSpeciesTree2016}.
+Shared ancestry is a fundamental attribute of life and phylogenetic methods 
+provide a statistical base for understanding the evolutionary history of organisms.
+A significant challenge to phylogentic reconstructions of this history is the 
+discordance that can arise between the genealogical histories of genes and 
+histories of divergence among species \citep{maddisonGeneTreesSpecies1997}.
+Of the processes that lead to this phenomenon, incomplete lineage sorting has 
+been the focus of most phylogenetic methods development to account for discordance
+among gene trees. The multispecie coalescent (MSC) model has emerged as a 
+powerful framework for estimating species trees along with other parameters of 
+interest such as divergence times, and effective population sizes in the 
+presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}.
+There are two classes of methods using the MSC model: approximate or summary 
+methods and full Likelihood methods. Full likelihood methods are ideal because they 
+integrate over gene trees and accomodate uncertainty, whereas summary methods 
+treat gene trees as observed data and are thus susceptible to bias arising from 
+error in gene tree estimation.
 
-Likelihood-based approaches to species 
-tree inference can be classified into two groups, based on how they model the 
+Full likelihood approaches to species 
+tree inference can be further classified into two groups, based on how they model the 
 evolution of orthologous DNA sites along gene trees within the species 
 tree---those that assume (1) each site evolved along its own gene tree 
 (i.e., each site is ``unlinked'') 
