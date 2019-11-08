@@ -342,16 +342,29 @@ There will be a lower probability of sampling both alleles at a locus when locus
 coverage is low. There may be a high probability of missing alleles from any 
 locus in individuals with overall low coverage. 
 
-The program Stacks2 first identifies alleles then merges alleles together to 
-create consensus loci \citep{rochetteStacksAnalyticalMethods2019}. 
+Furthermore even if both alleles at a locus are sequenced, they must be sequenced
+at high enough coverage to meet the filtering thresholds during data processing.
+The method used to process and filter data could have an effect?
+For example the program Stacks2 first identifies alleles then merges them 
+together to create consensus loci \citep{rochetteStacksAnalyticalMethods2019}. 
 
 Pyrad first aligns reads to identify loci and then calls variants from loci 
 based on variant coverage \citep{PyRADeatonAssemblyNovo2014}.
 
-There may be a difference in how low coverage affects each tool.
+There may be a difference in how low coverage and basecallig or mutational error in reads
+affects different strategies to data processing.
 
-If minor allele frequency filtering is performed then all singletons will be
-missing and bias would be expected to be more severe than in our analyses.
+
+
+%
+Filtering of minor allele frequencies that do not meet a minimum threshold has 
+been discussed as a way to eliminate the impact of basecalling and mutational 
+error \citep{linckMinorAlleleFrequency2019}.
+Filtering alleles with counts of less than 3 ensures that all alleles have been 
+found in at least two diploid inidividuals which would minimize the incorporation 
+of error into analyses \citep{rochetteStacksAnalyticalMethods2019}.
+Minor allele frequency filtering of singleton sites would eliminate all sites 
+and likely produce error much greater than that observed in our analyses.
 
 
 %
