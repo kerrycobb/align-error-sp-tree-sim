@@ -1,8 +1,5 @@
 \section{Introduction}
 
-
-Shared ancestry is a fundamental 
-
 Likelihood-based inference under the multispecies coalescent is a powerful 
 framework for estimating species trees, divergence times, and effective 
 population sizes in the presence of incomplete lineage sorting 
@@ -61,7 +58,6 @@ resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}.
 Current high-throughput sequencing technologies have high rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
 as high as 0.25\% per base. 
-
 
 
 % Sequence coverage---the mean number of unique reads representing each locus---is
@@ -244,20 +240,19 @@ all of the data and scripts necessary to produce our results.
 The 95\% credible intervals for divergence times and effective population 
 sizes estimated from alignments without error in \beast had the expected 
 frequentist coverage in that the true value was within approximately 95\% of the 
-estimated credible intervals 
-This is confirms that the sequence data were simulated under the same model as 
+estimated credible intervals. 
+This confirms that the sequence data were simulated under the same model as 
 that used for inference in \beast. 
 
-The effective sample size was greater than 200 for most \ecoevolity parameter
-estimates regardless of locus length and type or amount of error \mainfigs. 
-Likewise the potential scale reduction factor was less than 1.2 for most 
-\ecoevolity parameter estimates \mainfigs.
 
-The proportion of estimates with PSRF values greater than 1.2 was very low across 
-all \beast analyses indicating convergence of most chains \mainfigs.
-The proportion of \beast divergence time estimates with ESS values less than 200 
-increased at more recent divergence times as locus length decreased but were 
-consistent across different types and degrees of error \timefigs.
+Nearly all sets \beast and \ecoevolity chains converged for all parameters across
+all locus lengths as well as all types and degrees of error as indicated by 
+PSRF values less than 1.2 \mainfigs.
+Nearly all \ecoevolity chains for all parameters and across all locus lengths and 
+types and degrees of error mixed well and had ESS values greater than 200 \mainfigs. 
+The number of chains from \beast divergence time estimates with poor mixing increased 
+with decreasing locus length. Mixing of these chains was consitent across the different 
+types and degrees of error \timefigs.
 The proportion of \beast root effective population size estimates with ESS 
 values less than 200 was high across all analyses \rootfigs. 
 Estimates of descendant effective population size had better ESS values across all 
@@ -297,17 +292,7 @@ accuracy and precision than estimates made with \ecoevolity \thetafigs.
 
 
 
-
-
-
-
-
 \section{Discussion}
-
-
-
-
-
 
 
 As expected the linked-sequence model was more robust to model violation.
