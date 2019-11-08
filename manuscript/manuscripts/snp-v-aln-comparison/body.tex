@@ -245,14 +245,17 @@ This confirms that the sequence data were simulated under the same model as
 that used for inference in \beast. 
 
 
-Nearly all sets \beast and \ecoevolity chains converged for all parameters across
-all locus lengths as well as all types and degrees of error as indicated by 
-PSRF values less than 1.2 \mainfigs.
-Nearly all \ecoevolity chains for all parameters and across all locus lengths and 
-types and degrees of error mixed well and had ESS values greater than 200 \mainfigs. 
-The number of chains from \beast divergence time estimates with poor mixing increased 
-with decreasing locus length. Mixing of these chains was consitent across the different 
-types and degrees of error \timefigs.
+\subsection{MCMC convergence and mixing}
+Most sets \beast and \ecoevolity MCMC chains yielded samples of parameters with
+a PSRF less than 1.2, indicative of convergence,
+however, we do see poor mixing (ESS < 200) of the \beast chains as the length
+of loci decreases
+(\cref{fig:time1000,fig:time500,fig:time250,fig:roottheta1000,fig:roottheta500,fig:roottheta250,fig:theta1000,fig:theta500,fig:theta250};
+yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
+We only see evidence of poor mixing and convergence for \ecoevolity when
+applied to data sets with errors.
+This is in contrast to \beast, for which the frequency and degree of poor MCMC
+behavior is largely unaffected by the type or severity of errors.
 The proportion of \beast root effective population size estimates with ESS 
 values less than 200 was high across all analyses \rootfigs. 
 Estimates of descendant effective population size had better ESS values across all 
@@ -323,3 +326,42 @@ narrow range and is easier for MCMC.
 Practitioners may want to compare both models if the number of loci and taxa
 permit it. Or maybe perform analyses on parts of the tree with recent divergence
 time to compare results 
+
+We only see bias at very recent divergence times, where \ecoevolity
+underestimates the div time and overestimates the ancestral pop size.
+The affect dissapears when div time is larger than about $8N_e\mu$.
+This suggests that the unlinked model is sensitive to the errors
+when lineages do not coalesce within the terminal branches,
+but is robust to the errors when they do.
+
+What can invesitagors look for as warning signs that their results
+are affected by such errors/biases?
+Inflated pop size of internal branch.
+We are seeing values indicating an average divergence between individuals of up
+to 3\%, which is much higher than our prior mean expectation (0.4\%).
+Seeing such biologially unrealistically large internal pop sizes could indicate
+biased div time estimates.
+However, there is little information in the data about pop sizes of ancestral
+branches; so, unfortunately, the parameter that might serve as an indicator
+of a problem is going to have very large credible intervals.
+But, many of our posterior estimates of root pop size are well beyond the
+prior.
+
+Our results raise interesting questions that can be further explored\ldots
+\begin{itemize}
+    \item Larger trees. Will non-root internal branches suffer from bias, or
+        only the root? Will only branches ancestral to short branches suffer?
+        Will linked-site models remain robust?
+        Will biased div times and pop sizes also affect accuracy of topology
+        estimates?
+    \item Acquisition biases. E.g., removing most variable loci to avoid
+        paralogy. Will this only have an affect at recent times? Or will
+        this affect be more pervasive across parameter space?
+        Will linked-site models remain robust
+    \item What erroneous site patterns have the largest affect on
+        the likelihood? Can we model and correct for these?
+\end{itemize}
+
+\highLight{We need citations. The discussion should compare/contrast with
+    previous findings and put our findings in the context of the
+    field.}
