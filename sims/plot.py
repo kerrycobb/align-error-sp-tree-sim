@@ -34,15 +34,20 @@ def set_color(row):
 
 def set_axis(ax, df, lim, interval,
         include_rmse = True,
+        include_mix_rate = True,
         include_inset = False,
         inset_min = -0.002,
-        inset_max = 0.029):
+        inset_max = 0.029,
+        max_number_of_sim_reps = 100):
     lower = "{}_lower".format(interval)
     upper = "{}_upper".format(interval)
+    poor_mix_count = 0
+    sim_rep_count = 0
     for ix, row in df.iterrows():
         zorder = 200
         if row["color"] != "#1f77b4":
             zorder = 300
+            poor_mix_count += 1
         ax.errorbar(
             x=row["true"],
             y=row["mean"],
@@ -59,6 +64,9 @@ def set_axis(ax, df, lim, interval,
             capsize=2.0,
             zorder = zorder,
         )
+        sim_rep_count += 1
+        if sim_rep_count > max_number_of_sim_reps:
+            break
     # ax.set_ylabel("Estimated Value")
     # ax.set_xlabel("True Value")
     lim_buffer = lim * 0.05
@@ -84,19 +92,39 @@ def set_axis(ax, df, lim, interval,
         x = list(df["true"])
         y = list(df["mean"])
         rmse = root_mean_square_error(x, y)
-        ax.text(0.02, 0.97,
+        ax.text(0.02, 0.98,
                 "RMSE = {0:.2e}".format(
                         rmse),
                 horizontalalignment = "left",
                 verticalalignment = "top",
                 transform = ax.transAxes,
                 size = 18.0,
-                zorder = 400)
-
+                zorder = 400,
+                bbox = {
+                    'facecolor': 'white',
+                    'edgecolor': 'white',
+                    'pad': 2}
+                )
+    if include_mix_rate:
+        poor_mix_rate = poor_mix_count / float(sim_rep_count)
+        ax.text(0.02, 0.90,
+                "RPMB = {0:.2f}".format(
+                        poor_mix_rate),
+                horizontalalignment = "left",
+                verticalalignment = "top",
+                transform = ax.transAxes,
+                size = 18.0,
+                zorder = 400,
+                bbox = {
+                    'facecolor': 'white',
+                    'edgecolor': 'white',
+                    'pad': 2}
+                )
     if include_inset:
         ax_inset = plt.axes([0,0,1,1])
         inset_position = InsetPosition(ax, [0.56, 0.06, 0.43, 0.43])
         ax_inset.set_axes_locator(inset_position)
+        sim_rep_count = 0
         for ix, row in df.iterrows():
             zorder = 200
             if row["color"] != "#1f77b4":
@@ -117,6 +145,9 @@ def set_axis(ax, df, lim, interval,
                 capsize=2.0,
                 zorder = zorder,
             )
+            sim_rep_count += 1
+            if sim_rep_count > max_number_of_sim_reps:
+                break
         ax_inset.set_xlim([inset_min, inset_max])
         ax_inset.set_ylim([inset_min, inset_max])
         # ax.set_xlim([0, ax.get_ylim()[1]])
