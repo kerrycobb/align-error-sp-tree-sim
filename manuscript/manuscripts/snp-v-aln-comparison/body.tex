@@ -453,6 +453,7 @@ are sensitive to the frequencies of rare alleles
 % and likely produce error much greater than that observed in our analyses.
 
 \subsection{Recommendations for using unlinked-character models}
+
 When erroneous character patterns cause \ecoevolity to underestimate the
 divergence time it also inflates the effective population size of the ancestral
 population.
@@ -489,46 +490,58 @@ Consistent with what has been shown in previous work
 \citep{Oaks2018ecoevolity,Oaks2018paic},
 \ecoevolity performed better when all sites were utilized despite violating the
 assumption that all sites are unlinked.
-This suggests that investigators might be better off analyzing all their data,
-rather than discarding much of it to avoid violating an assumption of the
-model.
-However, it remains to be seen whether this holds true for larger trees\ldots
+This suggests that investigators might obtain better estimates by analyzing all
+their data under unlinked-character models, rather than discarding much of it
+to avoid violating an assumption of the model.
+Given that model of unlinked characters implemented in \ecoevolity
+does not use information about linkage among sites 
+\citep{bryantInferringSpeciesTrees2012, Oaks2018ecoevolity},
+it is not surprising that this model violation does not introduce a bias.
+Linkage among sites does not change the gene trees and site patterns that are
+expected under the model, but it does reduce the variance of the those patterns
+due to them evolving along fewer gene trees.
+As a result, the accuracy of the parameter estimates is not affected
+by the linkage among sites within loci, but the credible intervals
+become too narrow as the length of loci increase
+\citep{Oaks2018ecoevolity,Oaks2018paic}.
+However, it remains to be seen whether the robustness of the model's accuracy
+to linked sites holds true for larger species trees.
 
 
 % What can they do to avoid errors/biases?
-Obtain high coverage data.
-Evaluate the effect of different filtering thresholds.
-Filter PCR duplicates to ensure that read coverage is not inflated for some
-alleles or loci. 
+% Obtain high coverage data.
+% Evaluate the effect of different filtering thresholds.
+% Filter PCR duplicates to ensure that read coverage is not inflated for some
+% alleles or loci. 
 % PCR duplicated can account for as much as 60\% of sequenced 
 % Duplicates can be filtered using single molecule tagging, randomly sheared 
 % libraries, or PCR free library preparation. If PCR bias is high 
 % Removing rare site patterns to avoid introducing mutational or basecalling error 
 % may not provide more accurate inferences. 
-While the error rates of current high-throughput sequencing methods are not 
-negligable, the impact of removing all rare or singleton site has a substantial 
-impact on accuracy and precision of estimates. 
+% While the error rates of current high-throughput sequencing methods are not 
+% negligable, the impact of removing all rare or singleton site has a substantial 
+% impact on accuracy and precision of estimates. 
 % PCR clones account for as much as 60\% of sequenced reads 
 % \citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014}
 
 
-% Future directions
-\subsection{}
-Our results raise a number of interesting questions ...
-
+\subsection{Future directions}
 % Larger trees
-In this study we used a simple two species model to avoid having any differences
-in accuracy and precision of divergence time and effective population size
-estimates being the result of differences in
-numerical algorithms for searching species and gene tree space.
+In this study we used a simple two species model with a small number of gene
+copies sampled from each to minimize the effect of differences in algorithms
+for searching species and gene tree space on the performance of the linked and
+unlinked character models.
+Our goal was to compare the theoretical performance of these two models, not
+their current software implementations.
 \kaccomment{worth noting what differences there are?}
-The tree topology is frequently a parameter of great interest and it would
-therefore be interesting to know how bias affects topology inference.
-We saw that the root effective population size estimates were quite poor and 
-even implausibly large and falling outside of the prior distribution. Will
-estimates of effective population sizes of internal branches show this behavior.
-Or will the affect of bias be similar to the effect on descendant effective 
-population sizes.
+Nonetheless, the tree topology is frequently a parameter of great interest and
+it would therefore be interesting to know how bias affects estimation of the
+species-tree topology.
+From our simulations, we saw that their was little information in the data to
+update the prior distribution on the effective size of the ancestral population.
+Exploring larger trees will determine whether estimates of the population size
+of most internal branches show this behavior, or if it will be confined to the
+root population, or maybe the most basal branches of the species tree.
 
 % Similarity Thresholds
 To generate alignments of orthologous loci from high-throughput data, 
