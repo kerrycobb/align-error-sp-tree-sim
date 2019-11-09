@@ -15,16 +15,8 @@ Full-likelihood Bayesian approaches are appealing, because of their ability to
 infer the species tree directly from character alignments while accommodating
 uncertainty in geneaological processes by integrating over gene trees
 \citep{rannalaEfficientBayesianSpecies2017}.
-%% This categorization does not capture methods that use phylogenetic invariants
-% There are two classes of methods using the MSC model: approximate or summary 
-% methods and full Likelihood methods. Full likelihood methods are ideal because they 
-% integrate over gene trees and accomodate uncertainty, whereas summary methods 
-% treat gene trees as observed data and are thus susceptible to bias arising from 
-% error in gene tree estimation \citep{rannalaEfficientBayesianSpecies2017}.
 
-Full likelihood approaches to species 
-tree inference can be
-% further
+Full likelihood approaches to species tree inference can be
 classified into two groups, based on how they model the 
 evolution of orthologous DNA sites along gene trees within the species 
 tree---those that assume (1) each site evolved along its own gene tree 
@@ -118,7 +110,10 @@ space where the differences between linked and unlinked character models is
 revealed is quite limited.
 
 
+
+
 \section{Methods}
+
 
 \subsection{Simulations of error-free data sets}
 For our simulations, we assumed a simple two-tipped species tree
@@ -169,6 +164,7 @@ We simulated linked biallelic character alignments using
 with a GTR model with base frequencies of A and C equal to 0 and base 
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
 0, except for the rate between G and T which was 1.0. 
+
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
@@ -252,9 +248,10 @@ at
 and includes
 all of the data and scripts necessary to produce our results.
 
+
+
+
 \section{Results}
-
-
 
 \subsection{MCMC convergence and mixing}
 Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
@@ -432,24 +429,28 @@ and likely produce error much greater than that observed in our analyses.
 % What can investigators look for as warning signs that their results
 % are affected by such errors/biases?
 Investigators should be careful when sequence coverage is low within some
-individual samples are at some loci as this can result in allelic dropout.
+individual samples or at some loci as this can result in allelic dropout.
 It may be wise to perform analysis with different coverage thresholds for 
 variants or alleles to evaluate the effect on estimates. 
 Improbably large root or internal node effective population sizes could be 
 indicative of bias resulting from error in the alignment. Especially if effective 
 population sizes are much larger than the upper end of the prior distribution. 
 
-
-What can they do to avoid errors/biases?
-It is important to obtain high coverage reduce the probability of allelic dropout
-and missing singletons. 
-Filter PCR clones which can account for as much as 60\% of sequenced reads 
-\citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014} by using single molecule tagging, randomly sheared libraries or PCR free
-techniques.
-Removing rare site patterns to avoid introducing mutational or basecalling error 
-may not provide more accurate inferences. While the error rates of current 
-high-throughput sequencing methods are not negligable, the impact of removing 
-all rare or singleton site  
+% What can they do to avoid errors/biases?
+Obtain high coverage data.
+Evaluate the effect of different filtering thresholds.
+Filter PCR duplicates to ensure that read coverage is not inflated for some
+alleles or loci. 
+% PCR duplicated can account for as much as 60\% of sequenced 
+% Duplicates can be filtered using single molecule tagging, randomly sheared 
+% libraries, or PCR free library preparation. If PCR bias is high 
+% Removing rare site patterns to avoid introducing mutational or basecalling error 
+% may not provide more accurate inferences. 
+While the error rates of current high-throughput sequencing methods are not 
+negligable, the impact of removing all rare or singleton site has a substantial 
+impact on accuracy and precision of estimates. 
+% PCR clones account for as much as 60\% of sequenced reads 
+% \citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014}
 
 
 % Future directions
