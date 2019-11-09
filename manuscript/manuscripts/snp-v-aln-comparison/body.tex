@@ -408,22 +408,24 @@ from \ecoevolity.
 % Application
 The degree to which a dataset will be affected by error from missing alleles 
 and missing singletons will be highly dependent on the depth of sequencing coverage
-and on how the data are processed. Lower coverage at a locus could arise due 
-to amplification bias but also due to stochastic variance. Furthermore,
-mean coverage will likely vary across individual samples resulting in greater 
-likelihood of allelic dropout those individuals. Most processing pipelines set 
-a minimum coverage threshold for variants and alleles. 
+and on how the data are processed. 
+Low coverage of a locus can arise due to amplification bias as well as 
+stochastic variance leading missing loci within or acorrs individual samples 
+after sequencing.
+Most pipelines for processing sequence data processing pipelines set 
+a minimum coverage threshold for variants or for alleles in order filter
+sequencing error. True variants or alleles are more likely to filtered when
+if coverage is low. 
 
-Filtering of minor allele frequencies that do not meet a minimum threshold has 
-been discussed as a way to eliminate the impact of basecalling and mutational 
-error \citep{linckMinorAlleleFrequency2019}.
-Filtering alleles with counts of less than 3 ensures that all alleles have been 
-found in at least two diploid inidividuals which would minimize the incorporation 
-of error into analyses \citep{rochetteStacksAnalyticalMethods2019}.
+Filtering of very rare alleles that do not meet a minimum minor allele 
+frequency threshold has been used as a way to eliminate the impact of 
+basecalling and mutational error. 
+For example filtering alleles with counts of less than 3 would ensure that all alleles have been 
+found in at least two diploid inidividuals \citep{rochetteStacksAnalyticalMethods2019}.
+However filtering in this way can result in error in estimates that are 
+sensitive to the frequencies of rare alleles \citep{linckMinorAlleleFrequency2019}.
 Minor allele frequency filtering of singleton sites would eliminate all sites 
 and likely produce error much greater than that observed in our analyses.
-Minor allele frequency filtering has been shown to bias estimates of population 
-structure \citep{linckMinorAlleleFrequency2019}.
 
 
 % Recommendations
