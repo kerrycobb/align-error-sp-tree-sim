@@ -168,7 +168,7 @@ frequencies of G and T equal to 0.5. The transition rate for all base changes wa
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
-introducing two types of errors at two levels of severity. The first type of 
+introducing two types of errors at two levels of frequency. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
 for which one gene copy was different from the other seven gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
@@ -262,7 +262,7 @@ yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
 We only see evidence of poor mixing and convergence for \ecoevolity when
 applied to data sets with errors.
 This is in contrast to \beast, for which the frequency and degree of poor MCMC
-behavior is largely unaffected by the type or severity of errors.
+behavior is largely unaffected by the type or frequency of errors.
 The proportion of \beast root effective population size estimates with ESS 
 values less than 200 was high across all analyses \rootfigsp;
 estimates of descendant effective population size had better ESS values across all 
@@ -292,8 +292,8 @@ For data sets without error (and when all characters are analyzed), the
 accuracy and precision of \ecoevolity's divergence time estimates were
 comparable to \beast \timefigsp.
 However when alignments contained errors, \ecoevolity underestimated very
-recent divergence times with increasing severity as the degree of error
-increased \timefigsp; estimates of larger divergence times were unaffected.
+recent divergence times with increasing severity as the frequency of errors
+increases \timefigsp; estimates of larger divergence times were unaffected.
 
 The biased underestimation of divergence times by \ecoevolity in the face of
 errors was coupled with overestimation of the ancestral effective population
@@ -347,53 +347,68 @@ short when analyzing linked loci, due to the model violation.
 
 \section{Discussion}
 
-\subsection{Unlinked vs Linked Character Models}
-Consistent with what has been shown in previous work, \ecoevolity performed 
-better when all sites were utilized despite violating the assumption that all 
-sites are unlinked \citep{Oaks2018ecoevolity}. All parameter estimates were very
-poor when only a single SNP per locus was used even without model violation. 
-When all of the sites were included, \ecoevolity does nearly as well as \beast 
-when there is no model violation caused by error.
 
 % Starbeast vs ecoevolity
-As expected the linked-character model of \beast was more robust to model 
-violation from bias and error in the alignment than the unlinked-character 
-model of \ecoevolity and yielded less biased 
-estimates of divergence time and effective population sizes. 
-We only see biased estimates of divergence time at very recent times, 
-where \ecoevolity
-underestimates the divergence time and overestimates the ancestral pop size.
-This affect dissapears when divergence time is larger than about $8N_e\mu$.
-This suggests that the unlinked model is sensitive to the errors in the alignments
-when lineages do not coalesce within the terminal branches,
-but is robust to the errors when they do.
+\subsection{Robustness to character-pattern errors}
+As predicted the linked-character model of \beast was more robust to erroneous
+character patterns in the alignments than the unlinked-character model of
+\ecoevolity.
+This is most evident in the estimates of divergence times, for which
+the two methods perform very similarly when there are no errors in the
+data (Row 1 of \timefigs).
+When errors are introduced the divergence time estimates of \beast are
+unaffected, but \ecoevolity underestimates recent divergence times as both
+singleton and heterozygous errors become more frequent (Rows 2--5 of
+\timefigs).
 
-% Root pop size
-% Inflated pop size of internal branch.
-We are seeing values indicating an average divergence between individuals of up
-to 3\% \rootfigs, which is much higher than our prior mean expectation (0.4\%).
-Seeing such biologially unrealistically large internal pop sizes could indicate
-biased divergence time estimates.
-However, there is little information in the data about effective population sizes 
-of ancestral branches; so, unfortunately, the parameter that might serve as an indicator
-of a problem is going to have very large credible intervals.
-But, many of our posterior estimates of root pop size are well beyond the
-prior.
+However, \ecoevolity divergence-time estimates are only biased at
+very recent divergence times, and the effect disappears
+when the time of divergence is larger than about $8N_e\mu$.
+\jrocomment{We should plot div times in coalescent units versus error.}
+This pattern makes sense given that both types of character-pattern error
+reduce variation \emph{within} the species.
+Thus, it is not too surprising that the unlinked-character model
+struggles the most when there is shared variation between
+the two populations (i.e., most gene trees have more than
+two lineages that coalesce in the ancestral population).
+The erroneous character patterns mislead both models that the effective size of
+the descendant branches is smaller than they really are
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+To explain the shared variation between the species (i.e. deep coalescences)
+when underestimating the descendant population sizes,
+unlinked-character model of \ecoevolity
+simultaneously reduces the divergence time and increases the effective
+size of the ancestral population.
+\jrocomment{Perhaps plot div times error versus ancestral pop size error.}
+Despite also being misled about the size of the descendant populations
+(\cref{fig:theta1000,fig:theta500,fig:theta250}),
+the linked-character model of \beast seems to benefit from more information
+about the general shape of each gene tree across the linked sites and can still
+maintain an accurate estimate of the divergence time
+\timefigsp
+and ancestral population size
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+
+This downward biased variation within each species becomes
+less of a problem for the unlinked-character model as the
+divergence time gets larger, likely because the average gene
+tree only has a single lineage from each species that coalesces
+in the ancestral population.
+As the coalesced lineage within each species leading back
+to the ancestral population becomes a large proportion
+of the overall length of the average gene tree,
+the proportion of characters that are fixed differences versus invariant
+likely provides enough information to
+the unlinked character model about the time of divergence to overcome
+the downward biased estimates of the descendant population sizes.
+
 
 % Severity 
-It is reassuring to see affect of bias limited to small region of parameter 
-space and only large at most severe error rates.
-40\% error rates likely higher than real data sets (I think? citations?).
-However, real data likely contain a mix of errors/biases from
-various steps in data collection process. We did not evaluate the how mutational
-error or inaccurate base calls would bias estimates.
-Also, real data would not be generated under a model with no prior misspecification.
-Violations of the model might make methods more sensitive to lower rates of error.
 
 % Locus length
 Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
 There is less information contained in the shorter loci to inform gene tree estimation 
-and it is expected that there to be more uncertaintly in gene tree estimation.
+and it is expected that there to be more uncertainty in gene tree estimation.
 This uncertainly results in a wider posterior distribution of that must be 
 sampled from.
 Poor MCMC performance in \beast does not appear to correlate with poor parameter 
@@ -401,40 +416,84 @@ estimates. The distribution of estimates is generally as good or better than tho
 from \ecoevolity. 
 
 
-\subsection{Practical Considerations}
+\subsection{Applicability to empirical data sets}
 % Application
-The degree to which a dataset will be affected by error from missing alleles 
-and missing singletons will be highly dependent on the depth of sequencing coverage
-and on how the data are processed. 
-Low coverage of a locus can arise due to amplification bias as well as 
-stochastic variance leading missing loci within or acorrs individual samples 
-after sequencing.
+It is reassuring to see the effect of character-pattern errors on the
+unlinked-character model is limited to a small region of parameter space and is
+only large when the frequency of errors in the data is large.
+The error rates of 40\% that we simulated are likely higher than the rate of
+these types of errors in real high-throughput sequence alignments.
+However, empirical alignments likely contain a mix of different sources of
+errors and biases from various steps in data collection process.
+Also, real data would not be generated under a model with no prior misspecification.
+Violations of the model might make these methods of species-tree inference more
+sensitive to lower rates of error.
+
+The degree to which a dataset will be affected by error from missing
+heterozygote haplotypes and missing singletons will be highly dependent on the
+depth of sequencing coverage (i.e., the number of overlapping sequence reads at
+a locus) and on how the data are processed. 
+Coverage will very across loci due to random chance and biases in PCR
+amplification and sequencing.
 Most pipelines for processing sequence data processing pipelines set 
 a minimum coverage threshold for variants or for alleles in order filter
 sequencing error. True variants or alleles are more likely to filtered when
-if coverage is low. 
-
+coverage is low. 
 Filtering of very rare alleles that do not meet a minimum minor allele 
 frequency threshold has been used as a way to eliminate the impact of 
-basecalling and mutational error. 
-For example filtering alleles with counts of less than 3 would ensure that all alleles have been 
-found in at least two diploid inidividuals \citep{rochetteStacksAnalyticalMethods2019}.
-However filtering in this way can result in error in estimates that are 
-sensitive to the frequencies of rare alleles \citep{linckMinorAlleleFrequency2019}.
-Minor allele frequency filtering of singleton sites would eliminate all sites 
-and likely produce error much greater than that observed in our analyses.
+sequencing errors. 
+For example filtering alleles with counts of less than 3 would ensure that all
+alleles have been found in at least two diploid individuals
+\citep{rochetteStacksAnalyticalMethods2019}.
+However, filtering in this way can result in biased estimates of parameters that
+are sensitive to the frequencies of rare alleles
+\citep{linckMinorAlleleFrequency2019}.
+%% Do we know they filter all singleton patterns?
+% Minor allele frequency filtering of singleton sites would eliminate all sites 
+% and likely produce error much greater than that observed in our analyses.
 
+\subsection{Recommendations for using unlinked-character models}
+When erroneous character patterns cause \ecoevolity to underestimate the
+divergence time it also inflates the effective population size of the ancestral
+population.
+We are seeing values of $\rootpopsize\mu$ consistent with an average sequence
+divergence between individuals \emph{within} the ancestral population of 3\%,
+which is much larger than our prior mean expectation (0.4\%).
+Thus, looking for unrealistically large population sizes estimated for internal
+branches of the phylogeny might provide an indication that the
+unlinked-character model is not explaining the data well.
+However, there is little information in the data about the effective population
+sizes along ancestral branches,
+so the parameter that might indicate a problem is going to have very
+large credible intervals.
+Nonetheless, many of the posterior estimates of the ancestral population size
+from our simulated data sets with character-pattern errors are well beyond the
+prior distribution.
 
-% Recommendations
-% What can investigators look for as warning signs that their results
-% are affected by such errors/biases?
-Investigators should be careful when sequence coverage is low within some
-individual samples or at some loci as this can result in allelic dropout.
-It may be wise to perform analysis with different coverage thresholds for 
-variants or alleles to evaluate the effect on estimates. 
-Improbably large root or internal node effective population sizes could be 
-indicative of bias resulting from error in the alignment. Especially if effective 
-population sizes are much larger than the upper end of the prior distribution. 
+When using unlinked-character models with empirical high-throughput data sets,
+it might also help to perform the analysis on different versions of the aligned
+data that are assembled under different coverage thresholds for variants or
+alleles.
+Variation of estimates derived from different assemblies of the data might
+indicate that the model is sensitive to the errors or acquisition biases in the
+alignments.
+This is especially true for data where sequence coverage is low for samples
+and/or loci.
+Given our findings, it might be helpful to compare the estimates of the
+effective population sizes along internal branches of the tree.
+Seeing improbably large estimates for some assemblies of the
+data might indicate that the model is being biased by
+errors or acquisition biases present in the character patterns.
+
+Consistent with what has been shown in previous work
+\citep{Oaks2018ecoevolity,Oaks2018paic},
+\ecoevolity performed better when all sites were utilized despite violating the
+assumption that all sites are unlinked.
+This suggests that investigators might be better off analyzing all their data,
+rather than discarding much of it to avoid violating an assumption of the
+model.
+However, it remains to be seen whether this holds true for larger trees\ldots
+
 
 % What can they do to avoid errors/biases?
 Obtain high coverage data.
