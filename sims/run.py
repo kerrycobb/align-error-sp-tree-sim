@@ -52,7 +52,7 @@ def gen_xml(dir, config):
     alignment_dicts = []
     for i in range(0, config["nloci"]):
         align_path = os.path.join(dir, "alignment-{}.phy".format(i))
-        alignment = AlignIO.read(open(align_path), "phylip") 
+        alignment = AlignIO.read(open(align_path), "phylip-relaxed") 
         seq_dicts = []
         for record in alignment:
             taxon, tip = record.id.split("_")
@@ -74,16 +74,20 @@ def gen_xml(dir, config):
         handle.write(starbeast_xml)
     return xml_path
 
-def gen_ecoevol_alignment(dir, config, snp=False):
+def gen_ecoevol_alignment(dir, config, snp=False, concat=False):
     d = {}
     for i in range(1, config["nspecies"]+1):
         for j in range(1, config["ngenomes"]+1):
             tax = "T{}_{}".format(i, j) 
             d[tax] = [] 
-    if snp:
-        align_path = os.path.join(dir, "snp-alignment.phy".format(i))
-        alignment = AlignIO.read(open(align_path), "phylip") 
-        nchar = alignment.get_alignment_length() 
+    if snp or concat:
+        if snp:
+            align_name = "snp-alignment.phy"
+        elif concat:
+            align_name = "alignment.phy"
+        align_path = os.path.join(dir, align_name)
+        alignment = AlignIO.read(open(align_path), "phylip-relaxed") 
+        # nchar = alignment.get_alignment_length() 
         for record in alignment:
             for j in record.seq:
                 if j == "T":
@@ -96,8 +100,8 @@ def gen_ecoevol_alignment(dir, config, snp=False):
         nchar = 0
         for i in range(0, config["nloci"]):
             align_path = os.path.join(dir, "alignment-{}.phy".format(i))
-            alignment = AlignIO.read(open(align_path), "phylip") 
-            nchar += alignment.get_alignment_length() 
+            alignment = AlignIO.read(open(align_path), "phylip-relaxed") 
+            # nchar += alignment.get_alignment_length() 
             for record in alignment:
                 for j in record.seq:
                     nchar += 1
@@ -107,27 +111,34 @@ def gen_ecoevol_alignment(dir, config, snp=False):
                         d[record.id].append("1")
                     else:
                         raise Exception("Invalid character {}".format(j))
-    ns = []
-    ns.append("#NEXUS\n")
-    ns.append("BEGIN TAXA;\n")
-    ns.append("DIMENSIONS NTAX={};\n".format(len(d)))
-    ns.append("TAXLABELS\n")
-    for key in d.keys():
-        ns.append("'{}'\n".format(key))
-    ns.append(";\nEND;\n")
-    ns.append("BEGIN CHARACTERS;\n")
-    ns.append("DIMENSIONS NCHAR={};\n".format(nchar))
-    ns.append("FORMAT DATATYPE=STANDARD SYMBOLS=\"01\" MISSING=?;\n")
-    ns.append("MATRIX\n")
-    for key, value in d.items():
-        ns.append("'{}'    {}\n".format(key, "".join(value)))
-    ns.append(";\nEND;")
+    # ns = []
+    # ns.append("#NEXUS\n")
+    # ns.append("BEGIN TAXA;\n")
+    # ns.append("DIMENSIONS NTAX={};\n".format(len(d)))
+    # ns.append("TAXLABELS\n")
+    # for key in d.keys():
+    #     ns.append("'{}'\n".format(key))
+    # ns.append(";\nEND;\n")
+    # ns.append("BEGIN CHARACTERS;\n")
+    # ns.append("DIMENSIONS NCHAR={};\n".format(nchar))
+    # ns.append("FORMAT DATATYPE=STANDARD SYMBOLS=\"01\" MISSING=?;\n")
+    # ns.append("MATRIX\n")
+    # for key, value in d.items():
+    #     ns.append("'{}'    {}\n".format(key, "".join(value)))
+    # ns.append(";\nEND;")
 
-    with open(os.path.join(dir, "alignment.nex"), "w") as fh:
-        fh.writelines(ns)
-    
-def qsub(dir, jobname, walltime, script, ssh=False):
-    cmd = ["myqsub", "-N", jobname, "-d", dir, "-t", walltime]
+    # with open(os.path.join(dir, "alignment.nex"), "w") as fh:
+    #     fh.writelines(ns)
+
+
+    for key, value in d.items():
+        d[key] = "".join(d[key]) 
+    dna = dp.StandardCharacterMatrix.from_dict(d, 
+            default_state_alphabet=dp.new_standard_state_alphabet(('0', '1')))
+    dna.write(path=os.path.join(dir, "alignment.nex"), schema="nexus")
+
+def qsub(dir, jobname, walltime, memory, script, ssh=False):
+    cmd = ["myqsub", "-N", jobname, "-d", dir, "-t", walltime, "-m", memory]
     if ssh:
         cmd.append("-s")
     cmd.append("\"{}\"".format(script)) 
@@ -144,7 +155,7 @@ def run_starbeast(dir, seed, jobname, xml, rerun=False, ssh=False):
     if rerun:
         script.append("-overwrite")
     script.append(xml)
-    qsub(dir=dir, jobname=jobname, walltime="200:00:00",
+    qsub(dir=dir, jobname=jobname, walltime="200:00:00", memory="1gb",
             script=" ".join(script), ssh=ssh)
    
 def run_ecoevolity(dir, seed, jobname, eco_config, rerun=False, ssh=False):
@@ -161,9 +172,14 @@ def run_ecoevolity(dir, seed, jobname, eco_config, rerun=False, ssh=False):
         "--relax-constant-sites",
         "ecoevolity-config.yml"]
     qsub(dir=dir, jobname=jobname,
-            walltime="1:00:00", script=" ".join(script), ssh=ssh)
+            walltime="1:00:00", memory="250mb", script=" ".join(script), ssh=ssh)
 
-def run_analyses(dir, ssh=False, overwrite=False, method="all", snp=False):
+def run_analyses(dir, ssh=False, overwrite=False, method="all", snp=False, 
+        concat=False):
+    if snp and concat:
+        quit("Cannot run with --snp and --concat")
+    if method in ["all", "starbeast"] and concat:
+        quit("Cannot run starbeast with --concat flag")
     dir = os.path.abspath(dir)
     basename = os.path.basename(dir)
     if overwrite:
@@ -176,10 +192,9 @@ def run_analyses(dir, ssh=False, overwrite=False, method="all", snp=False):
 
     for rep in range(0, config["nreps"]):
         rep_dir = os.path.join(dir, "rep-{}".format(rep))
-
         # Create ecoevolity directories and files and run ecoevolity
         if method in ["all", "ecoevolity"]: 
-            gen_ecoevol_alignment(rep_dir, config, snp=snp)
+            gen_ecoevol_alignment(rep_dir, config, snp=snp, concat=concat)
             eco_config["comparisons"][0]["comparison"]["path"] = os.path.join(
                     rep_dir, "alignment.nex")
             for chain in range(1, config["ecoevolity_chains"]+1):

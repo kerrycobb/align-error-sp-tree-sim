@@ -1,0 +1,13 @@
+nreps: 200 
+nspecies: 2
+ngenomes: 4
+nloci: 100000 
+locus_length: 1
+ecoevolity_chains: 4
+starbeast_chains: 2
+starbeast_chain_length: 20000000
+starbeast_sample_freq: 1000
+pop_size_shape: 5.0
+pop_size_scale: 0.0004
+birth_rate: 10.0
+templates_path: "/gpfs01/scratch/phyletica/bias-sim/sims/templates"

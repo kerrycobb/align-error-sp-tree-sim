@@ -150,39 +150,8 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
         plt.close('all')
         f, ax = plt.subplots()    
         set_axis(ax, i[0], i[1], interval) 
-        # f.suptitle(i[2])
         plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
             bbox_inches='tight', pad_inches=0) 
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, star_time, time_lim, interval)
-    # # f.suptitle("Starbeast Time")
-    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-time.pdf"))
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, star_theta, theta_lim, interval)
-    # # f.suptitle("Starbeast Theta")
-    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-theta.pdf"))
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, star_root_theta, theta_lim, interval)
-    # # f.suptitle("Starbeast Root Theta")
-    # plt.savefig(os.path.join(dir_name, alignment + "-" + "starbeast-root-theta.pdf"))
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, eco_time, time_lim, interval)n
-    # # f.suptitle("Ecoevolity Time")
-    # plt.savefig(os.path.join(dir_name, alignment + n "ecoevolity-time.pdf"))
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, eco_theta, theta_lim, intervan
-    # # f.suptitle("Ecoevolity Theta")
-    # plt.savefig(os.path.join(dir_name, alignment + "-" + "ecoevolity-theta.pdf"))
-
-    # f, ax = plt.subplots()
-    # set_axis(ax, eco_root_theta, theta_lim, interval)
-    # # f.suptitle("Ecoevolity Root Theta")
-    # plt.savefig(os.path.join(dir_name, alignment + "-" + "ecoevolity-root-theta.pdf"))
 
 if __name__ == "__main__":
     make_plot()

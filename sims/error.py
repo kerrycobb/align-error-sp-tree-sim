@@ -74,7 +74,7 @@ def drop_het(align, prob, rng):
                 record0.seq = record1.seq
     return align
 
-def gen_error(dir, prob, single=False, het=False):
+def gen_error(dir, prob, single=False, het=False, concat=False):
     """
     Change singleton site patterns to major allele with probability of 1 - <prob>
     Or drop one haplotype for randomly chosen pairs within populations with probability of 1 - <prob>
@@ -102,12 +102,11 @@ def gen_error(dir, prob, single=False, het=False):
         os.mkdir(new_rep_dir_path)
         shutil.copy(os.path.join(rep_dir_path, "species_tree.nex"), 
                 new_rep_dir_path)
-        for locus in range(0, config["nloci"]):
-            # Get alignment name and paths
-            align_name = "alignment-{}.phy".format(locus) 
-            align_path = os.path.join(rep_dir_path, align_name) 
-            new_align_path = os.path.join(new_rep_dir_path, align_name)
-            align = AlignIO.read(open(align_path), "phylip")
+        # If single concatenated alignment
+        if concat:
+            align_path = os.path.join(rep_dir_path, "alignment.phy")
+            new_align_path = os.path.join(new_rep_dir_path, "alignment.phy")
+            align = AlignIO.read(open(align_path), "phylip-relaxed")
             # Drop singletons
             if single:
                 ids, seq_matrix = align_to_matrix(align)
@@ -116,7 +115,24 @@ def gen_error(dir, prob, single=False, het=False):
             # Drop hets
             elif het:
                 new_align = drop_het(align, prob, rng)
-            AlignIO.write(new_align, open(new_align_path, "w"), "phylip")
+            AlignIO.write(new_align, open(new_align_path, "w"), "phylip-relaxed")
+        # If separate alignment for each locus
+        else:
+            for locus in range(0, config["nloci"]):
+                # Get alignment name and paths
+                align_name = "alignment-{}.phy".format(locus) 
+                align_path = os.path.join(rep_dir_path, align_name) 
+                new_align_path = os.path.join(new_rep_dir_path, align_name)
+                align = AlignIO.read(open(align_path), "phylip-relaxed")
+                # Drop singletons
+                if single:
+                    ids, seq_matrix = align_to_matrix(align)
+                    new_seq_matrix = drop_singletons(seq_matrix, prob, rng)[0]
+                    new_align = matrix_to_align(ids, new_seq_matrix)
+                # Drop hets
+                elif het:
+                    new_align = drop_het(align, prob, rng)
+                AlignIO.write(new_align, open(new_align_path, "w"), "phylip-relaxed")
 
 if __name__ == "__main__":
     fire.Fire(gen_error)
