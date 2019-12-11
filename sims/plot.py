@@ -258,17 +258,18 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
             (eco_theta, max_theta, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
         
     for i in plot_params:
-        include_inset = False
-        if i[2].endswith("Time") and (not alignment.endswith("-snp")):
-            include_inset = True
-        plt.close('all')
-        f, ax = plt.subplots()    
-        set_axis(ax, i[0], i[1], interval,
-                include_rmse = True,
-                include_inset = include_inset) 
-        # f.suptitle(i[2])
-        plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
-            bbox_inches='tight', pad_inches=0) 
+        if len(i[0]) > 0:
+            include_inset = False
+            if i[2].endswith("Time") and (not alignment.endswith("-snp")):
+                include_inset = True
+            plt.close('all')
+            f, ax = plt.subplots()    
+            set_axis(ax, i[0], i[1], interval,
+                    include_rmse = True,
+                    include_inset = include_inset) 
+            # f.suptitle(i[2])
+            plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
+                bbox_inches='tight', pad_inches=0) 
 
 if __name__ == "__main__":
     make_plot()
