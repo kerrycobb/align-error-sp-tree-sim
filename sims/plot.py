@@ -270,6 +270,9 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
             # f.suptitle(i[2])
             plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
                 bbox_inches='tight', pad_inches=0) 
+        else:
+            print("Warning: No data to plot for {dir} {align} {param}".format(
+                dir=dir_name, align=alignment, param=i[2]))
 
 if __name__ == "__main__":
     make_plot()
