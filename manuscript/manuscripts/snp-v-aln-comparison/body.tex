@@ -1,161 +1,614 @@
 \section{Introduction}
 
-% How does an MSA model compare to BC model as the number and length of loci
-% change?
+Shared ancestry is a fundamental attribute of life and phylogenetic methods 
+provide a statistical basis for understanding the evolutionary history of organisms.
+A significant challenge to phylogenetic reconstructions of this history is the 
+discordance that can arise between the genealogical histories of genes and 
+histories of divergence among species \citep{maddisonGeneTreesSpecies1997}.
+Of the processes that lead to this phenomenon, incomplete lineage sorting has 
+been the focus of most phylogenetic methods development to account for discordance
+among gene trees. The multispecies coalescent (MSC) model has emerged as a 
+powerful framework for estimating species trees along with other parameters of 
+interest such as divergence times, and effective population sizes in the 
+presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}.
+Full-likelihood Bayesian approaches are appealing, because of their ability to
+infer the species tree directly from character alignments while accommodating
+uncertainty in genealogical processes by integrating over gene trees
+\citep{rannalaEfficientBayesianSpecies2017}.
 
-% When we have multi-locus sequence data, should we analyze all the data under
-% a biallelic-character model, or only keep (at most) one site per locus?
-
-% How do MSA and BC models compare in term of robustness to data-acquistion
-% biases?
-% BC can be very sensitive \citep{Oaks2018ecoevolity}.
-% Will MSA fair better?
-% Information from each site under a BC model is the counts of alleles.
-% Thus, it's not surprising these models are sensitive when these counts are off.
-% BC gleans information from many sites to directly inform the species
-% tree by integrating out the gene trees; we have very little information
-% about any of the gene trees.
-% In comparison, information from aligned sequences of linked sites can
-% potentially contain much more information about the underlying gene tree.
-% Thus, if an acquistion bias causes some tips to be missing, the
-% information in the gene tree and branch lengths from the remaning
-% sequences might allow us to recover.
-
-Likelihood-based inference under the multispecies coalescent is a powerful 
-framework for estimating species trees,  divergence times, and  effective 
-population sizes in the presence of incomplete lineage sorting 
-\citep{xuChallengesSpeciesTree2016}. Likelihood--based approaches to species 
-tree inference can be classified into two groups, based on how they model the 
+Full likelihood approaches to species tree inference can be
+classified into two groups, based on how they model the 
 evolution of orthologous DNA sites along gene trees within the species 
 tree---those that assume (1) each site evolved along its own gene tree 
 (i.e., each site is ``unlinked'') 
 \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
 or (2) contiguous, linked sites evolved along a shared gene tree 
-\citep{liuSpeciesTreesGene2007, ogilvieStarBEAST2BringsFaster2017, 
+\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
 yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
 linked-character models, respectively. For both models, the gene tree of each 
 locus (whether each locus is a single site or a segment of linked sites) 
 is assumed to be independent of the gene 
-trees of all other loci, conditional on the species tree. Methods using linked 
-character models become intractable as the number of loci grows large 
-\citep{bryantInferringSpeciesTrees2012}. Unlinked-character models on the other 
+trees of all other loci, conditional on the species tree.
+Methods using linked character models become computationally expensive as the
+number of loci grows large, due to the estimation or numerical integration of
+all of the gene trees \citep{bryantInferringSpeciesTrees2012}.
+Unlinked-character models on the other 
 hand are more tractable for a large number of loci, because  estimating 
 individual gene trees is avoided by integrating over all possible gene trees 
-\citep{bryantInferringSpeciesTrees2012}. While unlinked-character models can 
-accomodate a larger number of loci than linked-character models, they do not 
-consider all of the information that is contained in the sequence data. As 
-linked-character models estimate the gene tree of each locus there is 
-information from the tree to inform estimates of parameters in the model. 
-Unlinked character models rely only on allele counts to inform parameter 
-estimates. This difference could make parameter estimates under linked-character 
-models more robust to error and bias in the sequence data.
+\citep{bryantInferringSpeciesTrees2012}.
+Whereas unlinked-character models can accommodate a larger number of loci than
+linked-character models, most genetic data sets comprise linked sites and
+unlinked-character models are unable to utilize this information.
 
-Reduced-representation genomic data sets acquired from high-throughput instruments
-are becoming commonplace in phylogenetics, and usually comprise hundreds to 
-thousands of loci as short as 50 nucleotides long and up to several thousand 
-base pairs long. Investigators are thus faced with decisions about how best to 
-use their data to infer a species tree. Should they use a linked-character 
-method that assumes the sites within each locus evolved along a shared gene 
-tree? Or, should they remove all but a single-nucleotide polymorphism (SNP) from 
-each locus and use an unlinked-character model? Or, perhaps they should apply 
-the unlinked-character method to all of their sites, even if this violates the 
-assumption that each site evolved along an independent gene tree? Very little 
-work has been done to help inform these types of decisions. 
+Reduced-representation genomic data sets acquired from high-throughput
+instruments are becoming commonplace in phylogenetics \citep{Leache2017}, and
+usually comprise hundreds to thousands of loci as short as 50 nucleotides long
+and up to several thousand base pairs long.
+Investigators are thus faced with decisions about how best to 
+use their data to infer a species tree.
+Should they use a linked-character method that assumes the sites within each
+locus evolved along a shared gene tree?
+Ideally, the answer would be ``yes,'' however this is not always
+computationally feasible and the model could be violated by intralocus
+recombination.
+Alternatively, should investigators remove all but a single-nucleotide
+polymorphism (SNP) from each locus and use an unlinked-character model?
+Or, perhaps they should apply the unlinked-character method to all of their
+sites, even if this violates the assumption that each site evolved along an
+independent gene tree?
+Little work has been done to help inform these types of decisions. 
 
-An important consideration for choosing which character model to utilize are
-sources of error and bias that result from reduced representation methods,
-high throughput sequencing and the processing of these data. High throughput
-sequencing is now almost invariably performed on Illumina sequencing platforms
-which have been shown to have error rates as high as 0.25\% per base. 
-To prevent this error from affecting analyses performed with the data, it is not 
+An important consideration for choosing a multi-species coalescent model is
+the sources of error and bias that result from reduced-representation protocols,
+high-throughput sequencing technologies, and the processing of these data.
+Most reduced-representation sequencing workflows employ amplification of DNA  
+using polymerase chain reaction (PCR) which can introduce mutational error at a 
+rate of up to $1.5\times10^{-5}$ substitutions per base \citep{potapovExaminingSourcesError2017}.
+Furthermore, amplification of different genome regions can be highly variable 
+resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}. 
+Current high-throughput sequencing technologies have high rates of error.
+For example, Illumina sequencing platforms have been shown to have error rates
+as high as 0.25\% per base. 
+
+\citep{pfeifferSystematicEvaluationError2018}. 
+To avoid introducing sequencing errors into analyses performed with the data, it is not 
 uncommon to filter out variants that are not found above some minimum frequency 
 threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
-This filtering can change the frequency of true variants and introduce bias. 
-This filtering has been shown to have an effect on estimates derived from these 
-frequencies \citep{linckMinorAlleleFrequency2019}.
+The effect of this filtering will be more pronounced in data sets with low or 
+highly variable coverage.
+This filtering can also introduce errors and biases which has been 
+shown to have an effect on estimates derived from the assembled alignments
+\citep{Harvey2015,linckMinorAlleleFrequency2019}.
+Furthermore, decisions have to be made during or after processing
+the raw sequence reads to avoid aligning paralogous sequences.
+This is often done by setting an upper threshold on the number of variable
+sites within a locus \citep{harveySimilarityThresholdsUsed2015}. 
+Such a strategy will also filter out the most variable alignments
+of orthologous loci, thus introducing an acquisition bias.
 
-Another 
-Sequence coverage---the mean number of unique reads representing each locus---is
-often highly variable among loci and among individuals. This poses a problem for
-accurately inferring the correct base at every position in a locus. It can also
-pose a problem for sampling 
+Given all of these potential problems throughout the data collection process,
+phylogeneticists should assume their high-throughput genomic data set suffers
+from errors and acquisition biases.
+Do linked and unlinked character models differ in their robustness to such
+errors?
+Linked-character models can leverage shared information among linked sites
+about each underlying gene tree.
+Thus, these models may be able to correctly infer the general shape and depth
+of a gene tree, even if the haplotypes at some of the tips have errors.
+Unlinked character models have very little information about each gene tree,
+and rely on the frequency of allele counts across many characters to inform the
+model about the relative probabilities of all possible gene trees
+(\jrocomment{Figure showing this difference?}).
+Given this reliance on accurate allele count frequencies, we predict that
+unlinked character models will be more sensitive to errors and acquisition
+biases in genomic data.
+Our goal is to simulate data sets with varying degrees of errors length of loci
+to test this prediction that linked character models are more robust to the
+types of errors contained in high-throughput sequence data sets.
+Our results support this prediction, but also show that region of parameter
+space where the differences between linked and unlinked character models is
+revealed is quite limited.
 
 
-	
-Singleton site patterns here refer to sites in the alignment where one gene 
-copy differs from all other gene copies in each species.
 
 
 \section{Methods}
-\subsection{Simulations}
-We simulated data sets with three different locus lengths—1000, 500, and 250 
-linked characters—and then sampled from these alignments to create alignments 
-with  error. We simulated 100 replicate data sets for each locus length and 
-subsequent sampling routine. All data sets contained a total of 100,000 
-characters sampled from 2 diploid individuals ( 4 haploid gene copies) from each 
-of two species. We chose this simple sample design to help ensure any 
-differences in estimation accuracy or precision were due to the underlying 
-models, and not due to differences in numerical algorithms for searching tree 
-space.  We simulated two tip species trees under a pure birth process with a 
+
+
+\subsection{Simulations of error-free data sets}
+For our simulations, we assumed a simple two-tipped species tree
+with one ancestral population with a constant effective size
+of
+\rootpopsize
+that diverged at time \divtime into
+two descendent populations (terminal branches) with constant
+effective sizes of
+\tippopsize[1]
+and
+\tippopsize[2]
+\jrocomment{(Figure X)}.
+For two diploid individuals sampled from each of the terminal
+populations (4 sampled gene copies per population),
+we simulated 100,000 orthologous biallelic characters under a finite-sites,
+continuous-time Markov chain (CTMC) model of evolution.
+We simulated 100 data sets comprised of loci of three different lengths---1000,
+500, and 250 linked characters.
+We assume each locus is effectively unlinked and has no intralocus
+recombination, i.e., each locus evolved along a single gene tree that is
+independent of the other loci, conditional on the species tree.
+We chose this simple species tree model for our simulations to help ensure any
+differences in estimation accuracy or precision were due to differences in
+underlying linked and unlinked character models,
+and \emph{not} due to differences in numerical algorithms for searching species
+and gene tree space.
+Furthermore, we simulated biallelic characters, because unlinked-character MSC
+models
+\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}
+that are most comparable to linked-character models
+\citep{Heled2010,ogilvieStarBEAST2BringsFaster2017}
+are limited to characters with (at most) two states.
+
+We simulated the two-tipped species trees under a pure birth-process with a
 birth rate of 10 using the \python package
 \dendropy
-\citep[Version 4.40; dev branch commit eb69003;][]{Dendropy}.  
+\citep[Version 4.40; \highLight{XXXXX} branch commit eb69003;][]{Dendropy}.  
+This is equivalent to the divergence time being Exponentially distributed with
+a rate of 20.
 We drew population sizes for each branch of the species tree from a Gamma 
 distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 
 400 gene trees for the 1000, 500, and 250 locus length data sets respectively 
-using the contained coalescent implemented in \dendropy. In order to 
-simulate data under a model compatible with the biallelic model implemented in 
-\ecoevolity, we simulated alignments of linked biallelic character data. 
+using the contained coalescent implemented in \dendropy.
 We simulated linked biallelic character alignments using
 \seqgen (Version 1.3.4)
-\citationNeeded
+\citep{rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
-frequencies of G and T equal to 0.5. Transition rates for all base changes were 
-with the exception of the rates between G and T which had a rate of 1.0. 
+frequencies of G and T equal to 0.5. The transition rate for all base changes was 
+0, except for the rate between G and T which was 1.0. 
+
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset described above, we created four datasets by 
-introducing two types of errors at two levels of severity. The first type of 
+introducing two types of errors at two levels of frequency. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
-for which one gene copy was different from the gene copies) to invariant 
+for which one gene copy was different from the other seven gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change with a probability of 0.2 and 0.4 to create 
 two datasets from each simulated dataset. The second type of error we introduced 
-was converting heterozygote haplotypes to homozygous. To do this, for each locus 
-we randomly paired gene copies from within each species, and with a probability 
-of 0.2 or 0.4 we randomly replaced one with the other. 
+was missing heterozygous gene copies. To do this, we randomly paired gene copies 
+from within each species for each locus, and with a probability 
+of 0.2 or 0.4 we randomly replaced one with the other.
+
 
 \subsection{Inference}
-We performed Bayesian inference to estimate the divergence time between the two species and the effective 
-population sizes of the root and tips of the species tree from each alignment 
-under both an unlinked-character model and a linked-character model. For each 
-model we parameterized the prior distributions on divergence time and effective
-population size with the same parameters under which the data were generated. 
-the same as the distributions generating the data.
-We used \ecoevolity
+For each simulated data set,
+we approximated the posterior distribution of the divergence time (\divtime)
+and effective population sizes
+(\rootpopsize, \tippopsize[1], and \tippopsize[2])
+under an
+unlinked-character model using
+\ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
-to infer these parameters under the 
-unlinked-character model. We ran four independent chains of \ecoevolity
-with 75,000 steps and a sample frequency of 50 steps.
-We used the
-\beast (Version 0.15.1) \citationNeeded
+and a linked-character model using the
+\beast
+\citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} 
 package in
-\beastcore (Version 2.5.2) \citationNeeded
-to infer these parameters under the linked-character model. 
-We ran two independent chains of \beast with 20 million steps and a 
-sample frequency of 1000 steps. 
-To model sequence evolution in \beast in a comparable way to \ecoevolity we used 
-the same GTR model under which the data were simulated as explained above.
+\beastcore
+\citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
+For both methods, we specified a CTMC model of character evolution and prior
+distributions that matched the model and distributions from which the data were
+generated.
+The prior on the effective size of the root population in the original
+implementation of \ecoevolity was parameterized to be relative to the mean
+effective size of the descendant populations.
+We added an option to \ecoevolity to compile a version where the prior is
+specified as the absolute effective size of the root population,
+which matches the model in \beast and the model we used to generate the data.
+Because the linked sites violates the unlinked-character model of
+\ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity},
+we also analyzed each data set after removing all but (at most)
+one variable character per locus, while correcting the likelihood
+for sampling only variable characters.
+
+For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
+analyses with 75,000 steps and a sample frequency of 50 steps.
+For \beast, we ran two independent MCMC analyses with 20 million steps and a
+sample frequency of 5000 steps. 
+To assess convergence and mixing of the \ecoevolity and \beast MCMC chains, we
+computed the effective sample size
+\citep[ESS;][]{Gong2014}
+and potential scale reduction factor
+\citep[PSRF; the square root of Equation 1.1 in][]{Brooks1998}
+from the samples of each parameter, and considered an ESS value greater
+than 200 and PSRF less than 1.2 \citep{gelman1998} to indicate adequate mixing
+of a chain. 
+Based on preliminary analyses of simulated data sets without errors,
+we chose to discard the first 501 and 201 samples from
+the MCMC chains of \ecoevolity and \beast, leaving 4000 and
+7600 posterior samples for each data set, respectively.
+
+
+\subsection{Simulating unlinked characters}
+All of the simulations above violate the assumption of the \ecoevolity
+model that all characters are unlinked
+\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}.
+In order to help verify that the generative model of our simulation pipeline
+matched the underlying model of \ecoevolity, and to confirm that any behavior
+of the method was not being caused by the linkage violation,
+we simulated an additional 100 data sets of 100,000 biallelic characters as
+described above, except that the characters  were unlinked
+(i.e., each character evolved along an independent gene tree).
+From each of these, we created another data set where singleton site patterns
+were converted to invariant sites with a probability of 0.4.
+We analyzed each of these data sets with \ecoevolity as described above.
+
+\subsection{Project repository}
+The full history of this project has been version-controlled and is available
+at
+\url{https://github.com/}\highLight{XXXXXX},
+and includes
+all of the data and scripts necessary to produce our results.
+
+
+
 
 \section{Results}
 
-Time results for 1000bp loci (Figure~\ref{fig:time1000}).
+\subsection{MCMC convergence and mixing}
+Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
+a PSRF less than 1.2, indicative of convergence,
+however, we do see poor mixing (ESS < 200) of the \beast chains as the length
+of loci decreases (\mainfigs;
+yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
+We only see evidence of poor mixing and convergence for \ecoevolity when
+applied to data sets with errors.
+This is in contrast to \beast, for which the frequency and degree of poor MCMC
+behavior is largely unaffected by the type or frequency of errors.
+The proportion of \beast root effective population size estimates with ESS 
+values less than 200 was high across all analyses \rootfigsp;
+estimates of descendant effective population size had better ESS values across all 
+analyses with the exception of estimates of small effective population sizes from 
+250 bp loci \thetafigsp.
 
-Time results for 500bp loci (Figure~\ref{fig:time500}).
+\subsection{Analyzing all sites versus SNPs with \ecoevolity}
+When analyzing the simulated data sets without errors, the precision of
+parameter estimates by \ecoevolity was much greater when all sites of the
+alignment were used than when a single SNP per locus was used \mainfigsp.
+This was true across the different lengths of loci.
+Only analyzing SNPs does make \ecoevolity more robust to the errors
+we introduced.
+However, this robustness is due to the lack of information in the
+SNP data leading to wide credible intervals, and in the case of
+population size parameters, the marginal posteriors essentially
+match the prior distribution \thetafigsp.
+Our discussion of the behavior of \ecoevolity below focus on the estimates with
+all characters, unless mentioned otherwise.
 
-Time results for 250bp loci (Figure~\ref{fig:time250}).
+\subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
+    models}
+The divergence time estimates of \beast were very accurate and precise for all
+alignment lengths and types and degrees error, despite poor MCMC mixing (i.e.,
+low ESS values) for shorter loci \timefigsp. 
+For data sets without error (and when all characters are analyzed), the
+accuracy and precision of \ecoevolity's divergence time estimates were
+comparable to \beast \timefigsp.
+However when alignments contained errors, \ecoevolity underestimated very
+recent divergence times with increasing severity as the frequency of errors
+increases \timefigsp; estimates of larger divergence times were unaffected.
+
+The biased underestimation of divergence times by \ecoevolity in the face of
+errors was coupled with overestimation of the ancestral effective population
+sizes (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+When analyzing the alignments without errors, \ecoevolity essentially returned
+the prior distribution on the effective size of the ancestral population
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+Despite poor MCMC mixing, \beast consistently estimated the effective size of
+the ancestral population better than \ecoevolity and was unaffected by errors
+in the data
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250});
+the precision of \beast's estimates of \rootpopsize increased with locus
+length.
+
+The estimates of the effective size of the descendant populations
+are largely similar between \beast and \ecoevolity;
+both methods underestimate the descendant population sizes when
+the data sets contain errors, and this downward bias is generally
+worse for \ecoevolity
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+The degree of underestimation increases with the rate of errors in the data
+sets for both \beast and \ecoevolity, and the results were largely consistent
+across different locus lengths.
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+
+\subsection{Performance of \ecoevolity with unlinked characters}
+The above results of \ecoevolity when analyzing data sets comprising linked
+loci are susceptible to a violation of its unlinked-character model.
+To rule out the possibility that the greater sensitivity of \ecoevolity to the
+errors we simulated is due to this violation, we simulated unlinked data sets
+and introduced singleton errors at a rate of 40\%.
+Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
+biases in parameter estimates with the data sets of unlinked characters
+(\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+\jrocomment{These results still need to be incorporated}.
+
+\subsection{Coverage of credible intervals}
+The 95\% credible intervals for divergence times and effective population sizes
+estimated from alignments without error in \beast had the expected coverage
+frequency in that the true value was within approximately 95\% of the estimated
+credible intervals. 
+This was also true for \ecoevolity when analyzing data sets simulated with
+unlinked characters (i.e., no linked sites) \cref{fig:ecoevolityunlinked}.
+The expected coverage behavior of \beast and \ecoevolity helps to confirm that
+the sequence data were simulated under the same model as that used for
+inference by these methods. 
+As seen previously \citep{Oaks2018ecoevolity}, the coverage of \ecoevolity is
+short when analyzing linked loci, due to the model violation.
+
+
 
 \section{Discussion}
 
 
-\section{Conclusions}
+% Starbeast vs ecoevolity
+\subsection{Robustness to character-pattern errors}
+As predicted the linked-character model of \beast was more robust to erroneous
+character patterns in the alignments than the unlinked-character model of
+\ecoevolity.
+This is most evident in the estimates of divergence times, for which
+the two methods perform very similarly when there are no errors in the
+data (Row 1 of \timefigs).
+When errors are introduced the divergence time estimates of \beast are
+unaffected, but \ecoevolity underestimates recent divergence times as both
+singleton and heterozygous errors become more frequent (Rows 2--5 of
+\timefigs).
+
+However, \ecoevolity divergence-time estimates are only biased at
+very recent divergence times, and the effect disappears
+when the time of divergence is larger than about $8N_e\mu$.
+\jrocomment{We should plot div times in coalescent units versus error.}
+This pattern makes sense given that both types of character-pattern error
+reduce variation \emph{within} the species.
+Thus, it is not too surprising that the unlinked-character model
+struggles the most when there is shared variation between
+the two populations (i.e., most gene trees have more than
+two lineages that coalesce in the ancestral population).
+The erroneous character patterns mislead both models that the effective size of
+the descendant branches is smaller than they really are
+(\cref{fig:theta1000,fig:theta500,fig:theta250}).
+To explain the shared variation between the species (i.e. deep coalescences)
+when underestimating the descendant population sizes,
+unlinked-character model of \ecoevolity
+simultaneously reduces the divergence time and increases the effective
+size of the ancestral population.
+\jrocomment{Perhaps plot div times error versus ancestral pop size error.}
+Despite also being misled about the size of the descendant populations
+(\cref{fig:theta1000,fig:theta500,fig:theta250}),
+the linked-character model of \beast seems to benefit from more information
+about the general shape of each gene tree across the linked sites and can still
+maintain an accurate estimate of the divergence time
+\timefigsp
+and ancestral population size
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+
+This downward biased variation within each species becomes
+less of a problem for the unlinked-character model as the
+divergence time gets larger, likely because the average gene
+tree only has a single lineage from each species that coalesces
+in the ancestral population.
+As the coalesced lineage within each species leading back
+to the ancestral population becomes a large proportion
+of the overall length of the average gene tree,
+the proportion of characters that are fixed differences versus invariant
+likely provides enough information to
+the unlinked character model about the time of divergence to overcome
+the downward biased estimates of the descendant population sizes.
+
+
+% Severity 
+
+% Locus length
+Unsurprisingly MCMC performance declines with decreasing decreasing locus length.
+There is less information contained in the shorter loci to inform gene tree estimation 
+and it is expected that there to be more uncertainty in gene tree estimation.
+This uncertainly results in a wider posterior distribution of that must be 
+sampled from.
+Poor MCMC performance in \beast does not appear to correlate with poor parameter 
+estimates. The distribution of estimates is generally as good or better than those 
+from \ecoevolity. 
+
+
+\subsection{Relevance to empirical data sets}
+% Application
+It is reassuring to see the effect of character-pattern errors on the
+unlinked-character model is limited to a small region of parameter space and is
+only large when the frequency of errors in the data is large.
+The error rates of 40\% that we simulated are likely higher than the rate of
+these types of errors in real high-throughput sequence alignments.
+However, empirical alignments likely contain a mix of different sources of
+errors and biases from various steps in data collection process.
+Also, real data would not be generated under a model with no prior misspecification.
+Violations of the model might make these methods of species-tree inference more
+sensitive to lower rates of error.
+
+The degree to which a dataset will be affected by error from missing
+heterozygote haplotypes and missing singletons will be highly dependent on the
+depth of sequencing coverage (i.e., the number of overlapping sequence reads at
+a locus) and on how the data are processed. 
+Coverage will very across loci due to random chance and biases in PCR
+amplification and sequencing.
+Most pipelines for processing sequence data processing pipelines set 
+a minimum coverage threshold for variants or for alleles in order filter
+sequencing error. True variants or alleles are more likely to filtered when
+coverage is low. 
+Filtering of very rare alleles that do not meet a minimum minor allele 
+frequency threshold has been used as a way to eliminate the impact of 
+sequencing errors. 
+For example filtering alleles with counts of less than 3 would ensure that all
+alleles have been found in at least two diploid individuals
+\citep{rochetteStacksAnalyticalMethods2019}.
+However, filtering in this way can result in biased estimates of parameters that
+are sensitive to the frequencies of rare alleles
+\citep{linckMinorAlleleFrequency2019}.
+%% Do we know they filter all singleton patterns?
+% Minor allele frequency filtering of singleton sites would eliminate all sites 
+% and likely produce error much greater than that observed in our analyses.
+
+\subsection{Recommendations for using unlinked-character models}
+
+When erroneous character patterns cause \ecoevolity to underestimate the
+divergence time it also inflates the effective population size of the ancestral
+population.
+We are seeing values of $\rootpopsize\mu$ consistent with an average sequence
+divergence between individuals \emph{within} the ancestral population of 3\%,
+which is much larger than our prior mean expectation (0.4\%).
+Thus, looking for unrealistically large population sizes estimated for internal
+branches of the phylogeny might provide an indication that the
+unlinked-character model is not explaining the data well.
+However, there is little information in the data about the effective population
+sizes along ancestral branches,
+so the parameter that might indicate a problem is going to have very
+large credible intervals.
+Nonetheless, many of the posterior estimates of the ancestral population size
+from our simulated data sets with character-pattern errors are well beyond the
+prior distribution.
+
+When using unlinked-character models with empirical high-throughput data sets,
+it might also help to perform the analysis on different versions of the aligned
+data that are assembled under different coverage thresholds for variants or
+alleles.
+Variation of estimates derived from different assemblies of the data might
+indicate that the model is sensitive to the errors or acquisition biases in the
+alignments.
+This is especially true for data where sequence coverage is low for samples
+and/or loci.
+Given our findings, it might be helpful to compare the estimates of the
+effective population sizes along internal branches of the tree.
+Seeing improbably large estimates for some assemblies of the
+data might indicate that the model is being biased by
+errors or acquisition biases present in the character patterns.
+
+Consistent with what has been shown in previous work
+\citep{Oaks2018ecoevolity,Oaks2018paic},
+\ecoevolity performed better when all sites were utilized despite violating the
+assumption that all sites are unlinked.
+This suggests that investigators might obtain better estimates by analyzing all
+their data under unlinked-character models, rather than discarding much of it
+to avoid violating an assumption of the model.
+Given that model of unlinked characters implemented in \ecoevolity
+does not use information about linkage among sites 
+\citep{bryantInferringSpeciesTrees2012, Oaks2018ecoevolity},
+it is not surprising that this model violation does not introduce a bias.
+Linkage among sites does not change the gene trees and site patterns that are
+expected under the model, but it does reduce the variance of the those patterns
+due to them evolving along fewer gene trees.
+As a result, the accuracy of the parameter estimates is not affected
+by the linkage among sites within loci, but the credible intervals
+become too narrow as the length of loci increase
+\citep{Oaks2018ecoevolity,Oaks2018paic}.
+However, it remains to be seen whether the robustness of the model's accuracy
+to linked sites holds true for larger species trees.
+
+
+% What can they do to avoid errors/biases?
+% Obtain high coverage data.
+% Evaluate the effect of different filtering thresholds.
+% Filter PCR duplicates to ensure that read coverage is not inflated for some
+% alleles or loci. 
+% PCR duplicated can account for as much as 60\% of sequenced 
+% Duplicates can be filtered using single molecule tagging, randomly sheared 
+% libraries, or PCR free library preparation. If PCR bias is high 
+% Removing rare site patterns to avoid introducing mutational or basecalling error 
+% may not provide more accurate inferences. 
+% While the error rates of current high-throughput sequencing methods are not 
+% negligable, the impact of removing all rare or singleton site has a substantial 
+% impact on accuracy and precision of estimates. 
+% PCR clones account for as much as 60\% of sequenced reads 
+% \citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014}
+
+
+\subsection{Future directions}
+% Larger trees
+In this study we used a simple two species model with a small number of gene
+copies sampled from each to minimize the effect of differences in algorithms
+for searching species and gene tree space on the performance of the linked and
+unlinked character models.
+Our goal was to compare the theoretical performance of these two models, not
+their current software implementations.
+\kaccomment{worth noting what differences there are?}
+Nonetheless, exploring how character-pattern errors and biases affect
+the inference of larger species trees would be informative.
+From our simulations, we saw that their was little information in the data to
+update the prior distribution on the effective size of the ancestral population.
+Exploring larger trees will determine whether estimates of the population size
+of most internal branches show this behavior, or if it will be confined to the
+to only the most basal branches and root of the species tree.
+Also, the tree topology is frequently a parameter of great interest and
+it would therefore be interesting to know how character-pattern errors and
+biases affect estimation of the species-tree topology.
+
+% Similarity Thresholds
+Exploring other types of errors and biases would also be informative.
+To generate alignments of orthologous loci from high-throughput data, 
+sequences are matched to a similar portion of a reference sequence or 
+clustered together based on similarity. To avoid aligning paralogous sequences 
+it is necessary to establish a minimum level of similarity for establishing 
+orthology between sequences. This can lead to an acquisition bias due to the 
+exclusion of more variable loci or alleles from the alignment.
+Furthermore, when a reference 
+sequence is used, this data filtering will not be random with respect to the
+species, but rather there will be a bias towards filtering loci and alleles
+with greater sequence divergence from the reference. 
+Simulations exploring the affect of these types of data acquisition biases
+would complement the errors we explored here.
+
+% Diffuse Prior
+In our analyses, there was no model misspecification other than the introduced
+errors (expect for the linked sites violating the unlinked-character model).
+With empirical data, there are likely many violations of our models,
+and our prior distributions will never match the distributions that generated
+the data.
+Introducing other model violations and misspecified prior distributions
+would thus help to better understand how MSC models behave on real
+data sets.
+Of particular concern is whether misspecified priors will amplify the effect of
+character-pattern errors or biases.
+
+We found that character-pattern errors that remove variation from within
+species can cause unlinked-character MSC models to underestimate divergence
+times and overestimate ancestral population sizes in order to explain shared
+variation among species.
+This raises the question of whether we can model and correct for these types of
+data collection errors in order to avoid biased parameter estimates.
+An approach that could integrate over uncertainty in the frequency of these
+types of missing-allele errors would be particularly appealing.
+
+% Low coverage from many individuals
+% Our sample size of 4 gene copies per species is quite small. In order to gain high confidence
+% in the genotypes of a small sample it is necessary to sequence each sample at 
+% high coverage. However there is a high probability that the counts of of alleles 
+% in a small sample size are very low and therefore difficult to distinguish from
+% mutational or basecalling error. One proposed approach to better detect polymorphisms 
+% within populations is to sequence a large number of individuals at low coverage
+% (~2x) \citep{buerklePopulationGenomicsBased2013}.
+
+
+
+% Our results raise interesting questions that can be further explored\ldots
+% \begin{itemize}
+    % \item Larger trees. Will non-root internal branches suffer from bias, or
+    %     only the root? Will only branches ancestral to short branches suffer?
+    %     Will linked-site models remain robust?
+    %     Will biased div times and pop sizes also affect accuracy of topology
+    %     estimates?
+    % \item Acquisition biases. E.g., removing most variable loci to avoid
+    %     paralogy. Will this only have an affect at recent times? Or will
+    %     this affect be more pervasive across parameter space?
+    %     Will linked-site models remain robust
+    % \item What erroneous site patterns have the largest affect on
+    %     the likelihood? Can we model and correct for these?
+    % \item Are larger population sample sizes more robust? Perhaps it is better
+        % to sequence a larger number of individuals at lower coverage 
+        % \cite{fumagalliAssessingEffectSequencing2013}.
+    % \item We essentially had no model misspecification.
+        % what happens when our priors are wrong/diffuse?
+        % Will this amplify affect of errors/biases?
+% \end{itemize}

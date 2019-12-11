@@ -12,25 +12,26 @@
 
 \newcommand{\jroedit}[2]{\sout{#1}{\color{pauburn}{#2}}}
 % \newcommand{\jroedit}[2]{#2}
+\newcommand{\jrocomment}[1]{{\color{pgreen}{[JRO comment: #1]}}}
+\newcommand{\kaccomment}[1]{{\color{pgreen}{[KAC comment: #1]}}}
 
 % \newcommand{\ifembed}[2]{#1}
 \newcommand{\ifembed}[2]{#2}
 % \newcommand{\ifdoublespacing}[2]{#1}
 \newcommand{\ifdoublespacing}[2]{#2}
-% \newcommand{\iflinenumbers}[2]{#1}
-\newcommand{\iflinenumbers}[2]{#2}
+\newcommand{\iflinenumbers}[2]{#1}
+% \newcommand{\iflinenumbers}[2]{#2}
 % \newcommand{\ifragged}[2]{#1}
 \newcommand{\ifragged}[2]{#2}
 % \newcommand{\ifincludefigcaptionlist}[2]{#1}
 \newcommand{\ifincludefigcaptionlist}[2]{#2}
-
 
 \usepackage[round]{natbib}
 
 \title{Comparing linked versus unlinked character models for species-tree inference}
 
 \author[1]{Kerry Cobb}
-\author[1]{Jamie R.\ Oaks \thanks{Corresponding author: \href{mailto:joaks@auburn.edu}{\tt joaks@auburn.edu}}}
+\author[1]{Jamie R.\ Oaks\thanks{Corresponding author: \href{mailto:joaks@auburn.edu}{\tt joaks@auburn.edu}}}
 \affil[1]{Department of Biological Sciences \& Museum of Natural History,
     Auburn University,
     101 Rouse Life Sciences Building,
@@ -64,7 +65,7 @@
 \begin{linenumbers}
 }{}
 
-\textbf{Running head}: \uppercase{To link or unlink}
+% \textbf{Running head}: \uppercase{To link or unlink}
 
 {\let\newpage\relax\maketitle}
 
@@ -137,30 +138,30 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SUPPORTING INFO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{page}{1}
-\setcounter{section}{0}
+% \newpage
+% \setcounter{figure}{0}
+% \setcounter{table}{0}
+% \setcounter{page}{1}
+% \setcounter{section}{0}
 
-\singlespacing
+% \singlespacing
 
-\section*{Supporting Information}
-\hangindent=1cm
-\noindent Title: \msTitle
+% \section*{Supporting Information}
+% \hangindent=1cm
+% \noindent Title: \msTitle
 
-\bigskip
-{\noindent Authors: \msAuthor}
+% \bigskip
+% {\noindent Authors: \msAuthor}
 
-\newpage
-\singlespacing
+% \newpage
+% \singlespacing
 
-\input{si-body.tex}
-\clearpage
+% \input{si-body.tex}
+% \clearpage
 
-\input{si-tables.tex}
-\clearpage
+% \input{si-tables.tex}
+% \clearpage
 
-\input{si-figures.tex}
+% \input{si-figures.tex}
 
 \end{document}

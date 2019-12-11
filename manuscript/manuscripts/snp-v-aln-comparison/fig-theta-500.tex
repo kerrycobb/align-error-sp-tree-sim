@@ -1,3 +1,26 @@
-\embedHeightFigure{0.8}{../../../sims/plots-tex/cropped-grid-theta-500bp.pdf}{
-    Caption here \ldots
+\embedHeightFigure{0.78}{../../../sims/plots-tex/cropped-grid-theta-500bp.pdf}{
+\footnotesize
+Accuracy and precision of estimates of effective population sizes of the
+descendant branches of the tree scaled by the mutation rate ($\tippopsize\mu$)
+with 500 base pair loci.
+The left column shows estimates from \beast.
+The center column shows estimates from \ecoevolity using all sites and the
+right column shows estimates from \ecoevolity using a single SNP per locus.
+The top row are estimates from 100 data sets simulated without
+character-pattern errors. 
+Rows labelled 20\% and 40\% singleton errors are estimates from the same
+alignments after singleton site patterns were changed to invariant sites with
+probabilities 0.2 and 0.4, respectively.
+Rows labelled 20\% and 40\% het errors are estimates from the same alignments
+after one copy of randomly paired gene copies within each species was replaced
+with the other with probabilities 0.2 and 0.4, respectively.
+Each plotted circle and associated error bars represent the posterior mean and 95\%
+credible interval.
+Circles and error bars are colored yellow if the effective sample size (ESS) of
+the estimate was less than 200, red if the potential scale reduction factor
+(PSRF) was greater than 1.2, and green if both conditions were true.
+The root mean square error (RMSE) and rate of poor MCMC behavior (RPMB) is
+given for each plot, the latter of which is the proportion of estimates with
+ESS < 200 and/or PSRF > 1.2.
+We generated the plots using matplotlib Version 3.1.1 \citep{matplotlib}. 
 }{fig:theta500}
