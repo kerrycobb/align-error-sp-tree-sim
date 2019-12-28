@@ -1,8 +1,8 @@
-nreps: 100
+nreps: 1 
 nspecies: 2
 ngenomes: 4
-nloci: 1000 
-locus_length: 100
+nloci: 10 
+locus_length: 1000
 ecoevolity_chains: 4
 starbeast_chains: 2
 starbeast_chain_length: 20000000

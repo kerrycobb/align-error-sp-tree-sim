@@ -1,0 +1,7 @@
+method,interval,taxon,coverage
+ecoevolity,ci,T1,0.97
+ecoevolity,ci,T2,0.945
+ecoevolity,ci,root,0.97
+ecoevolity,hpd,T1,0.96
+ecoevolity,hpd,T2,0.945
+ecoevolity,hpd,root,0.975

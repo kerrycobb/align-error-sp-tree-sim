@@ -2,18 +2,18 @@
 
 Shared ancestry is a fundamental attribute of life and phylogenetic methods 
 provide a statistical basis for understanding the evolutionary history of organisms.
-A significant challenge to phylogentic reconstructions of this history is the 
+A significant challenge to phylogenetic reconstructions of this history is the 
 discordance that can arise between the genealogical histories of genes and 
 histories of divergence among species \citep{maddisonGeneTreesSpecies1997}.
 Of the processes that lead to this phenomenon, incomplete lineage sorting has 
 been the focus of most phylogenetic methods development to account for discordance
-among gene trees. The multispecie coalescent (MSC) model has emerged as a 
+among gene trees. The multispecies coalescent (MSC) model has emerged as a 
 powerful framework for estimating species trees along with other parameters of 
 interest such as divergence times, and effective population sizes in the 
 presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}.
 Full-likelihood Bayesian approaches are appealing, because of their ability to
 infer the species tree directly from character alignments while accommodating
-uncertainty in geneaological processes by integrating over gene trees
+uncertainty in genealogical processes by integrating over gene trees
 \citep{rannalaEfficientBayesianSpecies2017}.
 
 Full likelihood approaches to species tree inference can be
@@ -36,7 +36,7 @@ Unlinked-character models on the other
 hand are more tractable for a large number of loci, because  estimating 
 individual gene trees is avoided by integrating over all possible gene trees 
 \citep{bryantInferringSpeciesTrees2012}.
-Whereas unlinked-character models can accomodate a larger number of loci than
+Whereas unlinked-character models can accommodate a larger number of loci than
 linked-character models, most genetic data sets comprise linked sites and
 unlinked-character models are unable to utilize this information.
 
@@ -151,7 +151,7 @@ are limited to characters with (at most) two states.
 We simulated the two-tipped species trees under a pure birth-process with a
 birth rate of 10 using the \python package
 \dendropy
-\citep[Version 4.40; \jrocomment{XXX} branch commit eb69003;][]{Dendropy}.  
+\citep[Version 4.40; \highLight{XXXXX} branch commit eb69003;][]{Dendropy}.  
 This is equivalent to the divergence time being Exponentially distributed with
 a rate of 20.
 We drew population sizes for each branch of the species tree from a Gamma 
@@ -328,7 +328,7 @@ and introduced singleton errors at a rate of 40\%.
 Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
 biases in parameter estimates with the data sets of unlinked characters
 (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
-\jrocomment{[These results still need to be incorporated]}.
+\jrocomment{These results still need to be incorporated}.
 
 \subsection{Coverage of credible intervals}
 The 95\% credible intervals for divergence times and effective population sizes
@@ -416,7 +416,7 @@ estimates. The distribution of estimates is generally as good or better than tho
 from \ecoevolity. 
 
 
-\subsection{Applicability to empirical data sets}
+\subsection{Relevance to empirical data sets}
 % Application
 It is reassuring to see the effect of character-pattern errors on the
 unlinked-character model is limited to a small region of parameter space and is
@@ -534,48 +534,66 @@ unlinked character models.
 Our goal was to compare the theoretical performance of these two models, not
 their current software implementations.
 \kaccomment{worth noting what differences there are?}
-Nonetheless, the tree topology is frequently a parameter of great interest and
-it would therefore be interesting to know how bias affects estimation of the
-species-tree topology.
+Nonetheless, exploring how character-pattern errors and biases affect
+the inference of larger species trees would be informative.
 From our simulations, we saw that their was little information in the data to
 update the prior distribution on the effective size of the ancestral population.
 Exploring larger trees will determine whether estimates of the population size
 of most internal branches show this behavior, or if it will be confined to the
-root population, or maybe the most basal branches of the species tree.
+to only the most basal branches and root of the species tree.
+Also, the tree topology is frequently a parameter of great interest and
+it would therefore be interesting to know how character-pattern errors and
+biases affect estimation of the species-tree topology.
 
 % Similarity Thresholds
+Exploring other types of errors and biases would also be informative.
 To generate alignments of orthologous loci from high-throughput data, 
 sequences are matched to a similar portion of a reference sequence or 
-clustered together based on similarity. To avoid aligning paralagous sequences 
-it is necessary to establish a minmum level of similarity for establishing 
+clustered together based on similarity. To avoid aligning paralogous sequences 
+it is necessary to establish a minimum level of similarity for establishing 
 orthology between sequences. This can lead to an acquisition bias due to the 
-exclusion of more variable loci or alleles from the alignment. When a reference 
-sequence is used, there will be a bias towards filtering loci and alleles with 
-greater sequence divergence from the the reference. 
-
+exclusion of more variable loci or alleles from the alignment.
+Furthermore, when a reference 
+sequence is used, this data filtering will not be random with respect to the
+species, but rather there will be a bias towards filtering loci and alleles
+with greater sequence divergence from the reference. 
+Simulations exploring the affect of these types of data acquisition biases
+would complement the errors we explored here.
 
 % Diffuse Prior
-We performed estimates under essentially the same model as we used to simulate 
-the data with the only difference being the violation of the linkage assumption 
-in \ecoevolity. 
-How will the linked and unlinked models compare when a more diffuse prior is 
-used as one would do when conducting analyses with empirical data?
-Will this amplify the affect of error and bias? Or will the estimates simply
-reflect greater the greater uncertainty introduced by a more diffuse prior?   
+In our analyses, there was no model misspecification other than the introduced
+errors (expect for the linked sites violating the unlinked-character model).
+With empirical data, there are likely many violations of our models,
+and our prior distributions will never match the distributions that generated
+the data.
+Introducing other model violations and misspecified prior distributions
+would thus help to better understand how MSC models behave on real
+data sets.
+Of particular concern is whether misspecified priors will amplify the effect of
+character-pattern errors or biases.
+
+We found that character-pattern errors that remove variation from within
+species can cause unlinked-character MSC models to underestimate divergence
+times and overestimate ancestral population sizes in order to explain shared
+variation among species.
+This raises the question of whether we can model and correct for these types of
+data collection errors in order to avoid biased parameter estimates.
+An approach that could integrate over uncertainty in the frequency of these
+types of missing-allele errors would be particularly appealing.
 
 % Low coverage from many individuals
-Our sample size of 4 gene copies per species is quite small. In order to gain high confidence
-in the genotypes of a small sample it is necessary to sequence each sample at 
-high coverage. However there is a high probability that the counts of of alleles 
-in a small sample size are very low and therefore difficult to distinguish from
-mutational or basecalling error. One proposed approach to better detect polymorphisms 
-within populations is to sequence a large number of individuals at low coverage
-(~2x) \citep{buerklePopulationGenomicsBased2013}.
+% Our sample size of 4 gene copies per species is quite small. In order to gain high confidence
+% in the genotypes of a small sample it is necessary to sequence each sample at 
+% high coverage. However there is a high probability that the counts of of alleles 
+% in a small sample size are very low and therefore difficult to distinguish from
+% mutational or basecalling error. One proposed approach to better detect polymorphisms 
+% within populations is to sequence a large number of individuals at low coverage
+% (~2x) \citep{buerklePopulationGenomicsBased2013}.
 
 
 
-Our results raise interesting questions that can be further explored\ldots
-\begin{itemize}
+% Our results raise interesting questions that can be further explored\ldots
+% \begin{itemize}
     % \item Larger trees. Will non-root internal branches suffer from bias, or
     %     only the root? Will only branches ancestral to short branches suffer?
     %     Will linked-site models remain robust?
@@ -585,12 +603,12 @@ Our results raise interesting questions that can be further explored\ldots
     %     paralogy. Will this only have an affect at recent times? Or will
     %     this affect be more pervasive across parameter space?
     %     Will linked-site models remain robust
-    \item What erroneous site patterns have the largest affect on
-        the likelihood? Can we model and correct for these?
+    % \item What erroneous site patterns have the largest affect on
+    %     the likelihood? Can we model and correct for these?
     % \item Are larger population sample sizes more robust? Perhaps it is better
         % to sequence a larger number of individuals at lower coverage 
         % \cite{fumagalliAssessingEffectSequencing2013}.
     % \item We essentially had no model misspecification.
         % what happens when our priors are wrong/diffuse?
         % Will this amplify affect of errors/biases?
-\end{itemize}
+% \end{itemize}
