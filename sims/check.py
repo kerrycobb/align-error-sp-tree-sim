@@ -20,6 +20,8 @@ def check_output(pattern, ending):
             pos = -1
             if lines[pos].startswith("Warning: Permanently added"):
                 pos -= 1
+            if lines[pos].startswith("su: cannot set user id:"):
+                pos -= 1
             if lines[pos].startswith(ending):
                 complete = True
             else:
@@ -43,8 +45,8 @@ def check_starbeast(dir, job, rep, chains, rerun, ssh=False):
                 xml_path = os.path.join(dir, "starbeast.xml")
                 with open(os.path.join(chain_dir, "seed.txt")) as fh:
                     seed = fh.readline()
-                jobname = "{}-star-{}-{}".format(job, rep, chain) 
-                run_starbeast(chain_dir, seed, jobname, xml_path, 
+                jobname = "{}-star-{}-{}".format(job, rep, chain)
+                run_starbeast(chain_dir, seed, jobname, xml_path,
                         rerun=True, ssh=ssh)
     return completed
 
@@ -74,11 +76,11 @@ def check_ecoevolity(dir, job, rep, chains, rerun, nsamples, ssh=False):
             if rerun:
                 with open(os.path.join(chain_dir, "seed.txt")) as fh:
                     seed = fh.readline()
-                eco_config_path = os.path.join(chain_dir, 
+                eco_config_path = os.path.join(chain_dir,
                         "ecoevolity-config.yml")
                 jobname = "{}-eco-{}-{}".format(job, rep, chain)
-                run_ecoevolity(chain_dir, seed, jobname, eco_config_path, 
-                        rerun=True, ssh=ssh ) 
+                run_ecoevolity(chain_dir, seed, jobname, eco_config_path,
+                        rerun=True, ssh=ssh )
     return completed
 
 def check(dir, rerun=False, ssh=False, method="all"):
@@ -98,19 +100,19 @@ def check(dir, rerun=False, ssh=False, method="all"):
         rep_dir = os.path.join(dir, "rep-{}".format(rep))
         if method in ["all", "starbeast"]:
             completed_star += check_starbeast(
-              dir=rep_dir, 
-              job=job_basename, 
-              rep=rep, 
-              chains=starbeast_chains, 
-              rerun=rerun, 
+              dir=rep_dir,
+              job=job_basename,
+              rep=rep,
+              chains=starbeast_chains,
+              rerun=rerun,
               ssh=ssh)
         if method in ["all", "ecoevolity"]:
             completed_eco += check_ecoevolity(
-                dir=rep_dir, 
+                dir=rep_dir,
                 job=job_basename,
-                rep=rep, 
-                chains=ecoevolity_chains, 
-                rerun=rerun, 
+                rep=rep,
+                chains=ecoevolity_chains,
+                rerun=rerun,
                 nsamples=nsamples,
                 ssh=ssh)
     if method in ["all", "ecoevolity"]:

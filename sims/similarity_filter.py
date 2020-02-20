@@ -1,114 +1,82 @@
 #!/usr/bin/env python
 
 import fire
-import glob
 import yaml
-import fire
-import subprocess
 import os
 import dendropy as dp
-from dendropy.interop import seqgen
-import random
-import numpy as np
-from tqdm import tqdm
+import pathlib
+import shutil
+import pandas as pd
+from statistics import mean
+import matplotlib.pyplot as plt
 
-
-# def check_similarity(align_path, similarity_thresh):
-#     align = dp.DnaCharacterMatrix.get(
-#         path=align_path,
-#         schema="phylip")
-#     seg_sites = dp.calculate.popgenstat.num_segregating_sites(align)
-#     proportion_similar = (align.max_sequence_size - seg_sites) / align.max_sequence_size
-#     if proportion_similar  > similarity_thresh:
-#         is_similar = True
-#     else:
-#         is_similar = False
-#     return is_similar 
-
-
-
-def run(dir):
-    dir = os.path.abspath(dir)
-    basename = os.path.basename(dir)
-    config_path = os.path.join(dir, "config.yml")
-    config = yaml.safe_load(open(config_path))
-    eco_config_path = os.path.join(dir, "eco-config.yml")
-    eco_config = yaml.safe_load(open(eco_config_path))
-    rng = random.Random(config["seed"])
+def alignment_filter(in_dir, prop, upper_lower):
+    """
+    upper_lower: < "upper" | "lower" >
+        upper = Most variable
+        lower = Least variable
+    """
+    config = yaml.safe_load(open(os.path.join(in_dir, "config.yml")))
+    parent_dir = pathlib.Path(in_dir).parent
+    new_dir = os.path.join(parent_dir, "filter-{}-{}".format(prop, upper_lower))
+    os.mkdir(new_dir)
+    shutil.copy(os.path.join(in_dir, "config.yml"), new_dir)
+    shutil.copy(os.path.join(in_dir, "eco-config.yml"), new_dir)
+    prop_n = int(prop * config["nloci"])
     for rep in range(0, config["nreps"]):
-        rep_dir = os.path.join(dir, "rep-{}".format(rep))
+        rep_dir = os.path.join(in_dir, "rep-{}".format(rep))
+        new_rep_dir = os.path.join(new_dir, "rep-{}".format(rep))
+        os.mkdir(new_rep_dir)
+        alignments = []
+        seg_sites = []
+        loci = []
         for locus in range(0, config["nloci"]):
             align_path = os.path.join(rep_dir, "alignment-{}.phy".format(locus))
             align = dp.DnaCharacterMatrix.get(
                 path=align_path,
                 schema="phylip")
-            seg_sites = dp.calculate.popgenstat.num_segregating_sites(align)
-            print(seg_sites)
-        # proportion_similar = (align.max_sequence_size - seg_sites) / align.max_sequence_size
+            segregating = dp.calculate.popgenstat.num_segregating_sites(align)
+            seg_sites.append(segregating)
+            alignments.append(dict(
+                seg_sites=segregating,
+                locus=locus,
+                alignment=align))
+            loci.append(locus)
+        alignments.sort(key=lambda dict: dict["seg_sites"])
+        if upper_lower == "upper":
+            filtered_alignments = alignments[-prop_n:]
+        elif upper_lower == "lower":
+            filtered_alignments = alignments[:prop_n]
+        new_seg_sites = []
+        for align in filtered_alignments:
+            filt_align_path = os.path.join(new_rep_dir,
+                    "alignment-{}.phy".format(align["locus"]))
+            align["alignment"].write(path=filt_align_path, schema="phylip")
+            new_seg_sites.append(align["seg_sites"])
 
+        # Output stats to text file
+        init_str = "Initial: {} loci, mean: {}, min: {}, max: {}\n".format(len(seg_sites),
+                mean(seg_sites), min(seg_sites), max(seg_sites))
+        filt_str = "Filtered: {} loci, mean: {}, min: {}, max: {}\n".format(len(new_seg_sites),
+                mean(new_seg_sites), min(new_seg_sites), max(new_seg_sites))
+        with open(os.path.join(new_rep_dir, "output.txt"), "w") as fh:
+            fh.write(init_str)
+            fh.write(filt_str)
 
+        # Copy species tree
+        shutil.copy(os.path.join(rep_dir, "species_tree.nex"),
+                os.path.join(new_rep_dir, "species_tree.nex"))
 
-
-#     """
-#     concat: Concatenate loci into single alignment
-#     """
-#     config = yaml.safe_load(open(config_path))
-#     eco_config = yaml.safe_load(open(eco_path))
-#     rng = random.Random(seed)
-
-#     # Make output directory
-#     out_dir = os.path.join(
-#         "out-sp{sp}-gen{gen}-loc{loc}-len{len}".format(
-#             sp=config["nspecies"],
-#             gen=config["ngenomes"],
-#             loc=config["nloci"],
-#             len=config["locus_length"]),
-#         "seed{}-reps{}".format(seed, config["nreps"]),
-#         "singleton-prob-1.0")
-#     os.makedirs(out_dir) 
-
-#    # Copy configs into output directory
-#     config["seed"] = rng.randint(0, 1000000000)
-#     new_config_path = os.path.join(out_dir, "config.yml")
-#     yaml.dump(config, open(new_config_path, "w"))
-#     new_eco_config_path = os.path.join(out_dir, "eco-config.yml")
-#     yaml.dump(eco_config, open(new_eco_config_path, "w"))
-
-#     for rep in tqdm(range(0, config["nreps"])):
-#         rep_dir = os.path.join(out_dir, "rep-{}".format(rep))
-#         os.mkdir(rep_dir)
-    
-#         # Simulate species tree
-#         sp_tree = simulate_species_tree(
-#             n_sp=config["nspecies"],
-#             birth_rate=config["birth_rate"],
-#             death_rate=0,
-#             pop_size_shape=config["pop_size_shape"],
-#             pop_size_scale=config["pop_size_scale"],
-#             rng=rng)
-#         sp_tree.write(
-#             path=os.path.join(rep_dir, "species_tree.nex"), 
-#             schema="nexus")
-
-#         # Simulate gene trees
-#         gene_trees = simulate_gene_trees(
-#             sp_tree=sp_tree,
-#             nloci=config["nloci"],
-#             ngenomes=config["ngenomes"],
-#             rng=rng)
-#         gene_trees.write(
-#             path=os.path.join(rep_dir, "gene_trees.nex"), 
-#             schema="nexus")
-
-#         # Simulate alignments
-#         simulate_alignment(
-#             trees=gene_trees, 
-#             length=config["locus_length"], 
-#             rng=rng, 
-#             dir=rep_dir, 
-#             concat=concat)
-    
-#     print("Simulation Complete")
+        # Get gene tree for filtered loci and output to new directory
+        gene_trees = dp.TreeList.get(path=os.path.join(rep_dir,
+                "gene_trees.nex"), schema="nexus")
+        new_gene_trees = dp.TreeList()
+        for tree in gene_trees:
+            if tree.label in loci:
+                new_gene_trees.append(tree)
+        new_gene_trees.write(path=os.path.join(new_rep_dir,
+                "gene_trees.nex"), schema="nexus")
+    print("Filtering Complete")
 
 if __name__ == "__main__":
-    fire.Fire(run)
+    fire.Fire(alignment_filter)
