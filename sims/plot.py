@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import (inset_axes, InsetPosition,
                                                   mark_inset)
 import re
+import fire
 
 
 def mean_squared_error(x, y):
@@ -201,10 +202,7 @@ def get_max_values(dir_name, statistic = "mean"):
     return max_time, max_root_theta, max_theta
 
 
-@click.command()
-@click.argument("dir_name", type=click.Path())
-@click.argument("alignment", type=click.Path())
-def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
+def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci", insets=True):
     # Read in summary csv
     theta_df = pd.read_csv(os.path.join(dir_name, 
             "{}-summary-theta.csv".format(alignment)))
@@ -260,8 +258,9 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
     for i in plot_params:
         if len(i[0]) > 0:
             include_inset = False
-            if i[2].endswith("Time") and (not alignment.endswith("-snp")):
-                include_inset = True
+            if insets:
+                if i[2].endswith("Time") and (not alignment.endswith("-snp")):
+                    include_inset = True
             plt.close('all')
             f, ax = plt.subplots()    
             set_axis(ax, i[0], i[1], interval,
@@ -274,5 +273,6 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
             print("Warning: No data to plot for {dir} {align} {param}".format(
                 dir=dir_name, align=alignment, param=i[2]))
 
+
 if __name__ == "__main__":
-    make_plot()
+    fire.Fire(make_plot)
