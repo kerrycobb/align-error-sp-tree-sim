@@ -1,0 +1,177 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\bibAnnoteFile}[1]{%
+  \IfFileExists{#1}{\begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ \input{#1}\end{quotation}}{}}
+\providecommand{\bibAnnote}[2]{%
+  \begin{quotation}\noindent\textsc{Key:} #1\\
+  \textsc{Annotation:}\ #2\end{quotation}}
+
+\bibitem[{Aird et~al.(2011)Aird, Ross, Chen, Danielsson, Fennell, Russ, Jaffe,
+  Nusbaum, and Gnirke}]{airdAnalyzingMinimizingPCR2011}
+Aird, D., M.~G. Ross, W.-S. Chen, M.~Danielsson, T.~Fennell, C.~Russ, D.~B.
+  Jaffe, C.~Nusbaum, and A.~Gnirke. 2011. {\selectlanguage{english}Analyzing
+  and minimizing {{PCR}} amplification bias in {{Illumina}} sequencing
+  libraries}. Genome Biology 12:R18.
+\bibAnnoteFile{airdAnalyzingMinimizingPCR2011}
+
+\bibitem[{Bouckaert et~al.(2014)Bouckaert, Heled, K{\"u}hnert, Vaughan, Wu,
+  Xie, Suchard, Rambaut, and Drummond}]{bouckaertBEASTSoftwarePlatform2014}
+Bouckaert, R., J.~Heled, D.~K{\"u}hnert, T.~Vaughan, C.-H. Wu, D.~Xie, M.~A.
+  Suchard, A.~Rambaut, and A.~J. Drummond. 2014.
+  {\selectlanguage{english}{{BEAST}} 2: {{A Software Platform}} for {{Bayesian
+  Evolutionary Analysis}}}. PLoS Computational Biology 10:e1003537.
+\bibAnnoteFile{bouckaertBEASTSoftwarePlatform2014}
+
+\bibitem[{Brooks and Gelman(1998)}]{Brooks1998}
+Brooks, S.~P. and A.~Gelman. 1998. General methods for monitoring convergence
+  of iterative simulations. Journal of Computational and Graphical Statistics
+  7:434--455.
+\bibAnnoteFile{Brooks1998}
+
+\bibitem[{Bryant et~al.(2012)Bryant, Bouckaert, Felsenstein, Rosenberg, and
+  RoyChoudhury}]{bryantInferringSpeciesTrees2012}
+Bryant, D., R.~Bouckaert, J.~Felsenstein, N.~A. Rosenberg, and A.~RoyChoudhury.
+  2012. {\selectlanguage{english}Inferring {{Species Trees Directly}} from
+  {{Biallelic Genetic Markers}}: {{Bypassing Gene Trees}} in a {{Full
+  Coalescent Analysis}}}. Molecular Biology and Evolution 29:1917--1932.
+\bibAnnoteFile{bryantInferringSpeciesTrees2012}
+
+\bibitem[{Gelman and Meng(1998)}]{gelman1998}
+Gelman, A. and X.-L. Meng. 1998. Statistical Science 13:163--185.
+\bibAnnoteFile{gelman1998}
+
+\bibitem[{Gong and Flegal(2016)}]{Gong2014}
+Gong, L. and J.~M. Flegal. 2016. A practical sequential stopping rule for
+  high-dimensional {M}arkov chain {M}onte {C}arlo. Journal of Computational and
+  Graphical Statistics 25:684--700.
+\bibAnnoteFile{Gong2014}
+
+\bibitem[{Harvey et~al.(2015{\natexlab{a}})Harvey, Judy, Seeholzer, Maley,
+  Graves, and Brumfield}]{Harvey2015}
+Harvey, M.~G., C.~D. Judy, G.~F. Seeholzer, J.~M. Maley, G.~R. Graves, and
+  R.~T. Brumfield. 2015{\natexlab{a}}. Similarity thresholds used in {DNA}
+  sequence assembly from short reads can reduce the comparability of population
+  histories across species. PeerJ 3:e895.
+\bibAnnoteFile{Harvey2015}
+
+\bibitem[{Harvey et~al.(2015{\natexlab{b}})Harvey, Judy, Seeholzer, Maley,
+  Graves, and Brumfield}]{harveySimilarityThresholdsUsed2015}
+Harvey, M.~G., C.~D. Judy, G.~F. Seeholzer, J.~M. Maley, G.~R. Graves, and
+  R.~T. Brumfield. 2015{\natexlab{b}}. {\selectlanguage{english}Similarity
+  thresholds used in {{DNA}} sequence assembly from short reads can reduce the
+  comparability of population histories across species}. PeerJ 3:e895.
+\bibAnnoteFile{harveySimilarityThresholdsUsed2015}
+
+\bibitem[{Heled and Drummond(2010)}]{Heled2010}
+Heled, J. and A.~J. Drummond. 2010. Bayesian inference of species trees from
+  multilocus data. Molecular Biology and Evolution 27:570--580.
+\bibAnnoteFile{Heled2010}
+
+\bibitem[{Hunter(2007)}]{matplotlib}
+Hunter, J.~D. 2007. Matplotlib: A {2D} graphics environment. Computing In
+  Science \& Engineering 9:90--95.
+\bibAnnoteFile{matplotlib}
+
+\bibitem[{Leach\'{e} and Oaks(2017)}]{Leache2017}
+Leach\'{e}, A.~D. and J.~R. Oaks. 2017. The utility of single nucleotide
+  polymorphism ({SNP}) data in phylogenetics. Annual Review of Ecology,
+  Evolution, and Systematics 48:69--84.
+\bibAnnoteFile{Leache2017}
+
+\bibitem[{Linck and Battey(2019)}]{linckMinorAlleleFrequency2019}
+Linck, E. and C.~J. Battey. 2019. {\selectlanguage{english}Minor allele
+  frequency thresholds strongly affect population structure inference with
+  genomic data sets}. Molecular Ecology Resources 19:639--647.
+\bibAnnoteFile{linckMinorAlleleFrequency2019}
+
+\bibitem[{Liu and Pearl(2007)}]{liuSpeciesTreesGene2007}
+Liu, L. and D.~K. Pearl. 2007. {\selectlanguage{english}Species {{Trees}} from
+  {{Gene Trees}}: {{Reconstructing Bayesian Posterior Distributions}} of a
+  {{Species Phylogeny Using Estimated Gene Tree Distributions}}}. Systematic
+  Biology 56:504--514.
+\bibAnnoteFile{liuSpeciesTreesGene2007}
+
+\bibitem[{Maddison(1997)}]{maddisonGeneTreesSpecies1997}
+Maddison, W.~P. 1997. {\selectlanguage{english}Gene trees in species trees}.
+  SYSTEMATIC BIOLOGY Page~14.
+\bibAnnoteFile{maddisonGeneTreesSpecies1997}
+
+\bibitem[{Maio et~al.(2015)Maio, Schrempf, and
+  Kosiol}]{maioPoMoAlleleFrequencyBased2015}
+Maio, N.~D., D.~Schrempf, and C.~Kosiol. 2015.
+  {\selectlanguage{english}{{PoMo}}: {{An Allele Frequency}}-{{Based Approach}}
+  for {{Species Tree Estimation}}}. Systematic Biology 64:14.
+\bibAnnoteFile{maioPoMoAlleleFrequencyBased2015}
+
+\bibitem[{Oaks(2018)}]{Oaks2018ecoevolity}
+Oaks, J.~R. 2018. Full {B}ayesian comparative phylogeography from genomic data.
+  Systematic Biology .
+\bibAnnoteFile{Oaks2018ecoevolity}
+
+\bibitem[{Oaks et~al.(2018)Oaks, Siler, and Brown}]{Oaks2018paic}
+Oaks, J.~R., C.~D. Siler, and R.~M. Brown. 2018. The comparative biogeography
+  of geckos challenges predictions from a paradigm of climate-driven vicariant
+  diversification across an island archipelago. bioRxiv .
+\bibAnnoteFile{Oaks2018paic}
+
+\bibitem[{Ogilvie et~al.(2017)Ogilvie, Bouckaert, and
+  Drummond}]{ogilvieStarBEAST2BringsFaster2017}
+Ogilvie, H.~A., R.~R. Bouckaert, and A.~J. Drummond. 2017.
+  {\selectlanguage{english}{{StarBEAST2 Brings Faster Species Tree Inference}}
+  and {{Accurate Estimates}} of {{Substitution Rates}}}. Molecular Biology and
+  Evolution 34:2101--2114.
+\bibAnnoteFile{ogilvieStarBEAST2BringsFaster2017}
+
+\bibitem[{Pfeiffer et~al.(2018)Pfeiffer, Gr{\"o}ber, Blank, H{\"a}ndler, Beyer,
+  Schultze, and Mayer}]{pfeifferSystematicEvaluationError2018}
+Pfeiffer, F., C.~Gr{\"o}ber, M.~Blank, K.~H{\"a}ndler, M.~Beyer, J.~L.
+  Schultze, and G.~Mayer. 2018. {\selectlanguage{english}Systematic evaluation
+  of error rates and causes in short samples in next-generation sequencing}.
+  Scientific Reports 8.
+\bibAnnoteFile{pfeifferSystematicEvaluationError2018}
+
+\bibitem[{Potapov and Ong(2017)}]{potapovExaminingSourcesError2017}
+Potapov, V. and J.~L. Ong. 2017. {\selectlanguage{english}Examining {{Sources}}
+  of {{Error}} in {{PCR}} by {{Single}}-{{Molecule Sequencing}}}. PLOS ONE
+  12:e0169774.
+\bibAnnoteFile{potapovExaminingSourcesError2017}
+
+\bibitem[{Rambaut and Grass(1997)}]{rambautSeqGenApplicationMonte1997}
+Rambaut, A. and N.~C. Grass. 1997. {\selectlanguage{english}Seq-{{Gen}}: An
+  application for the {{Monte Carlo}} simulation of {{DNA}} sequence evolution
+  along phylogenetic trees}. Bioinformatics 13:235--238.
+\bibAnnoteFile{rambautSeqGenApplicationMonte1997}
+
+\bibitem[{Rannala and Yang(2017)}]{rannalaEfficientBayesianSpecies2017}
+Rannala, B. and Z.~Yang. 2017. {\selectlanguage{english}Efficient {{Bayesian}}
+  species tree inference under the multispecies coalescent}. Systematic Biology
+  Page~syw119.
+\bibAnnoteFile{rannalaEfficientBayesianSpecies2017}
+
+\bibitem[{Rochette et~al.(2019)Rochette, Rivera-Col{\'o}n, and
+  Catchen}]{rochetteStacksAnalyticalMethods2019}
+Rochette, N.~C., A.~G. Rivera-Col{\'o}n, and J.~M. Catchen. 2019.
+  {\selectlanguage{english}Stacks 2: {{Analytical}} methods for paired-end
+  sequencing improve {{RADseq}}-based population genomics}. Molecular Ecology
+  28:4737--4754.
+\bibAnnoteFile{rochetteStacksAnalyticalMethods2019}
+
+\bibitem[{Sukumaran and Holder(2010)}]{Dendropy}
+Sukumaran, J. and M.~T. Holder. 2010. {DendroPy}: A {P}ython library for
+  phylogenetic computing. Bioinformatics 26:1569--1571.
+\bibAnnoteFile{Dendropy}
+
+\bibitem[{Xu and Yang(2016)}]{xuChallengesSpeciesTree2016}
+Xu, B. and Z.~Yang. 2016. {\selectlanguage{english}Challenges in {{Species Tree
+  Estimation Under}} the {{Multispecies Coalescent Model}}}. Genetics
+  204:1353--1368.
+\bibAnnoteFile{xuChallengesSpeciesTree2016}
+
+\bibitem[{Yang(2015)}]{yangBPPProgramSpecies2015}
+Yang, Z. 2015. {\selectlanguage{english}The {{BPP}} program for species tree
+  estimation and species delimitation}. Current Zoology 61:854--865.
+\bibAnnoteFile{yangBPPProgramSpecies2015}
+
+\end{thebibliography}

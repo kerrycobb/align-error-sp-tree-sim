@@ -15,3 +15,5 @@
 ./plot.py out-sp2-gen4-loc400-len250 het-prob-0.6
 ./plot.py out-sp2-gen4-loc100000-len1 singleton-prob-1.0
 ./plot.py out-sp2-gen4-loc100000-len1 singleton-prob-0.6
+./plot.py out-sp2-gen4-loc10000-len1000 filter-0.01-upper
+./plot.py out-sp2-gen4-loc10000-len1000 filter-0.01-lower

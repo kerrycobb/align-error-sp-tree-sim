@@ -1,0 +1,47 @@
+\documentclass[border=10pt,varwidth=30cm]{standalone}
+\usepackage{graphicx,capt-of}
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage[cm]{sfmath}
+\usepackage{xspace}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcounter{subfloat}
+\renewcommand{\thesubfloat}{\Alph{subfloat}}
+\newcommand{\image}[2]{%
+    \stepcounter{subfloat}%
+    \begin{tabular}[t]{@{}c@{}}
+    \thesubfloat. #1 \\
+    #2
+    \end{tabular}%
+}
+\newcommand{\insertlabel}{%
+    \small
+    \stepcounter{subfloat}%
+    \thesubfloat}
+\newcommand{\trm}[1]{\ensuremath{\textrm{\sffamily #1}}}
+
+\input{../../manuscript/utils/notation.tex}
+
+\begin{document}
+
+\begin{figure}
+    \centering
+    \begin{tabular}{@{}ccc@{}}
+        & \multicolumn{1}{c}{\Large \beast}
+        & \multicolumn{1}{c}{\Large \ecoevolity} \\
+        \multirow{6}{*}[-3.5em]{\begin{sideways}\Large Estimated value\end{sideways}}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-starbeast-time}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-ecoevolity-time}.pdf} \\
+        & \multicolumn{2}{c}{\Large True divergence time} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-starbeast-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-ecoevolity-theta}.pdf} \\
+        & \multicolumn{2}{c}{\Large True descendant $N_e\mu$} \\
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-starbeast-root-theta}.pdf}
+        & \includegraphics[width=0.18\textwidth]{{../out-sp2-gen4-loc10000-len1000/filter-0.01-lower-ecoevolity-root-theta}.pdf} \\
+        & \multicolumn{2}{c}{\Large True ancestral $N_e\mu$} \\
+    \end{tabular}
+\end{figure}
+
+\end{document}

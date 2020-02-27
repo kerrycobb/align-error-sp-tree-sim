@@ -39,7 +39,7 @@ def set_axis(ax, df, lim, interval,
         include_inset = False,
         inset_min = -0.002,
         inset_max = 0.029,
-        max_number_of_sim_reps = 100):
+        max_number_of_sim_reps = 200):
     lower = "{}_lower".format(interval)
     upper = "{}_upper".format(interval)
     poor_mix_count = 0
@@ -202,11 +202,11 @@ def get_max_values(dir_name, statistic = "mean"):
     return max_time, max_root_theta, max_theta
 
 
-def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci", insets=True):
+def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"):
     # Read in summary csv
-    theta_df = pd.read_csv(os.path.join(dir_name, 
+    theta_df = pd.read_csv(os.path.join(dir_name,
             "{}-summary-theta.csv".format(alignment)))
-    time_df = pd.read_csv(os.path.join(dir_name, 
+    time_df = pd.read_csv(os.path.join(dir_name,
             "{}-summary-time.csv".format(alignment)))
 
     # Make sure data will fit within defined limits of plots
@@ -226,13 +226,12 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
     #             .format(count, param))
     max_time, max_root_theta, max_theta = get_max_values(dir_name,
             statistic = "mean")
-    
 
-    # Assign color to data point 
+    # Assign color to data point
     theta_df["color"] = theta_df.apply(set_color, axis=1)
     time_df["color"] = time_df.apply(set_color, axis=1)
 
-    # Group data for plotting 
+    # Group data for plotting
     star_root_theta = theta_df.loc[(theta_df["method"] == "starbeast") & (theta_df["taxon"] == "root")]
     star_theta = theta_df.loc[(theta_df["method"] == "starbeast") & (theta_df["taxon"] != "root")]
     star_time = time_df.loc[(time_df["method"] == "starbeast")]
@@ -254,21 +253,20 @@ def make_plot(dir_name, alignment, time_lim=0.25, theta_lim=0.006, interval="ci"
             (eco_time, max_time, "Ecoevolity Time", "ecoevolity-time.pdf"),
             (eco_root_theta, max_root_theta, "Ecoevolity Root Theta", "ecoevolity-root-theta.pdf"),
             (eco_theta, max_theta, "Ecoevolity Theta", "ecoevolity-theta.pdf")]
-        
+
     for i in plot_params:
         if len(i[0]) > 0:
             include_inset = False
-            if insets:
-                if i[2].endswith("Time") and (not alignment.endswith("-snp")):
-                    include_inset = True
+            if i[2].endswith("Time") and (not alignment.endswith("-snp") and (not alignment.startswith("filter-"))):
+                include_inset = True
             plt.close('all')
-            f, ax = plt.subplots()    
+            f, ax = plt.subplots()
             set_axis(ax, i[0], i[1], interval,
                     include_rmse = True,
-                    include_inset = include_inset) 
+                    include_inset = include_inset)
             # f.suptitle(i[2])
-            plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]), 
-                bbox_inches='tight', pad_inches=0) 
+            plt.savefig(os.path.join(dir_name, alignment + "-" + i[3]),
+                bbox_inches='tight', pad_inches=0)
         else:
             print("Warning: No data to plot for {dir} {align} {param}".format(
                 dir=dir_name, align=alignment, param=i[2]))

@@ -1,0 +1,19 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Methods}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Simulations of error-free data sets}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Introducing Site-pattern Errors}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Inference}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Simulating unlinked characters}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Project repository}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Results}{}% 8
+\BOOKMARK [2][-]{subsection.3.1}{MCMC convergence and mixing}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Analyzing all sites versus SNPs with ecoevolity}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Behavior of linked \(StarBEAST2\) versus unlinked \(ecoevolity\) character models}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.4}{Performance of ecoevolity with unlinked characters}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.5}{Coverage of credible intervals}{section.3}% 13
+\BOOKMARK [1][-]{section.4}{Discussion}{}% 14
+\BOOKMARK [2][-]{subsection.4.1}{Robustness to character-pattern errors}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.2}{Relevance to empirical data sets}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.3}{Recommendations for using unlinked-character models}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.4}{Future directions}{section.4}% 18
+\BOOKMARK [1][-]{section.5}{Acknowledgments}{}% 19
