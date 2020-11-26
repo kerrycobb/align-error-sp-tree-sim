@@ -61,6 +61,10 @@
 % independent gene tree?
 % Little work has been done to help inform these types of decisions. 
 
+
+
+
+
 An important consideration for choosing a multi-species coalescent model is
 the sources of error and bias that result from reduced-representation protocols,
 high-throughput sequencing technologies, and the processing of these data.
@@ -130,6 +134,7 @@ effective sizes of
 and
 \tippopsize[2]
 \jrocomment{(Figure X)}.
+(\cref{fig:spTreeModel})
 For two diploid individuals sampled from each of the terminal
 populations (4 sampled gene copies per population),
 we simulated 100,000 orthologous biallelic characters under a finite-sites,
@@ -182,7 +187,7 @@ from within each species for each locus, and with a probability
 of 0.2 or 0.4 we randomly replaced one with the other.
 
 
-\subsection{Inference}
+\subsection{Assessing Sensitivity To Error}
 For each simulated data set,
 we approximated the posterior distribution of the divergence time (\divtime)
 and effective population sizes
