@@ -169,9 +169,16 @@ with a GTR model with base frequencies of A and C equal to 0 and base
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
 0, except for the rate between G and T which was 1.0. 
 
+\ecoevolity makes the assumption that all characters in a dataset are unlinked. 
+To verify that the generative model of our simulation pipeline matched the underlying
+model of \ecoevolity and to confirm that any behavior of the method was not 
+being caused violation of linkage assumptions, we simulated an additional 100 data sets of 
+100,000 biallelic characters as described above, except that all characters 
+were unlinked---i.e. each character was simulated on a separate gene tree. 
 
 \subsection{Introducing Site-pattern Errors}
-From each simulated dataset described above, we created four datasets by 
+From each simulated dataset containing linked characters described above, we 
+created four datasets by 
 introducing two types of errors at two levels of frequency. The first type of 
 error we introduced was changing singleton character patterns (i.e., characters 
 for which one gene copy was different from the other seven gene copies) to invariant 
@@ -180,8 +187,8 @@ copies. We introduced this change with a probability of 0.2 and 0.4 to create
 two datasets from each simulated dataset. The second type of error we introduced 
 was missing heterozygous gene copies. To do this, we randomly paired gene copies 
 from within each species for each locus, and with a probability 
-of 0.2 or 0.4 we randomly replaced one with the other.
-
+of 0.2 or 0.4 we randomly replaced one with the other. For the unlinked character 
+dataset we only simulated singleton character pattern error at a probability of 0.4.
 
 \subsection{Assessing Sensitivity To Error}
 For each simulated data set,
@@ -230,20 +237,6 @@ we chose to discard the first 501 and 201 samples from
 the MCMC chains of \ecoevolity and \beast, leaving 4000 and
 7600 posterior samples for each data set, respectively.
 
-
-\subsection{Simulating unlinked characters}
-All of the simulations above violate the assumption of the \ecoevolity
-model that all characters are unlinked
-\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}.
-In order to help verify that the generative model of our simulation pipeline
-matched the underlying model of \ecoevolity, and to confirm that any behavior
-of the method was not being caused by the linkage violation,
-we simulated an additional 100 data sets of 100,000 biallelic characters as
-described above, except that the characters  were unlinked
-(i.e., each character evolved along an independent gene tree).
-From each of these, we created another data set where singleton site patterns
-were converted to invariant sites with a probability of 0.4.
-We analyzed each of these data sets with \ecoevolity as described above.
 
 \subsection{Project repository}
 The full history of this project has been version-controlled and is available
