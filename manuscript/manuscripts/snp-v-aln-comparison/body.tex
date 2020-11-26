@@ -246,25 +246,7 @@ and includes
 all of the data and scripts necessary to produce our results.
 
 
-
-
 \section{Results}
-
-\subsection{MCMC convergence and mixing}
-Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
-a PSRF less than 1.2, indicative of convergence,
-however, we do see poor mixing (ESS < 200) of the \beast chains as the length
-of loci decreases (\mainfigs;
-yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
-We only see evidence of poor mixing and convergence for \ecoevolity when
-applied to data sets with errors.
-This is in contrast to \beast, for which the frequency and degree of poor MCMC
-behavior is largely unaffected by the type or frequency of errors.
-The proportion of \beast root effective population size estimates with ESS 
-values less than 200 was high across all analyses \rootfigsp;
-estimates of descendant effective population size had better ESS values across all 
-analyses with the exception of estimates of small effective population sizes from 
-250 bp loci \thetafigsp.
 
 \subsection{Analyzing all sites versus SNPs with \ecoevolity}
 When analyzing the simulated data sets without errors, the precision of
@@ -316,7 +298,6 @@ sets for both \beast and \ecoevolity, and the results were largely consistent
 across different locus lengths.
 (\cref{fig:theta1000,fig:theta500,fig:theta250}).
 
-\subsection{Performance of \ecoevolity with unlinked characters}
 The above results of \ecoevolity when analyzing data sets comprising linked
 loci are susceptible to a violation of its unlinked-character model.
 To rule out the possibility that the greater sensitivity of \ecoevolity to the
@@ -325,7 +306,6 @@ and introduced singleton errors at a rate of 40\%.
 Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
 biases in parameter estimates with the data sets of unlinked characters
 (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
-\jrocomment{These results still need to be incorporated}.
 
 \subsection{Coverage of credible intervals}
 The 95\% credible intervals for divergence times and effective population sizes
@@ -340,6 +320,21 @@ inference by these methods.
 As seen previously \citep{Oaks2018ecoevolity}, the coverage of \ecoevolity is
 short when analyzing linked loci, due to the model violation.
 
+\subsection{MCMC convergence and mixing}
+Most sets of \beast and \ecoevolity MCMC chains yielded samples of parameters with
+a PSRF less than 1.2, indicative of convergence.
+However, we do see poor mixing (ESS < 200) of the \beast chains as the length
+of loci decreases (\mainfigs;
+yellow indicates ESS < 200, red indicates PSRF > 1.2, green indicates both)
+We only see evidence of poor mixing and convergence for \ecoevolity when
+applied to data sets with errors.
+This is in contrast to \beast, for which the frequency and degree of poor MCMC
+behavior is largely unaffected by the type or frequency of errors.
+The proportion of \beast root effective population size estimates with ESS 
+values less than 200 was high across all analyses \rootfigsp.
+Estimates of descendant effective population size had better ESS values across all 
+analyses with the exception of estimates of small effective population sizes from 
+250 bp loci \thetafigsp.
 
 
 \section{Discussion}
