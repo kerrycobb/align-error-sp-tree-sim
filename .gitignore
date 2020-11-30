@@ -1,2 +1,11 @@
 __pycache__/
 seed*rep*
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.DS_Store
+*.Rhistory
