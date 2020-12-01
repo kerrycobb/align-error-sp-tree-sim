@@ -286,15 +286,12 @@ parameter estimates by \ecoevolity was much greater with no less accuracy
 when all sites of the alignment were used relative to when a single SNP per 
 locus was used despite violating the model \mainfigsp. This was true across the 
 different lengths of loci.
-
-
-Only analyzing SNPs does make \ecoevolity more robust to the errors
+Analyzing only SNPs data does make \ecoevolity more robust to the errors
 we introduced.
 However, this robustness is due to the lack of information in the
 SNP data leading to wide credible intervals, and in the case of
 population size parameters, the marginal posteriors essentially
 match the prior distribution \thetafigsp.
-
 To rule out the possibility that sensitivity to error might be caused by
 violation of the unlinked character model, we inferred parameters from the 
 dataset simulated under an unlinked character model whereby each orthologous
@@ -311,9 +308,12 @@ with the linked loci which violate the model of sequence evolution in
 
 \subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
     models}
+    
 The divergence time estimates of \beast were very accurate and precise for all
-alignment lengths and types and degrees error, despite poor MCMC mixing (i.e.,
-low ESS values) for shorter loci \timefigsp. 
+alignment lengths as well as types and degrees error. 
+
+% , despite poor MCMC mixing (i.e.,
+% low ESS values) for shorter loci \timefigsp. 
 For data sets without error (and when all characters are analyzed), the
 accuracy and precision of \ecoevolity's divergence time estimates were
 comparable to \beast \timefigsp.
@@ -327,7 +327,7 @@ sizes (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
 When analyzing the alignments without errors, \ecoevolity essentially returned
 the prior distribution on the effective size of the ancestral population
 (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
-Despite poor MCMC mixing, \beast consistently estimated the effective size of
+\beast consistently estimated the effective size of
 the ancestral population better than \ecoevolity and was unaffected by errors
 in the data
 (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250});
