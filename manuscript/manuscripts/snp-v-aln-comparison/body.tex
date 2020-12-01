@@ -47,12 +47,12 @@
 Phylogeneticists inferring species trees from reduced-representation genomic 
 data sets using full likelihood Bayesian methods are faced with two 
 classes of methods when conducting their analyses.
-These classes differ in the way they model the evolution of orthologous DNA 
+These classes differ in the way they model the evolution of orthologous single nucleotide 
 sites along gene trees within the species 
 tree. They assume that either (1) each site evolved along its own gene tree 
 (i.e., each site is ``unlinked'') 
 \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
-or (2) contiguous, linked sites evolved along a shared gene tree 
+or (2) contiguous, linked sites forming loci evolved along a shared gene tree 
 \citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
 yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
 linked-character models, respectively. For both models, the gene tree of each 
@@ -276,35 +276,37 @@ all of the data and scripts necessary to produce our results.
 
 \subsection{Analyzing all sites versus SNPs with \ecoevolity}
 
-\ecoevolity implements an unlinked-character model of sequence evolution and 
-it is not uncommon for phylogeneticists to use only a single variable sites per locus
-from their alignments when using methods implementing an unlinked-character model. 
-
-We examined the effect of including the invariant sites in \ecoevolity.
-
+The unlinked character model implemented in \ecoevolity assumes that ortholgous 
+nucleotide sites evolve independently along separate gene tree. The data however, were
+simulated under a model assuming that contiguous linked sites evolve along a shared 
+gene tree. It would thus be a violation of the \ecoevolity model to include all
+sites in the analysis. However, this drastically reduces the amount of data.    
 When analyzing the simulated data sets without errors, the precision of
-parameter estimates by \ecoevolity was much greater when all sites of the
-alignment were used than when a single SNP per locus was used \mainfigsp.
+parameter estimates by \ecoevolity was much greater with no less accuracy 
+when all sites of the alignment were used relative to when a single SNP per 
+locus was used despite violating the model \mainfigsp. This was true across the 
+different lengths of loci.
 
-This was true across the different lengths of loci.
+
 Only analyzing SNPs does make \ecoevolity more robust to the errors
 we introduced.
-
 However, this robustness is due to the lack of information in the
 SNP data leading to wide credible intervals, and in the case of
 population size parameters, the marginal posteriors essentially
 match the prior distribution \thetafigsp.
 
-Our discussion of the behavior of \ecoevolity below focus on the estimates with
-all characters, unless mentioned otherwise.
-% The above results of \ecoevolity when analyzing data sets comprising linked
-% loci are susceptible to a violation of its unlinked-character model.
-% To rule out the possibility that the greater sensitivity of \ecoevolity to the
-% errors we simulated is due to this violation, we simulated unlinked data sets
-% and introduced singleton errors at a rate of 40\%.
-% Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
-% biases in parameter estimates with the data sets of unlinked characters
-% (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+To rule out the possibility that sensitivity to error might be caused by
+violation of the unlinked character model, we inferred parameters from the 
+dataset simulated under an unlinked character model whereby each orthologous
+nucleotide site evolved on a separate gene tree. We introduced singleton error 
+into this dataset at a rate of 40\%. We find the same bias in parameter estimates
+with this unlinked character data set (\cref{fig:ecoevolityunlinked}) as we did 
+with the linked loci which violate the model of sequence evolution in 
+\ecoevolity \timefigsp.
+
+% Put this in the discussion somewhere
+% The results from this analysis were consistent
+% with \citep{Oaks2018ecoevolity} 
 
 
 \subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
