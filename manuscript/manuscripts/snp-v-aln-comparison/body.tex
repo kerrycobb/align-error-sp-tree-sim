@@ -206,7 +206,7 @@ frequencies of G and T equal to 0.5. The transition rate for all base changes wa
 \ecoevolity makes the assumption that all characters in a dataset are unlinked. 
 To verify that the generative model of our simulation pipeline matched the underlying
 model of \ecoevolity and to confirm that any behavior of the method was not 
-being caused violation of linkage assumptions, we simulated an additional 100 data sets of 
+being caused by violation of linkage assumptions, we simulated an additional 100 data sets of 
 100,000 biallelic characters as described above, except that all characters 
 were unlinked---i.e. each character was simulated on a separate gene tree. 
 
@@ -222,37 +222,29 @@ two datasets from each simulated dataset. The second type of error we introduced
 was missing heterozygous gene copies. To do this, we randomly paired gene copies 
 from within each species for each locus, and with a probability 
 of 0.2 or 0.4 we randomly replaced one with the other. For the unlinked character 
-dataset we only simulated singleton character pattern error at a probability of 0.4.
+dataset comprised of a single site per locus, we only simulated singleton 
+character pattern error at a probability of 0.4.
 
 \subsection{Assessing Sensitivity To Error}
-For each simulated data set,
-we approximated the posterior distribution of the divergence time (\divtime)
-and effective population sizes
-(\rootpopsize, \tippopsize[1], and \tippopsize[2])
-under an
-unlinked-character model using
-\ecoevolity
+For each simulated data set, we approximated the posterior distribution of the 
+divergence time (\divtime) and effective population sizes (\rootpopsize, \tippopsize[1], and \tippopsize[2])
+under an unlinked-character model using \ecoevolity
 \citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
-and a linked-character model using the
-\beast
-\citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} 
-package in
-\beastcore
+and a linked-character model using the \beast
+\citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} package in \beastcore
 \citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
 For both methods, we specified a CTMC model of character evolution and prior
 distributions that matched the model and distributions from which the data were
-generated.
-The prior on the effective size of the root population in the original
+generated. The prior on the effective size of the root population in the original
 implementation of \ecoevolity was parameterized to be relative to the mean
 effective size of the descendant populations.
 We added an option to \ecoevolity to compile a version where the prior is
 specified as the absolute effective size of the root population,
-which matches the model in \beast and the model we used to generate the data.
-Because the linked sites violates the unlinked-character model of
-\ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity},
-we also analyzed each data set after removing all but (at most)
-one variable character per locus, while correcting the likelihood
-for sampling only variable characters.
+which matches the model in \beast and matches the model we used to generate the data.
+The linkage of sites within loci of our simulated character data violates the 
+unlinked-character model of \ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}. Therefore, we also analyzed each data 
+set with \ecoevolity after selecting at most, a single variable character from 
+each locus. Loci without variable character sites were excluded. 
 
 For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
 analyses with 75,000 steps and a sample frequency of 50 steps.
@@ -283,18 +275,37 @@ all of the data and scripts necessary to produce our results.
 \section{Results}
 
 \subsection{Analyzing all sites versus SNPs with \ecoevolity}
+
+\ecoevolity implements an unlinked-character model of sequence evolution and 
+it is not uncommon for phylogeneticists to use only a single variable sites per locus
+from their alignments when using methods implementing an unlinked-character model. 
+
+We examined the effect of including the invariant sites in \ecoevolity.
+
 When analyzing the simulated data sets without errors, the precision of
 parameter estimates by \ecoevolity was much greater when all sites of the
 alignment were used than when a single SNP per locus was used \mainfigsp.
+
 This was true across the different lengths of loci.
 Only analyzing SNPs does make \ecoevolity more robust to the errors
 we introduced.
+
 However, this robustness is due to the lack of information in the
 SNP data leading to wide credible intervals, and in the case of
 population size parameters, the marginal posteriors essentially
 match the prior distribution \thetafigsp.
+
 Our discussion of the behavior of \ecoevolity below focus on the estimates with
 all characters, unless mentioned otherwise.
+% The above results of \ecoevolity when analyzing data sets comprising linked
+% loci are susceptible to a violation of its unlinked-character model.
+% To rule out the possibility that the greater sensitivity of \ecoevolity to the
+% errors we simulated is due to this violation, we simulated unlinked data sets
+% and introduced singleton errors at a rate of 40\%.
+% Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
+% biases in parameter estimates with the data sets of unlinked characters
+% (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+
 
 \subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
     models}
@@ -332,14 +343,16 @@ sets for both \beast and \ecoevolity, and the results were largely consistent
 across different locus lengths.
 (\cref{fig:theta1000,fig:theta500,fig:theta250}).
 
-The above results of \ecoevolity when analyzing data sets comprising linked
-loci are susceptible to a violation of its unlinked-character model.
-To rule out the possibility that the greater sensitivity of \ecoevolity to the
-errors we simulated is due to this violation, we simulated unlinked data sets
-and introduced singleton errors at a rate of 40\%.
-Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
-biases in parameter estimates with the data sets of unlinked characters
-(\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+
+% Should move to section above
+% The above results of \ecoevolity when analyzing data sets comprising linked
+% loci are susceptible to a violation of its unlinked-character model.
+% To rule out the possibility that the greater sensitivity of \ecoevolity to the
+% errors we simulated is due to this violation, we simulated unlinked data sets
+% and introduced singleton errors at a rate of 40\%.
+% Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
+% biases in parameter estimates with the data sets of unlinked characters
+% (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
 
 \subsection{Coverage of credible intervals}
 The 95\% credible intervals for divergence times and effective population sizes
