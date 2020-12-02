@@ -136,8 +136,8 @@ For two diploid individuals sampled from each of the terminal
 populations (4 sampled gene copies per population),
 we simulated 100,000 orthologous biallelic characters under a finite-sites,
 continuous-time Markov chain (CTMC) model of evolution.
-We simulated 100 data sets comprised of loci of three different lengths---1000,
-500, and 250 linked characters.
+We simulated 100 data sets comprised of loci of four different lengths---1000,
+500, 250, and 1 characters.
 We assume each locus is effectively unlinked and has no intralocus
 recombination, i.e., each locus evolved along a single gene tree that is
 independent of the other loci, conditional on the species tree.
@@ -158,22 +158,16 @@ birth rate of 10 using the \python package \dendropy
 This is equivalent to the divergence time being Exponentially distributed with
 a rate of 20.
 We drew population sizes for each branch of the species tree from a Gamma 
-distribution with a shape of 5.0 and mean of 0.002. We simulated 100, 200, and 
-400 gene trees for the 1000, 500, and 250 locus length data sets respectively 
-using the contained coalescent implemented in \dendropy.
+distribution with a shape of 5.0 and mean of 0.002.
+We simulated 100, 200, 400, and 100,000 gene trees for data sets with loci of
+length 1000, 500, 250, and 1, respectively, using the contained coalescent
+implemented in \dendropy.
 We simulated linked biallelic character alignments using
 \seqgen (Version 1.3.4)
 \citep{rambautSeqGenApplicationMonte1997}
 with a GTR model with base frequencies of A and C equal to 0 and base 
 frequencies of G and T equal to 0.5. The transition rate for all base changes was 
 0, except for the rate between G and T which was 1.0. 
-
-\ecoevolity makes the assumption that all characters in a dataset are unlinked. 
-To verify that the generative model of our simulation pipeline matched the underlying
-model of \ecoevolity and to confirm that any behavior of the method was not 
-being caused by violation of linkage assumptions, we simulated an additional 100 data sets of 
-100,000 biallelic characters as described above, except that all characters 
-were unlinked---i.e. each character was simulated on a separate gene tree. 
 
 \subsection{Introducing Site-pattern Errors}
 From each simulated dataset containing linked characters described above, we 
@@ -191,7 +185,8 @@ dataset comprised of a single site per locus, we only simulated singleton
 character pattern error at a probability of 0.4.
 
 \subsection{Assessing Sensitivity to Errors}
-For each simulated data set, we approximated the posterior distribution of the 
+For each simulated data set with loci of 250, 500, and 1000 characters, we
+approximated the posterior distribution of the 
 divergence time (\divtime) and effective population sizes (\rootpopsize, \tippopsize[1], and \tippopsize[2])
 under an unlinked-character model using \ecoevolity
 \citep[Version 0.3.2, Commit a7e9bf2;][]{Oaks2018ecoevolity}
@@ -208,8 +203,16 @@ specified as the absolute effective size of the root population,
 which matches the model in \beast and matches the model we used to generate the data.
 The linkage of sites within loci of our simulated character data violates the 
 unlinked-character model of \ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}. Therefore, we also analyzed each data 
-set with \ecoevolity after selecting at most, a single variable character from 
+set with \ecoevolity after selecting, at most, one variable character from 
 each locus. Loci without variable character sites were excluded. 
+
+We analyzed the data sets simulated with 1-character per locus (i.e., unlinked
+data) with only \ecoevolity.
+Our goal with these analyses was to
+verify that the generative model of our simulation pipeline matched the
+underlying model of \ecoevolity, and to confirm that any behavior of the method
+with the other simulated data sets was not being caused by the linkage
+violation.
 
 For \ecoevolity, we ran four independent Markov chain Monte Carlo (MCMC)
 analyses with 75,000 steps and a sample frequency of 50 steps.
