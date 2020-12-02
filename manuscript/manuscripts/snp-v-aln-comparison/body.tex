@@ -242,49 +242,16 @@ all of the data and scripts necessary to produce our results.
 
 \section{Results}
 
-\subsection{Analyzing all sites versus SNPs with \ecoevolity}
-
-The unlinked character model implemented in \ecoevolity assumes that ortholgous 
-nucleotide sites evolve independently along separate gene tree. The data however, were
-simulated under a model assuming that contiguous linked sites evolve along a shared 
-gene tree. It would thus be a violation of the \ecoevolity model to include all
-sites in the analysis. However, this drastically reduces the amount of data.    
-When analyzing the simulated data sets without errors, the precision of
-parameter estimates by \ecoevolity was much greater with no less accuracy 
-when all sites of the alignment were used relative to when a single SNP per 
-locus was used despite violating the model \mainfigsp. This was true across the 
-different lengths of loci.
-Analyzing only SNPs data does make \ecoevolity more robust to the errors
-we introduced.
-However, this robustness is due to the lack of information in the
-SNP data leading to wide credible intervals, and in the case of
-population size parameters, the marginal posteriors essentially
-match the prior distribution \thetafigsp.
-To rule out the possibility that sensitivity to error might be caused by
-violation of the unlinked character model, we inferred parameters from the 
-dataset simulated under an unlinked character model whereby each orthologous
-nucleotide site evolved on a separate gene tree. We introduced singleton error 
-into this dataset at a rate of 40\%. We find the same bias in parameter estimates
-with this unlinked character data set (\cref{fig:ecoevolityunlinked}) as we did 
-with the linked loci which violate the model of sequence evolution in 
-\ecoevolity \timefigsp.
-
-% Put this in the discussion somewhere
-% The results from this analysis were consistent
-% with \citep{Oaks2018ecoevolity} 
-
-
 \subsection{Behavior of linked (\beast) versus unlinked (\ecoevolity) character
     models}
     
-The divergence time estimates of \beast were very accurate and precise for all
-alignment lengths as well as types and degrees error. 
-
-% , despite poor MCMC mixing (i.e.,
-% low ESS values) for shorter loci \timefigsp. 
-For data sets without error (and when all characters are analyzed), the
-accuracy and precision of \ecoevolity's divergence time estimates were
-comparable to \beast \timefigsp.
+The divergence time estimates by the linked-character method, \beast, were very
+accurate and precise for all alignment lengths as well as types and degrees
+error, despite poor MCMC mixing (i.e., low ESS values) for shorter loci
+\timefigsp. 
+For data sets without error, the unlinked-character method, \ecoevolity,
+estimated divergence times with similar accuracy and precision as \beast when
+all characters are analyzed \timefigsp.
 However when alignments contained errors, \ecoevolity underestimated very
 recent divergence times with increasing severity as the frequency of errors
 increases \timefigsp; estimates of larger divergence times were unaffected.
@@ -295,11 +262,12 @@ sizes (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
 When analyzing the alignments without errors, \ecoevolity essentially returned
 the prior distribution on the effective size of the ancestral population
 (\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}).
+Despite poor MCMC mixing,
 \beast consistently estimated the effective size of
 the ancestral population better than \ecoevolity and was unaffected by errors
 in the data
-(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250});
-the precision of \beast's estimates of \rootpopsize increased with locus
+(\cref{fig:roottheta1000,fig:roottheta500,fig:roottheta250}),
+and the precision of \beast{}'s estimates of \rootpopsize increased with locus
 length.
 
 The estimates of the effective size of the descendant populations
@@ -313,16 +281,44 @@ sets for both \beast and \ecoevolity, and the results were largely consistent
 across different locus lengths.
 (\cref{fig:theta1000,fig:theta500,fig:theta250}).
 
+When we apply \ecoevolity to data sets simulated with unlinked characters
+(i.e., data sets simulated with 1-character per locus),
+we see the same patterns of biased parameter estimates
+in response to errors
+(\cref{fig:ecoevolityunlinked})
+as we did with the linked loci \timefigsp.
+These results rule out the possibility that the greater sensitivity of
+\ecoevolity to the errors we simulated is due to  violation of the method's
+assumption that all characters are unlinked.
 
-% Should move to section above
-% The above results of \ecoevolity when analyzing data sets comprising linked
-% loci are susceptible to a violation of its unlinked-character model.
-% To rule out the possibility that the greater sensitivity of \ecoevolity to the
-% errors we simulated is due to this violation, we simulated unlinked data sets
-% and introduced singleton errors at a rate of 40\%.
-% Consistent with the results of \citet{Oaks2018ecoevolity}, we find the same
-% biases in parameter estimates with the data sets of unlinked characters
-% (\cref{fig:ecoevolityunlinked}) as we did with the linked loci \timefigsp.
+\subsection{Analyzing all sites versus SNPs with \ecoevolity}
+
+The unlinked character model implemented in \ecoevolity assumes that ortholgous 
+nucleotide sites evolve independently along separate gene tree. The data however, were
+simulated under a model assuming that contiguous linked sites evolve along a shared 
+gene tree. It would thus be a violation of the \ecoevolity model to include all
+sites in the analysis.
+However, avoiding this violation by removing all but one variable site per
+locus drastically reduces the amount of data.    
+When analyzing the simulated data sets without errors, the precision and accuracy of
+parameter estimates by \ecoevolity was much greater
+when all sites of the alignment were used relative to when a single SNP per 
+locus was used despite violating the model \mainfigsp.
+This was generally true across the different lengths of loci, however, the
+coverage of credible intervals is lower with longer loci.
+Analyzing only SNPs does make \ecoevolity more robust to the errors
+we introduced.
+However, this robustness is due to the lack of information in the
+SNP data leading to wide credible intervals, and in the case of
+population size parameters, the marginal posteriors essentially
+match the prior distribution \thetafigsp.
+
+% Put this in the discussion somewhere
+% The results from this analysis were consistent
+% with \citep{Oaks2018ecoevolity} 
+
+
+
 
 \subsection{Coverage of credible intervals}
 The 95\% credible intervals for divergence times and effective population sizes
