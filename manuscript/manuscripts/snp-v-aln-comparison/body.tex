@@ -1,150 +1,90 @@
 \section{Introduction}
 
-%% *********** Remove this section
-% Shared ancestry is a fundamental attribute of life and phylogenetic methods 
-% provide a statistical basis for understanding the evolutionary history of organisms.
-% A significant challenge to phylogenetic reconstructions of this history is the 
-% discordance that can arise between the genealogical histories of genes and 
-% histories of divergence among species \citep{maddisonGeneTreesSpecies1997}.
-% Of the processes that lead to this phenomenon, incomplete lineage sorting has 
-% been the focus of most phylogenetic methods development to account for discordance
-% among gene trees. The multispecies coalescent (MSC) model has emerged as a 
-% powerful framework for estimating species trees along with other parameters of 
-% interest such as divergence times, and effective population sizes in the 
-% presence of incomplete lineage sorting \citep{xuChallengesSpeciesTree2016}.
-% Full-likelihood Bayesian approaches are appealing, because of their ability to
-% infer the species tree directly from character alignments while accommodating
-% uncertainty in genealogical processes by integrating over gene trees
-% \citep{rannalaEfficientBayesianSpecies2017}.
+Currently, when evolutionary biologists want to infer a species tree from
+genomic data, they must decide whether to
+(1) assume every site or
+groups of linked sites evolved along independent gene trees, and
+(2) analyze all of their data or only putatively unlinked variable
+sites.
+Our goal in this chapter is to use simulated data to
+help guide these choices by
+comparing the robustness of different approaches to
+errors that are likely common in high-throughput genetic
+datasets.
 
-%% Original second paragraph
-% Full likelihood approaches to species tree inference can be
-% classified into two groups, based on how they model the 
-% evolution of orthologous DNA sites along gene trees within the species 
-% tree---those that assume (1) each site evolved along its own gene tree 
-% (i.e., each site is ``unlinked'') 
-% \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
-% or (2) contiguous, linked sites evolved along a shared gene tree 
-% \citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
-% yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
-% linked-character models, respectively. For both models, the gene tree of each 
-% locus (whether each locus is a single site or a segment of linked sites) 
-% is assumed to be independent of the gene 
-% trees of all other loci, conditional on the species tree.
-% Methods using linked character models become computationally expensive as the
-% number of loci grows large, due to the estimation or numerical integration of
-% all of the gene trees \citep{bryantInferringSpeciesTrees2012}.
-% Unlinked-character models on the other 
-% hand are more tractable for a large number of loci, because  estimating 
-% individual gene trees is avoided by integrating over all possible gene trees 
-% \citep{bryantInferringSpeciesTrees2012}.
-% Whereas unlinked-character models can accommodate a larger number of loci than
-% linked-character models, most genetic data sets comprise linked sites and
-% unlinked-character models are unable to utilize this information.
-
-% % Alternative second paragraph
-% Phylogeneticists inferring species trees from reduced-representation genomic 
-% data sets using full likelihood Bayesian methods are faced with two 
-% classes of methods when conducting their analyses.
-% These classes differ in the way they model the evolution of orthologous single nucleotide 
-% sites along gene trees within the species 
-% tree. They assume that either (1) each site evolved along its own gene tree 
-% (i.e., each site is ``unlinked'') 
-% \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
-% or (2) contiguous, linked sites forming loci evolved along a shared gene tree 
-% \citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
-% yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
-% linked-character models, respectively. For both models, the gene tree of each 
-% locus (whether each locus is a single site or a segment of linked sites) 
-% is assumed to be independent of the gene 
-% trees of all other loci, conditional on the species tree.
-% Methods using linked character models become computationally expensive as the
-% number of loci grows large, due to the estimation or numerical integration of
-% all of the gene trees \citep{bryantInferringSpeciesTrees2012}.
-% Unlinked-character models on the other 
-% hand are more tractable for a large number of loci, because  estimating 
-% individual gene trees is avoided by integrating over all possible gene trees 
-% \citep{bryantInferringSpeciesTrees2012}.
-% Whereas unlinked-character models can accommodate a larger number of loci than
-% linked-character models, most genetic data sets comprise linked sites and
-% unlinked-character models are unable to utilize this information.
-
-% Reduced-representation genomic data sets acquired from high-throughput
-% instruments are becoming commonplace in phylogenetics \citep{Leache2017}, and
-% usually comprise hundreds to thousands of loci as short as 50 nucleotides long
-% and up to several thousand base pairs long.
-% Investigators are thus faced with decisions about how best to 
-% use their data to infer a species tree.
-% Should they use a linked-character method that assumes the sites within each
-% locus evolved along a shared gene tree?
-% Ideally, the answer would be ``yes,'' however this is not always
-% computationally feasible and the model could be violated by intralocus
-% recombination.
-% Alternatively, should investigators remove all but a single-nucleotide
-% polymorphism (SNP) from each locus and use an unlinked-character model?
-% Or, perhaps they should apply the unlinked-character method to all of their
-% sites, even if this violates the assumption that each site evolved along an
-% independent gene tree?
-% Little work has been done to help inform these types of decisions. 
-
-
-Phylogeneticists inferring species trees from reduced-representation genomic 
-data sets are faced with a decision of whether to analyze all of their data or 
-reduce it to only putatively unlinked SNPs.
-
-These data sets are becoming commonplace in phylogenetics \citep{Leache2017}, and
-usually comprise hundreds to thousands of loci as short as 50 nucleotides long
-and up to several thousand base pairs long. % Seems awkward here.
-
-Full bayesian likelihood methods are an ideal tool for inferring species trees 
-from these data when computationally feasible. 
-
-These full likelihood methods can be classified into two groups, based on how 
-they model the evolution of orthologous DNA sites along gene trees within the 
-species tree---those that assume (1) each site evolved along its own gene tree 
-(i.e., each site is ``unlinked'') 
-\citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015}, 
-or (2) contiguous, linked sites evolved along a shared gene tree 
-\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017, 
-yangBPPProgramSpecies2015}. We will refer to these as unlinked and 
-linked-character models, respectively. For both models, the gene tree of each 
-locus (whether each locus is a single site or a segment of linked sites) 
-is assumed to be independent of the gene 
+Reduced-representation genomic data sets acquired from high-throughput
+instruments are becoming commonplace in phylogenetics \citep{Leache2017}, and
+usually comprise hundreds to thousands of loci from 50 to several thousand
+nucleotides long.
+Full likelihood approaches
+for inferring species trees from such datasets
+can be
+classified into two groups based on how they model the
+evolution of orthologous DNA sites along gene trees within the species
+tree---those that assume (1) each site evolved along its own gene tree
+(i.e., each site is ``unlinked'')
+\citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015},
+or (2) contiguous, linked sites evolved along a shared gene tree
+\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017,
+yangBPPProgramSpecies2015}.
+We will refer to these as unlinked and linked-character models, respectively.
+For both models, the gene tree of each
+locus (whether each locus is a single site or a segment of linked sites)
+is assumed to be independent of the gene
 trees of all other loci, conditional on the species tree.
 Methods using linked character models become computationally expensive as the
 number of loci grows large, due to the estimation or numerical integration of
 all of the gene trees \citep{bryantInferringSpeciesTrees2012}.
-Unlinked-character models on the other hand are more tractable for a large 
-number of loci, because  estimating individual gene trees is avoided by 
-integrating over all possible gene trees \citep{bryantInferringSpeciesTrees2012}.
+Unlinked-character models on the other
+hand are more tractable for a large number of loci, because  estimating
+individual gene trees is avoided by integrating over all possible gene trees
+\citep{bryantInferringSpeciesTrees2012}.
 Whereas unlinked-character models can accommodate a larger number of loci than
 linked-character models, most genetic data sets comprise linked sites and
 unlinked-character models are unable to utilize this information.
 
-Ideally, phylogeneticists would use a linked-character method that assumes sites
-within each locus evolved along a shared gene tree and uses all of the information
-contained at a locus. However this is not always computationally feasible and 
-the model could be violated by intralocus recombination.
-Should investigators then remove all but a single-nucleotide
+Investigators are thus faced with decisions about how best to
+use their data to infer a species tree.
+Should they use a linked-character method that assumes the sites within each
+locus evolved along a shared gene tree?
+Ideally, the answer would be ``yes,'' however this is not always
+computationally feasible and the model could be violated by intralocus
+recombination.
+Alternatively, should investigators remove all but one single-nucleotide
 polymorphism (SNP) from each locus and use an unlinked-character model?
 Or, perhaps they should apply the unlinked-character method to all of their
 sites, even if this violates the assumption that each site evolved along an
-independent gene tree?
-Our goal is to use simulated data to help inform these decisions.
-
-An important consideration for choosing a multi-species coalescent model and how
-to apply that model to data is
+independent gene tree.
+Important considerations in such decisions include
 the sources of error and bias that result from reduced-representation protocols,
 high-throughput sequencing technologies, and the processing of these data.
-Most reduced-representation sequencing workflows employ amplification of DNA  
-using polymerase chain reaction (PCR) which can introduce mutational error at a 
+
+Most reduced-representation sequencing workflows employ amplification of DNA
+using polymerase chain reaction (PCR) which can introduce mutational error at a
 rate of up to $1.5\times10^{-5}$ substitutions per base \citep{potapovExaminingSourcesError2017}.
-Furthermore, amplification of different genome regions can be highly variable 
-resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}. 
-Current high-throughput sequencing technologies have non-negligible rates of error.
+% Furthermore, amplification of different genome regions can be highly variable
+% resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}.
+Furthermore, current high-throughput sequencing technologies have non-negligible rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
-as high as 0.25\% per base. \citep{pfeifferSystematicEvaluationError2018}. 
-\kaccomment{Discuss biases inherent to reduced rep techniques?}
+as high as 0.25\% per base \citep{pfeifferSystematicEvaluationError2018}.
+To try and remove such errors,
+it is common to filter out variants that are not found above some minimum
+frequency threshold
+\citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}.
+The effect of this filtering will be more pronounced in data sets with low or
+highly variable coverage.
+Also, to avoid aligning paralogous sequences,
+it is common to remove loci
+that exceed an upper threshold on the number of variable
+sites \citep{harveySimilarityThresholdsUsed2015}.
+These processing steps can introduce errors and acquisition biases, which has
+been shown to have an effect on estimates derived from the assembled alignments
+\citep{Harvey2015,linckMinorAlleleFrequency2019}.
+Given these issues are likely common in high-throughput genomic data,
+downstream decisions about what methods to use and what data to include in
+analyses should consider how sensitive the results might be to
+errors and biases introduced during data collection and processing.
+% \kaccomment{Discuss biases inherent to reduced rep techniques?}
 % Different library preparation techniques can introduce biases.
 % Maybe mention this in general terms. Could be specific but maybe not necessary
 % since none of our simulations were specifically intended to emulate these. 
@@ -157,44 +97,32 @@ as high as 0.25\% per base. \citep{pfeifferSystematicEvaluationError2018}.
 % Effect of Transcriptome: 
 % \citep{freedmanErrorNoiseBias2019}
 
-To avoid introducing sequencing errors into analyses performed with the data, it is not 
-uncommon to filter out variants that are not found above some minimum frequency 
-threshold \citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}. 
-The effect of this filtering will be more pronounced in data sets with low or 
-highly variable coverage.
-This filtering can also introduce errors and biases which has been 
-shown to have an effect on estimates derived from the assembled alignments
-\citep{Harvey2015,linckMinorAlleleFrequency2019}.
-Furthermore, decisions have to be made during or after processing
-the raw sequence reads to avoid aligning paralogous sequences.
-This is often done by setting an upper threshold on the number of variable
-sites within a locus \citep{harveySimilarityThresholdsUsed2015}. 
-Such a strategy will also filter out the most variable alignments
-, thus introducing an acquisition bias.
 
-
-Given all of these potential problems throughout the data collection process,
-phylogeneticists should assume their high-throughput genomic data set suffers
-from errors and acquisition biases.
-Do linked and unlinked character models differ in their robustness to such
-errors?
+Our goal is to determine whether linked and unlinked character models
+differ in their robustness to errors in reduced-representation genomic data,
+and whether it is better to use all sites or only SNPs for unlinked character
+methods.
 Linked-character models can leverage shared information among linked sites
 about each underlying gene tree.
 Thus, these models may be able to correctly infer the general shape and depth
 of a gene tree, even if the haplotypes at some of the tips have errors.
 Unlinked character models have very little information about each gene tree,
 and rely on the frequency of allele counts across many characters to inform the
-model about the relative probabilities of all possible gene trees
-(\jrocomment{Figure showing this difference?}).
+model about the relative probabilities of all possible gene trees.
+% (\jrocomment{Figure showing this difference?}).
 Given this reliance on accurate allele count frequencies, we predict that
 unlinked character models will be more sensitive to errors and acquisition
 biases in genomic data.
-Our goal is to simulate data sets with varying degrees of errors and varying 
-locus lengths to test this prediction that linked character models are more 
-robust to the types of errors contained in reduced representation data sets.
-Our results support this prediction, but also show that region of parameter
-space where the differences between linked and unlinked character models is
-revealed is quite limited.
+To test this prediction that linked character models are more robust to the
+types of errors contained in reduced representation data sets,
+we simulated data sets with varying degrees of errors related to miscalling
+rare alleles and heterozygous sites.
+Our results support this prediction, but also show that with only two species,
+the region of parameter space where there are differences between linked and
+unlinked character models is quite limited.
+Further work is needed to determine whether this difference in robustness
+between linked and unlinked character models will increase for larger species
+trees.
 
 
 \section{Methods}
@@ -226,7 +154,7 @@ are limited to characters with (at most) two states.
 
 We simulated the two-tipped species trees under a pure birth-process with a
 birth rate of 10 using the \python package \dendropy
-\citep[Version 4.40; \highLight{XXXXX} branch commit eb69003;][]{Dendropy}.  
+\citep[Version 4.40, Commit eb69003;][]{Dendropy}.
 This is equivalent to the divergence time being Exponentially distributed with
 a rate of 20.
 We drew population sizes for each branch of the species tree from a Gamma 
@@ -262,11 +190,11 @@ of 0.2 or 0.4 we randomly replaced one with the other. For the unlinked characte
 dataset comprised of a single site per locus, we only simulated singleton 
 character pattern error at a probability of 0.4.
 
-\subsection{Assessing Sensitivity To Error}
+\subsection{Assessing Sensitivity to Errors}
 For each simulated data set, we approximated the posterior distribution of the 
 divergence time (\divtime) and effective population sizes (\rootpopsize, \tippopsize[1], and \tippopsize[2])
 under an unlinked-character model using \ecoevolity
-\citep[Version 0.3.2; dev branch commit a7e9bf2;][]{Oaks2018ecoevolity}
+\citep[Version 0.3.2, Commit a7e9bf2;][]{Oaks2018ecoevolity}
 and a linked-character model using the \beast
 \citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} package in \beastcore
 \citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
