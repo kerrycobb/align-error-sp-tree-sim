@@ -144,7 +144,10 @@ resulting in uneven coverage across loci \citep{airdAnalyzingMinimizingPCR2011}.
 Current high-throughput sequencing technologies have non-negligible rates of error.
 For example, Illumina sequencing platforms have been shown to have error rates
 as high as 0.25\% per base. \citep{pfeifferSystematicEvaluationError2018}. 
+\kaccomment{Discuss biases inherent to reduced rep techniques?}
 % Different library preparation techniques can introduce biases.
+% Maybe mention this in general terms. Could be specific but maybe not necessary
+% since none of our simulations were specifically intended to emulate these. 
 % Effect of RADSeq: Allelic dropout due to mutations in restriction site
 % \citep{Rivera-Colon2019}
 
@@ -216,15 +219,13 @@ underlying linked and unlinked character models,
 and \emph{not} due to differences in numerical algorithms for searching species
 and gene tree space.
 Furthermore, we simulated biallelic characters, because unlinked-character MSC
-models
-\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}
+models \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}
 that are most comparable to linked-character models
 \citep{Heled2010,ogilvieStarBEAST2BringsFaster2017}
 are limited to characters with (at most) two states.
 
 We simulated the two-tipped species trees under a pure birth-process with a
-birth rate of 10 using the \python package
-\dendropy
+birth rate of 10 using the \python package \dendropy
 \citep[Version 4.40; \highLight{XXXXX} branch commit eb69003;][]{Dendropy}.  
 This is equivalent to the divergence time being Exponentially distributed with
 a rate of 20.
@@ -423,8 +424,6 @@ analyses with the exception of estimates of small effective population sizes fro
 
 
 \section{Discussion}
-
-
 
 % Starbeast vs ecoevolity
 \subsection{Robustness to character-pattern errors}
@@ -663,8 +662,6 @@ types of missing-allele errors would be particularly appealing.
 % mutational or basecalling error. One proposed approach to better detect polymorphisms 
 % within populations is to sequence a large number of individuals at low coverage
 % (~2x) \citep{buerklePopulationGenomicsBased2013}.
-
-
 
 % Our results raise interesting questions that can be further explored\ldots
 % \begin{itemize}
