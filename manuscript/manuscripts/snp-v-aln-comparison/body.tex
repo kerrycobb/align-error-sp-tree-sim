@@ -235,7 +235,7 @@ the MCMC chains of \ecoevolity and \beast, leaving 4000 and
 \subsection{Project repository}
 The full history of this project has been version-controlled and is available
 at
-\url{https://github.com/}\highLight{XXXXXX},
+\url{https://github.com/kerrycobb/align-error-sp-tree-sim}\highLight{XXXXXX},
 and includes
 all of the data and scripts necessary to produce our results.
 
@@ -353,6 +353,19 @@ analyses with the exception of estimates of small effective population sizes fro
 
 \section{Discussion}
 
+The results of the simulations presented here should serve as a guide to 
+biologists for how to infer species trees from genomic data. 
+Linked character methods such as \beast are worth considering even if locus lengths
+are short as they are more robust to character pattern errors that are likely 
+to be present in empirical data sets. Computational limitations may preclude the 
+use of linked models however. When using unlinked models, our simulations 
+show that it is better to use all of the data available rather than just a single 
+variable site per locus or only the variable sites. While the unlinked model are 
+likely to perform more poorly than linked models, they are generally robust to 
+the error. Below we discuss why performance differs between methods, locus 
+lengths, and degree of error in the data and discuss what this understanding 
+means for the analysis of empirical data. 
+
 % Starbeast vs ecoevolity
 \subsection{Robustness to character-pattern errors}
 As predicted the linked-character model of \beast was more robust to erroneous
@@ -364,12 +377,11 @@ data (Row 1 of \timefigs).
 When errors are introduced, the divergence time estimates of \beast are
 unaffected, but \ecoevolity underestimates recent divergence times as both
 singleton and heterozygosity errors become more frequent (Rows 2--5 of
-\timefigs).
+\timefigs). 
 
 \ecoevolity divergence-time estimates are only biased at
 very recent divergence times, and the effect disappears
 when the time of divergence is larger than about $8N_e\mu$.
-\jrocomment{We should plot div times in coalescent units versus error.}
 This pattern makes sense given that both types of character-pattern error
 reduce variation \emph{within} the species.
 Thus, it is not too surprising that the unlinked-character model in \ecoevolity
@@ -384,7 +396,6 @@ when estimating the descendant population sizes,
 the unlinked-character model of \ecoevolity
 simultaneously reduces the divergence time and increases the effective
 size of the ancestral population.
-\jrocomment{Perhaps plot div times error versus ancestral pop size error.}
 Despite also being misled about the size of the descendant populations
 (\cref{fig:theta1000,fig:theta500,fig:theta250}),
 the linked-character model of \beast seems to benefit from more information
