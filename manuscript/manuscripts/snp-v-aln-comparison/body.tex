@@ -79,7 +79,7 @@ that exceed an upper threshold on the number of variable
 sites \citep{harveySimilarityThresholdsUsed2015}.
 These processing steps can introduce errors and acquisition biases, which has
 been shown to have an effect on estimates derived from the assembled alignments
-\citep{Harvey2015,linckMinorAlleleFrequency2019}.
+\citep{harveySimilarityThresholdsUsed2015,linckMinorAlleleFrequency2019}.
 Given these issues are likely common in high-throughput genomic data,
 downstream decisions about what methods to use and what data to include in
 analyses should consider how sensitive the results might be to
@@ -235,7 +235,7 @@ the MCMC chains of \ecoevolity and \beast, leaving 4000 and
 \subsection{Project repository}
 The full history of this project has been version-controlled and is available
 at
-\url{https://github.com/kerrycobb/align-error-sp-tree-sim}\highLight{XXXXXX},
+\url{https://github.com/kerrycobb/align-error-sp-tree-sim},
 and includes
 all of the data and scripts necessary to produce our results.
 
@@ -360,13 +360,12 @@ are short as they are more robust to character pattern errors that are likely
 to be present in empirical data sets. Computational limitations may preclude the 
 use of linked models however. When using unlinked models, our simulations 
 show that it is better to use all of the data available rather than just a single 
-variable site per locus or only the variable sites. While the unlinked model are 
-likely to perform more poorly than linked models, they are generally robust to 
-the error. Below we discuss why performance differs between methods, locus 
-lengths, and degree of error in the data and discuss what this understanding 
-means for the analysis of empirical data. 
+variable site per locus or only the variable sites. While the unlinked model is 
+likely to perform more poorly than linked models when there is error, they are 
+generally robust to error. Below we discuss why performance differs between 
+methods, locus lengths, and degree of error in the data and discuss what this 
+understanding means for the analysis of empirical data. 
 
-% Starbeast vs ecoevolity
 \subsection{Robustness to character-pattern errors}
 As predicted the linked-character model of \beast was more robust to erroneous
 character patterns in the alignments than the unlinked-character model of
@@ -418,6 +417,14 @@ likely provides enough information to
 the unlinked character model about the time of divergence to overcome
 the downward biased estimates of the descendant population sizes.
 
+Less evident than the performance difference between \ecoevolity and \beast 
+in estimating divergence times, is the general decrease in accuracy of \ecoevolity 
+estimates with heterozygosity error for all three parameters as locus length 
+increases. In contrast, accuracy of estimates with singleton error remain consistent across 
+all locus lengths. Heterozygosity error will impact a greater number of individual
+sites than singleton error as locus length increases due to its affects on the entire 
+locus rather than a single variable site.    
+
 Unsurprisingly, MCMC performance in \beast declines with decreasing locus length.
 There is less information contained in the shorter loci to inform gene tree estimation 
 and it is expected that there would be more uncertainty in gene tree estimation.
@@ -464,6 +471,7 @@ an even greater level of error than we evaluated with our simulations.
 % Minor allele frequency filtering of singleton sites would eliminate all sites 
 % and likely produce error much greater than that observed in our analyses.
 
+
 \subsection{Recommendations for using unlinked-character models}
 
 When erroneous character patterns cause \ecoevolity to underestimate the
@@ -499,13 +507,13 @@ data might indicate that the model is being biased by
 errors or acquisition biases present in the character patterns.
 
 Consistent with what has been shown in previous work
-\citep{Oaks2018ecoevolity,Oaks2018paic},
+\citep{Oaks2018ecoevolity,oaks2019comparative},
 \ecoevolity performed better when all sites were utilized despite violating the
 assumption that all sites are unlinked.
 This suggests that investigators might obtain better estimates by analyzing all
 their data under unlinked-character models, rather than discarding much of it
 to avoid violating an assumption of the model.
-Given that model of unlinked characters implemented in \ecoevolity
+Given that the model of unlinked characters implemented in \ecoevolity
 does not use information about linkage among sites 
 \citep{bryantInferringSpeciesTrees2012, Oaks2018ecoevolity},
 it is not surprising that this model violation does not introduce a bias.
@@ -515,26 +523,9 @@ due to them evolving along fewer gene trees.
 As a result, the accuracy of the parameter estimates is not affected
 by the linkage among sites within loci, but the credible intervals
 become too narrow as the length of loci increase
-\citep{Oaks2018ecoevolity,Oaks2018paic}.
+\citep{Oaks2018ecoevolity,oaks2019comparative}.
 However, it remains to be seen whether the robustness of the model's accuracy
 to linked sites holds true for larger species trees.
-
-
-% What can they do to avoid errors/biases?
-% Obtain high coverage data.
-% Evaluate the effect of different filtering thresholds.
-% Filter PCR duplicates to ensure that read coverage is not inflated for some
-% alleles or loci. 
-% PCR duplicated can account for as much as 60\% of sequenced 
-% Duplicates can be filtered using single molecule tagging, randomly sheared 
-% libraries, or PCR free library preparation. If PCR bias is high 
-% Removing rare site patterns to avoid introducing mutational or basecalling error 
-% may not provide more accurate inferences. 
-% While the error rates of current high-throughput sequencing methods are not 
-% negligable, the impact of removing all rare or singleton site has a substantial 
-% impact on accuracy and precision of estimates. 
-% PCR clones account for as much as 60\% of sequenced reads 
-% \citep{andrewsHarnessingPowerRADseq2016, smithBiasedEstimatesClonal2014}
 
 
 \subsection{Future directions}
@@ -545,17 +536,20 @@ for searching species and gene tree space on the performance of the linked and
 unlinked character models.
 Our goal was to compare the theoretical performance of these two models, not
 their current software implementations.
-\kaccomment{worth noting what differences there are?}
 Nonetheless, exploring how character-pattern errors and biases affect
 the inference of larger species trees would be informative.
-From our simulations, we saw that their was little information in the data to
+Tree topology is usually a parameter of great interest to biologists. Will 
+the linked model be more robust to character pattern errors than the unlinked 
+model when estimating topology? We saw the MCMC performance in \beast declines 
+concomitantly with locus length in our simulations due to uncertainty in gene 
+tree estimation. Date sets frequently contain loci shorter than 250 bp. Furthermore,
+there is a rapid expansion of parameter space which must be sampled from as tips are 
+added to species trees. From our simulations, we saw that their was little information in the data to
 update the prior distribution on the effective size of the ancestral population.
-Exploring larger trees will determine whether estimates of the population size
+Exploring larger trees will also determine whether estimates of the population size
 of most internal branches show this behavior, or if it will be confined to the
 to only the most basal branches and root of the species tree.
-Also, the tree topology is frequently a parameter of great interest and
-it would therefore be interesting to know how character-pattern errors and
-biases affect estimation of the species-tree topology.
+
 
 % Similarity Thresholds
 Exploring other types of errors and biases would also be informative.
