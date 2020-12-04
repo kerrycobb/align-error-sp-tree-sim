@@ -1,5 +1,14 @@
 \embedHeightFigure{0.8}{../../../sims/plots-tex/cropped-grid-ecoevolity-1bp.pdf}{
-\footnotesize
-    The performance of \ecoevolity with data sets simulated with unlinked
-    characters.
+\footnotesize The performance of \ecoevolity with data sets simulated with
+unlinked characters.
+Each plotted circle and associated error bars represent the posterior mean and
+95\% credible interval.
+Circles and error bars are colored yellow if the effective sample size (ESS) of
+the estimate was less than 200, red if the potential scale reduction factor
+(PSRF) was greater than 1.2, and green if both conditions were true.
+The root mean square error (RMSE) and rate of poor MCMC behavior (RPMB) is
+given for each plot, the latter of which is the proportion of estimates with
+ESS < 200 and/or PSRF > 1.2.
+Inset plots magnify estimates of most recent divergence times.
+We generated the plots using matplotlib Version 3.1.1 \citep{matplotlib}.
 }{fig:ecoevolityunlinked}
