@@ -353,21 +353,41 @@ analyses with the exception of estimates of small effective population sizes fro
 
 \section{Discussion}
 
-The results of the simulations presented here should serve as a guide to 
-biologists for how to infer species trees from genomic data. 
-Linked character methods such as \beast are worth considering even if locus lengths
-are short as they are more robust to character pattern errors that are likely 
-to be present in empirical data sets. Computational limitations may preclude the 
-use of linked models however. When using unlinked models, our simulations 
-show that it is better to use all of the data available rather than just a single 
-variable site per locus or only the variable sites. While the unlinked model is 
-likely to perform more poorly than linked models when there is error, they are 
-generally robust to error. Below we discuss why performance differs between 
-methods, locus lengths, and degree of error in the data and discuss what this 
-understanding means for the analysis of empirical data. 
+Phylogeneticists seeking to infer species trees from large, multi-locus data
+sets are faced with difficult decisions regarding assumptions about linkage
+across sites and, if assuming all sites are unlinked, what data to include in
+their analysis.
+With the caveat that we only explored trees with two species,
+the results of our simulations provide some guidance for these decisions. 
+As we predicted, the linked-character method we tested, \beast, was more robust
+to the sequencing errors we simulated than the unlinked character method,
+\ecoevolity.
+However, even with only two species in our simulations, the current
+computational limitations of linked-character models was apparent from the poor
+sampling efficiency of the MCMC chains, especially with shorter loci.
+With data sets with more species and many short loci, linked character
+models are theoretically appealing, but current implementations
+may not be computationally feasible.
+While more sensitive to sequence errors than \beast, the unlinked-character
+method, \ecoevolity, was still quite robust to realistic levels of errors.
+Importantly, by analytically integrating over gene trees, unlinked character
+methods are more computationally feasible for large data sets with many
+short loci.
+
+Overall, if your data set has relatively long loci, as is common with
+sequence-capture approaches, it might be worth trying a linked-character
+method.
+If computationally practical, you stand to benefit from the aggregate
+information about each gene tree contained in the linked sites of each locus.
+However, if your loci are shorter, as in RADseq data, you are likely better off
+applying an unlinked-character model to all of your data, even though this
+violates an assumption of the model.
+Below we discuss why performance differs between methods, locus lengths, and
+degree of error in the data and discuss what this understanding means for the
+analysis of empirical data. 
 
 \subsection{Robustness to character-pattern errors}
-As predicted the linked-character model of \beast was more robust to erroneous
+As predicted, the linked-character model of \beast was more robust to erroneous
 character patterns in the alignments than the unlinked-character model of
 \ecoevolity.
 This is most evident in the estimates of divergence times, for which
@@ -376,9 +396,9 @@ data (Row 1 of \timefigs).
 When errors are introduced, the divergence time estimates of \beast are
 unaffected, but \ecoevolity underestimates recent divergence times as both
 singleton and heterozygosity errors become more frequent (Rows 2--5 of
-\timefigs). 
+\timefigs).
 
-\ecoevolity divergence-time estimates are only biased at
+However, \ecoevolity divergence-time estimates are only biased at
 very recent divergence times, and the effect disappears
 when the time of divergence is larger than about $8N_e\mu$.
 This pattern makes sense given that both types of character-pattern error
@@ -417,13 +437,14 @@ likely provides enough information to
 the unlinked character model about the time of divergence to overcome
 the downward biased estimates of the descendant population sizes.
 
-Less evident than the performance difference between \ecoevolity and \beast 
-in estimating divergence times, is the general decrease in accuracy of \ecoevolity 
-estimates with heterozygosity error for all three parameters as locus length 
-increases. In contrast, accuracy of estimates with singleton error remain consistent across 
-all locus lengths. Heterozygosity error will impact a greater number of individual
-sites than singleton error as locus length increases due to its affects on the entire 
-locus rather than a single variable site.    
+When faced with heterozygosity errors,
+the accuracy of \ecoevolity decreases as locus length increases.
+In contrast, accuracy of \ecoevolity is not affected by locus
+length when analyzing data sets with singleton erros.
+This pattern makes sense in light of how we generated these errors.
+We introduced singleton errors per-site and heterozygosity errors per-locus.
+Thus, the same per-locus rate of heterzygosity errors affects many more sites
+of a dataset with 1000bp loci compared to dataset with 250bp loci.
 
 Unsurprisingly, MCMC performance in \beast declines with decreasing locus length.
 There is less information contained in the shorter loci to inform gene tree estimation 
@@ -443,7 +464,8 @@ The error rates of 40\% that we simulated are likely higher than the rate of
 these types of errors induced during sample preparation and high-throughput 
 sequencing. However, empirical alignments likely contain a mix of different sources of
 errors and biases from various steps in data collection process.
-Also, real data would not be generated under a model with no prior misspecification.
+Also, real data are not be generated under a known model with no prior
+misspecification.
 Violations of the model might make these methods of species-tree inference more
 sensitive to lower rates of error.
 
@@ -465,8 +487,9 @@ alleles have been found in at least two diploid individuals
 \citep{rochetteStacksAnalyticalMethods2019}.
 However, filtering in this way can result in biased estimates of parameters that
 are sensitive to the frequencies of rare alleles
-\citep{linckMinorAlleleFrequency2019}. Such stringent filtering would introduce
-an even greater level of error than we evaluated with our simulations.
+\citep{huang2016unforeseen,linckMinorAlleleFrequency2019}.
+Such stringent filtering would introduce an even greater level of error than we
+evaluated with our simulations.
 %% Do we know they filter all singleton patterns?
 % Minor allele frequency filtering of singleton sites would eliminate all sites 
 % and likely produce error much greater than that observed in our analyses.
@@ -528,7 +551,7 @@ However, it remains to be seen whether the robustness of the model's accuracy
 to linked sites holds true for larger species trees.
 
 
-\subsection{Future directions}
+\subsection{Other complexities of empirical data in need of exploration}
 % Larger trees
 In this study we used a simple two species model with a small number of gene
 copies sampled from each to minimize the effect of differences in algorithms
