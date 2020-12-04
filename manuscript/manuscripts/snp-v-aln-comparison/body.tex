@@ -474,37 +474,44 @@ It is reassuring to see the effect of sequence errors on the unlinked-character
 model is limited to a small region of parameter space, and is only severe when
 the frequency of errors in the data is large.
 Our simulated error rate of 40\% is likely higher than the rate that these
-types of errors occur during sample preparation, high-throughput sequencing,
+types of errors occur during most sample preparation, high-throughput sequencing,
 and bioinformatic processing.
 However, empirical alignments likely contain a mix of different sources of
 errors and biases from various steps in the data collection process.
 Also, real data are not be generated under a known model with no prior
 misspecification.
 Violations of the model might make these methods of species-tree inference more
-sensitive to lower rates of error.
-
+sensitive to lower rates of error. One source of error that might be 
 The degree to which a dataset will be affected by error from missing
 heterozygote haplotypes and missing singletons will be highly dependent on the 
 method used to reduce representation of the genome, depth of sequencing 
 coverage (i.e., the number of overlapping sequence reads at
 a locus), and how the data are processed. Coverage will vary across loci due 
 to random chance and biases in PCR amplification and sequencing.
-\jrocomment{Are the following 4 sentences redundant (saying the same thing in
-    two different ways)?}
-To filter out sequencing errors, most pipelines for processing sequence data set 
-a minimum coverage threshold for variants.
-True variants are more likely to be filtered out when coverage is low. 
-Filtering of very rare alleles that do not meet a minimum minor allele 
-frequency threshold has been used as a way to eliminate the impact of 
-sequencing errors. 
-For example filtering alleles with counts of less than 3 would ensure that all
-alleles have been found in at least two diploid individuals
-\citep{rochetteStacksAnalyticalMethods2019}.
-However, filtering in this way can result in biased estimates of parameters that
-are sensitive to the frequencies of rare alleles
-\citep{huang2016unforeseen,linckMinorAlleleFrequency2019}.
-Such stringent filtering could introduce an even greater level of error than we
-evaluated with our simulations.
+There is one potential source of error which would have a greater 
+affect than the error we simulated. Filtering of rare alleles that do not meet 
+a minimum minor allele frequency or count threshold in order to remove potential 
+sequencing errors eliminates every allele below that threshold rather than a 
+proportion as in our simulations 
+\citep{rochetteStacksAnalyticalMethods2019, linckMinorAlleleFrequency2019}.
+
+
+% \jrocomment{Are the following 4 sentences redundant (saying the same thing in
+%     two different ways)?}
+% To filter out sequencing errors, most pipelines for processing sequence data set 
+% a minimum coverage threshold for variants.
+% True variants are more likely to be filtered out when coverage is low. 
+% Filtering of very rare alleles that do not meet a minimum minor allele 
+% frequency threshold has been used as a way to eliminate the impact of 
+% sequencing errors. 
+% For example filtering alleles with counts of less than 3 would ensure that all
+% alleles have been found in at least two diploid individuals
+% \citep{rochetteStacksAnalyticalMethods2019}.
+% However, filtering in this way can result in biased estimates of parameters that
+% are sensitive to the frequencies of rare alleles
+% \citep{huang2016unforeseen,linckMinorAlleleFrequency2019}.
+% Such stringent filtering could introduce an even greater level of error than we
+% evaluated with our simulations.
 %% Do we know they filter all singleton patterns?
 % Minor allele frequency filtering of singleton sites would eliminate all sites 
 % and likely produce error much greater than that observed in our analyses.
