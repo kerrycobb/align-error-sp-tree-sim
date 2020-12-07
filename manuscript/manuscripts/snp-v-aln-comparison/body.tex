@@ -15,7 +15,7 @@ errors that are likely common in high-throughput genetic
 datasets.
 
 Reduced-representation genomic data sets acquired from high-throughput
-instruments are becoming commonplace in phylogenetics \citep{Leache2017}, and
+instruments are becoming commonplace in phylogenetics \citep{leacheUtilitySingleNucleotide2017}, and
 usually comprise hundreds to thousands of loci from 50 to several thousand
 nucleotides long.
 Full likelihood approaches
@@ -27,7 +27,7 @@ tree---those that assume (1) each site evolved along its own gene tree
 (i.e., each site is ``unlinked'')
 \citep{bryantInferringSpeciesTrees2012, maioPoMoAlleleFrequencyBased2015},
 or (2) contiguous, linked sites evolved along a shared gene tree
-\citep{liuSpeciesTreesGene2007, Heled2010, ogilvieStarBEAST2BringsFaster2017,
+\citep{liuSpeciesTreesGene2007, heledBayesianInferenceSpecies2010, ogilvieStarBEAST2BringsFaster2017,
 yangBPPProgramSpecies2015}.
 We will refer to these as unlinked and linked-character models, respectively.
 For both models, the gene tree of each
@@ -152,14 +152,14 @@ and \emph{not} due to differences in numerical algorithms for searching species
 and gene tree space.
 Furthermore, we simulated biallelic characters, because unlinked-character
 multi-species coalescent models
-\citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}
+\citep{bryantInferringSpeciesTrees2012,oaksFullBayesianComparative2019}
 that are most comparable to linked-character models
-\citep{Heled2010,ogilvieStarBEAST2BringsFaster2017}
+\citep{heledBayesianInferenceSpecies2010,ogilvieStarBEAST2BringsFaster2017}
 are limited to characters with (at most) two states.
 
 We simulated the two-tipped species trees under a pure-birth process
 \citep{Yule1925} with a birth rate of 10 using the \python package \dendropy
-\citep[Version 4.40, Commit eb69003;][]{Dendropy}.
+\citep[Version 4.40, Commit eb69003;][]{sukumaranDendroPyPythonLibrary2010}.
 This is equivalent to the time of divergence between the two species being
 Exponentially distributed with a mean of 0.05 substitutions per site.
 We drew population sizes for each branch of the species tree from a Gamma 
@@ -195,7 +195,7 @@ For each simulated data set with loci of 250, 500, and 1000 characters, we
 approximated the posterior distribution of the 
 divergence time (\divtime) and effective population sizes (\rootpopsize, \tippopsize[1], and \tippopsize[2])
 under an unlinked-character model using \ecoevolity
-\citep[Version 0.3.2, Commit a7e9bf2;][]{Oaks2018ecoevolity}
+\citep[Version 0.3.2, Commit a7e9bf2;][]{oaksFullBayesianComparative2019}
 and a linked-character model using the \beast package
 \citep[Version 0.15.1;][]{ogilvieStarBEAST2BringsFaster2017} in \beastcore
 \citep[Version 2.5.2;][]{bouckaertBEASTSoftwarePlatform2014}.
@@ -208,7 +208,7 @@ We added an option to \ecoevolity to compile a version where the prior is
 specified as the absolute effective size of the root population,
 which matches the model in \beast and the model we used to generate the data.
 The linkage of sites within loci of our simulated data violates the 
-unlinked-character model of \ecoevolity \citep{bryantInferringSpeciesTrees2012,Oaks2018ecoevolity}. Therefore, we also analyzed each data 
+unlinked-character model of \ecoevolity \citep{bryantInferringSpeciesTrees2012,oaksFullBayesianComparative2019}. Therefore, we also analyzed each data 
 set with \ecoevolity after selecting, at most, one variable character from 
 each locus; loci without variable sites were excluded. 
 
@@ -230,7 +230,7 @@ computed the effective sample size
 and potential scale reduction factor
 \citep[PSRF; the square root of Equation 1.1 in][]{Brooks1998}
 from the samples of each parameter, and considered an ESS value greater than
-200 and PSRF less than 1.2 \citep{gelman1998} to indicate adequate convergence
+200 and PSRF less than 1.2 \citep{Brooks1998} to indicate adequate convergence
 and mixing of the chains. 
 Based on preliminary analyses of simulated data sets without errors,
 we chose to discard the first 501 and 201 samples from
@@ -321,7 +321,7 @@ match the prior distribution \thetafigsp.
 
 % Put this in the discussion somewhere
 % The results from this analysis were consistent
-% with \citep{Oaks2018ecoevolity} 
+% with \citep{oaksFullBayesianComparative2019} 
 
 
 
@@ -337,7 +337,7 @@ unlinked characters (i.e., no linked sites).
 This coverage behavior is expected, and helps to confirm confirm that our
 simulation pipeline generated data under the same model used for inference by
 \beast and \ecoevolity. 
-As seen previously \citep{Oaks2018ecoevolity}, analyzing longer linked loci
+As seen previously \citep{oaksFullBayesianComparative2019}, analyzing longer linked loci
 causes the coverage of \ecoevolity to be lower, due to the violation of the
 model's assumption that the sites are unlinked.
 
@@ -545,7 +545,7 @@ data might indicate that the model is being biased by
 errors or acquisition biases present in the character patterns.
 
 Consistent with what has been shown in previous work
-\citep{Oaks2018ecoevolity,oaks2019comparative},
+\citep{oaksFullBayesianComparative2019,oaks2019comparative},
 \ecoevolity performed better when all sites were utilized despite violating the
 assumption that all sites are unlinked.
 This suggests that investigators might obtain better estimates by analyzing all
@@ -553,7 +553,7 @@ their data under unlinked-character models, rather than discarding much of it
 to avoid violating an assumption of the model.
 Given that the model of unlinked characters implemented in \ecoevolity
 does not use information about linkage among sites 
-\citep{bryantInferringSpeciesTrees2012, Oaks2018ecoevolity},
+\citep{bryantInferringSpeciesTrees2012, oaksFullBayesianComparative2019},
 it is not surprising that this model violation does not introduce a bias.
 Linkage among sites does not change the gene trees and site patterns that are
 expected under the model, but it does reduce the variance of the those patterns
@@ -561,7 +561,7 @@ due to them evolving along fewer gene trees.
 As a result, the accuracy of the parameter estimates is not affected
 by the linkage among sites within loci, but the credible intervals
 become too narrow as the length of loci increase
-\citep{Oaks2018ecoevolity,oaks2019comparative}.
+\citep{oaksFullBayesianComparative2019,oaks2019comparative}.
 However, it remains to be seen whether the robustness of the model's accuracy
 to linked sites holds true for larger species trees.
 
