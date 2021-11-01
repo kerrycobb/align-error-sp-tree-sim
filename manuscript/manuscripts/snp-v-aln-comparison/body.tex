@@ -183,10 +183,12 @@ error we introduced was changing singleton character patterns (i.e., characters
 for which one gene copy was different from the other seven gene copies) to invariant 
 patterns by changing the singleton character state to match the other gene 
 copies. We introduced this change to all singleton site patterns with a probability of 0.2 and 0.4 to create 
-two datasets from each simulated dataset. The second type of error we introduced 
-was missing heterozygous gene copies. To do this, we randomly paired gene copies 
-from within each species for each locus, and with a probability 
-of 0.2 or 0.4 we randomly replaced one with the other. For the unlinked character 
+two datasets from each simulated dataset. The second type of error we introduced
+was missing heterozygous gene copies. To do this, we randomly paired gene copies
+from within each species to create two diploid genotypes for each locus, and with a probability
+% Spelling out the pairing a bit more, but double check that "each genotype"
+% below is accurate. I'm prettys sure it is based on the simulation code.
+of 0.2 or 0.4 we randomly replaced one allele of each genotype with the other. For the unlinked character
 dataset comprised of a single site per locus, we only simulated singleton 
 character pattern error at a probability of 0.4.
 
